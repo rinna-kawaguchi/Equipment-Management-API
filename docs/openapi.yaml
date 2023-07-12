@@ -1,11 +1,11 @@
 openapi: 3.0.3
 info:
-  title: UserAPI
+  title: Equipment Management API
   description: |-
-    SwggerによるUserAPI仕様書です。
+    設備点検管理アプリのAPI仕様書です。
   version: 1.0.0
 servers:
-  - url: https://http://localhost:8080
+  - url: http://localhost:8080
 tags:
   - name: equipment
     description: 設備に関する操作
