@@ -1,0 +1,616 @@
+openapi: 3.0.3
+info:
+  title: UserAPI
+  description: |-
+    SwggerによるUserAPI仕様書です。
+  version: 1.0.0
+servers:
+  - url: https://http://localhost:8080
+tags:
+  - name: equipment
+    description: 設備に関する操作
+  - name: plan
+    description: 点検計画に関する操作
+  - name: history
+    description: 点検履歴に関する操作
+paths:
+  /equipment:
+    get:
+      tags:
+        - equipment
+      summary: 設備の取得
+      description: クエリパラメータで検索条件を入力した条件に合致した設備を取得、条件を入力しない場合は設備を全数取得する
+      parameters:
+        - name: name
+          in: query
+          description: 入力した文字が含まれる設備が検索される
+          required: false
+          schema:
+            type: string
+          example: ポンプ
+        - name: number
+          in: query
+          description: 入力した文字が含まれる設備が検索される
+          required: false
+          schema:
+            type: string
+          example: 001
+        - name: location
+          in: query
+          description: 入力した文字が含まれる設備が検索される
+          required: false
+          schema:
+            type: string
+          example: Area1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: 真空ポンプA
+                    number:
+                      type: string
+                      example: A1-C001A
+                    location:
+                      type: string
+                      example: Area1
+                    deadline:
+                      type: string
+                      example: 2023/9/30
+                    history:
+                      type: string
+                      example: 2022/9/30
+    post:
+      tags:
+        - equipment
+      summary: 新規設備登録
+      description: 設備を新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  nullable: false
+                  example: 真空ポンプB
+                number:
+                  type: string
+                  nullable: false
+                  example: A1-C001B
+                location:
+                  type: string
+                  nullable: false
+                  example: Area1
+                deadline:
+                  type: string
+                  nullable: true
+                  example: 2023/11/30
+                history:
+                  type: string
+                  nullable: true
+                  example: 2021/11/30
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 設備が正常に登録されました
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+  /equipment/{id}:
+    get:
+      tags:
+        - equipment
+      summary: 指定されたidの設備の取得
+      description: 指定されたIDの設備情報を取得する
+      parameters:
+        - name: id
+          in: path
+          description: 取得したい設備のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: 真空ポンプA
+                    number:
+                      type: string
+                      example: A1-C001A
+                    location:
+                      type: string
+                      example: Area1
+                    deadline:
+                      type: string
+                      example: 2023/9/30
+                    history:
+                      type: string
+                      example: 2022/9/30
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    patch:
+      tags:
+        - equipment
+      summary: 設備情報の更新
+      description: 指定したIDの設備情報を更新する
+      parameters:
+        - name: id
+          in: path
+          description: 更新したい設備のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  nullable: false
+                  example: 真空ポンプB
+                number:
+                  type: string
+                  nullable: false
+                  example: A1-C001B
+                location:
+                  type: string
+                  nullable: false
+                  example: Area1
+                deadline:
+                  type: string
+                  nullable: true
+                  example: 2023/11/30
+                history:
+                  type: string
+                  nullable: true
+                  example: 2021/11/30
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 登録内容が正常に更新されました
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    delete:
+      tags:
+        - equipment
+      summary: 設備の削除
+      description: 指定したIDの設備を削除する
+      parameters:
+        - name: id
+          in: path
+          description: 削除したい設備のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 設備が正常に削除されました
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /equipment/{id}/plan:
+    get:
+      tags:
+        - plan
+      summary: 点検計画の取得
+      description: 指定したIDの設備の点検計画を取得する
+      parameters:
+        - name: id
+          in: path
+          description: 点検計画を取得したい設備のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: 簡易点検
+                    period:
+                      type: string
+                      example: 1年
+                    deadline:
+                      type: string
+                      example: 2023/9/30
+    post:
+      tags:
+        - plan
+      summary: 点検計画の登録
+      description: 指定したIDの設備の点検計画を登録する
+      parameters:
+        - name: id
+          in: path
+          description: 点検計画を登録したい設備のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  nullable: false
+                  example: 簡易点検
+                period:
+                  type: string
+                  nullable: false
+                  example: 1年
+                deadline:
+                  type: string
+                  nullable: false
+                  example: 2023/9/30
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検計画が正常に登録されました
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+  /plan/{id}:
+    patch:
+      tags:
+        - plan
+      summary: 点検計画の更新
+      description: 指定した点検計画を更新する
+      parameters:
+        - name: id
+          in: path
+          description: 更新したい点検計画のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  nullable: false
+                  example: 簡易点検
+                period:
+                  type: string
+                  nullable: false
+                  example: 1年
+                deadline:
+                  type: string
+                  nullable: false
+                  example: 2023/9/30
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検計画が正常に更新されました
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+    delete:
+      tags:
+        - plan
+      summary: 点検計画の削除
+      description: 指定したIDの点検計画を削除する
+      parameters:
+        - name: id
+          in: path
+          description: 削除したい点検計画のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検計画が正常に削除されました
+  /equipment/{id}/history:
+    get:
+      tags:
+        - history
+      summary: 点検履歴の取得
+      description: 指定したIDの設備の点検履歴を取得する
+      parameters:
+        - name: id
+          in: path
+          description: 点検履歴を取得したい設備のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      example: 2022/9/30
+                    type:
+                      type: string
+                      example: 簡易点検
+                    result:
+                      type: string
+                      example: 1年
+                    attachment:
+                      type: string
+                      example: 点検報告書.pdf
+    post:
+      tags:
+        - history
+      summary: 点検履歴の登録
+      description: 指定したIDの設備の点検計画を登録する
+      parameters:
+        - name: id
+          in: path
+          description: 点検履歴を登録したい設備のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  nullable: false
+                  example: 2022/9/30
+                type:
+                  type: string
+                  nullable: false
+                  example: 簡易点検
+                result:
+                  type: string
+                  nullable: false
+                  example: 1年
+                attachment:
+                  type: string
+                  nullable: true
+                  example: 点検報告書.pdf
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検履歴が正常に登録されました
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+  /history/{id}:
+    patch:
+      tags:
+        - history
+      summary: 点検履歴の更新
+      description: 指定した点検履歴を更新する
+      parameters:
+        - name: id
+          in: path
+          description: 更新したい点検履歴のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  nullable: false
+                  example: 2022/9/30
+                type:
+                  type: string
+                  nullable: false
+                  example: 簡易点検
+                result:
+                  type: string
+                  nullable: false
+                  example: 1年
+                attachment:
+                  type: string
+                  nullable: true
+                  example: 点検報告書.pdf
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検履歴が正常に更新されました
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+    delete:
+      tags:
+        - history
+      summary: 点検履歴の削除
+      description: 指定したIDの点検履歴を削除する
+      parameters:
+        - name: id
+          in: path
+          description: 削除したい点検履歴のID
+          required: true
+          schema:
+            type: number
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検履歴が正常に削除されました
+components:
+  schemas:
+    BadRequest:
+      description: リクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        Status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: 入力が不足している項目があります
+    NotFound:
+      description: 指定したリソースが存在しない場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        Status:
+          type: string
+          example: 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: Not Found
+        path:
+          type: string
+          example: /eqipment/99
