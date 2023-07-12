@@ -21,4 +21,4 @@
 <img src="img/screen-transition-diagram.png" width="70%"/>
 
 ### API仕様書
-[SwaggerによるAPI仕様書](https://rinna-kawaguchi.github.io/Equipment-Management-API/)
+[SwaggerによるAPI仕様書](https://rinna-kawaguchi.github.io/Equipment-Management-API/dist/index.html)
