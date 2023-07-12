@@ -120,8 +120,8 @@ paths:
     get:
       tags:
         - equipment
-      summary: 指定されたidの設備の取得
-      description: 指定されたIDの設備情報を取得する
+      summary: 指定したIDの設備の取得
+      description: 指定したIDの設備情報を取得する
       parameters:
         - name: id
           in: path
