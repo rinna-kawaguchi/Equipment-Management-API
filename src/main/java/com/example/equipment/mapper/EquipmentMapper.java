@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +23,8 @@ public interface EquipmentMapper {
       + " VALUES (#{name}, #{number}, #{location})")
   @Options(useGeneratedKeys = true, keyProperty = "equipmentId")
   void insertEquipment(Equipment equipment);
+
+  @Update("UPDATE equipments SET name = #{name}, number = #{number}, location = #{location}"
+      + " WHERE equipment_id = #{equipmentId}")
+  void updateEquipment(int equipmentId, String name, String number, String location);
 }

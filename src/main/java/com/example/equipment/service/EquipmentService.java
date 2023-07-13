@@ -1,7 +1,7 @@
 package com.example.equipment.service;
 
 import com.example.equipment.entity.Equipment;
-import com.example.equipment.form.EquipmentCreateForm;
+import com.example.equipment.form.EquipmentForm;
 import java.util.List;
 
 public interface EquipmentService {
@@ -10,5 +10,7 @@ public interface EquipmentService {
 
   Equipment findEquipmentById(int equipmentId);
 
-  Equipment createEquipment(EquipmentCreateForm form);
+  Equipment createEquipment(EquipmentForm form);
+
+  void updateEquipment(int equipmentId, String name, String number, String location);
 }

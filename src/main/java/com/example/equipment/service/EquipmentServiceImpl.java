@@ -2,7 +2,7 @@ package com.example.equipment.service;
 
 import com.example.equipment.entity.Equipment;
 import com.example.equipment.exception.ResourceNotFoundException;
-import com.example.equipment.form.EquipmentCreateForm;
+import com.example.equipment.form.EquipmentForm;
 import com.example.equipment.mapper.EquipmentMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -28,9 +28,16 @@ public class EquipmentServiceImpl implements EquipmentService {
   }
 
   @Override
-  public Equipment createEquipment(EquipmentCreateForm form) {
+  public Equipment createEquipment(EquipmentForm form) {
     Equipment equipment = new Equipment(form.getName(), form.getNumber(), form.getLocation());
     equipmentMapper.insertEquipment(equipment);
     return equipment;
+  }
+
+  @Override
+  public void updateEquipment(int equipmentId, String name, String number, String location) {
+    equipmentMapper.findEquipmentById(equipmentId)
+        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    equipmentMapper.updateEquipment(equipmentId, name, number, location);
   }
 }
