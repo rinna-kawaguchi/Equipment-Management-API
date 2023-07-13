@@ -17,8 +17,6 @@
  -->
 
 <module name="Checker">
-    <module name="SuppressWarningsFilter"/>
-
     <property name="charset" value="UTF-8"/>
 
     <property name="severity" value="warning"/>
@@ -96,7 +94,7 @@
             <property name="tokens"
                       value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT,
                     INSTANCE_INIT, ANNOTATION_DEF, ENUM_DEF, INTERFACE_DEF, RECORD_DEF,
-                    COMPACT_CTOR_DEF, LITERAL_SWITCH"/>
+                    COMPACT_CTOR_DEF"/>
         </module>
         <module name="SuppressionXpathSingleFilter">
             <!-- suppresion is required till https://github.com/checkstyle/checkstyle/issues/7541 -->
@@ -108,8 +106,7 @@
             <property name="tokens"
                       value="COMMA, SEMI, TYPECAST, LITERAL_IF, LITERAL_ELSE, LITERAL_RETURN,
                     LITERAL_WHILE, LITERAL_DO, LITERAL_FOR, LITERAL_FINALLY, DO_WHILE, ELLIPSIS,
-                    LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_CATCH, LAMBDA,
-                    LITERAL_YIELD, LITERAL_CASE"/>
+                    LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_CATCH, LAMBDA"/>
         </module>
         <module name="WhitespaceAround">
             <property name="allowEmptyConstructors" value="true"/>
@@ -349,36 +346,23 @@
                     <property name="excludeScope" value="nothing"/>
                 </module>
  -->
-                <module name="MethodName">
-                    <property name="format" value="^[a-z][a-z0-9]\w*$"/>
-                    <message key="name.invalidPattern"
-                             value="Method name ''{0}'' must match pattern ''{1}''."/>
-                </module>
-                <module name="SingleLineJavadoc"/>
-                <module name="EmptyCatchBlock">
-                    <property name="exceptionVariableName" value="expected"/>
-                </module>
-                <module name="CommentsIndentation">
-                    <property name="tokens" value="SINGLE_LINE_COMMENT, BLOCK_COMMENT_BEGIN"/>
-                </module>
-                <!-- https://checkstyle.org/filters/suppressionxpathfilter.html -->
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
+            <message key="name.invalidPattern"
+                     value="Method name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="SingleLineJavadoc"/>
+        <module name="EmptyCatchBlock">
+            <property name="exceptionVariableName" value="expected"/>
+        </module>
+        <module name="CommentsIndentation">
+            <property name="tokens" value="SINGLE_LINE_COMMENT, BLOCK_COMMENT_BEGIN"/>
+        </module>
+        <!-- https://checkstyle.org/filters/suppressionxpathfilter.html -->
         <module name="SuppressionXpathFilter">
             <property name="file" value="${org.checkstyle.google.suppressionxpathfilter.config}"
                       default="checkstyle-xpath-suppressions.xml" />
             <property name="optional" value="true"/>
-        </module>
-        <module name="SuppressWarningsHolder" />
-        <module name="SuppressionCommentFilter">
-            <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)" />
-            <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)" />
-            <property name="checkFormat" value="$1" />
-        </module>
-        <module name="SuppressWithNearbyCommentFilter">
-            <property name="commentFormat" value="CHECKSTYLE.SUPPRESS\: ([\w\|]+)"/>
-            <!-- $1 refers to the first match group in the regex defined in commentFormat -->
-            <property name="checkFormat" value="$1"/>
-            <!-- The check is suppressed in the next line of code after the comment -->
-            <property name="influenceFormat" value="1"/>
         </module>
     </module>
 </module>
