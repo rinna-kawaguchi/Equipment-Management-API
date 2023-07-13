@@ -10,6 +10,7 @@ import java.util.List;
 public class EquipmentServiceImpl implements EquipmentService {
 
   private EquipmentMapper equipmentMapper;
+
   public EquipmentServiceImpl(EquipmentMapper equipmentMapper) {
     this.equipmentMapper = equipmentMapper;
   }
