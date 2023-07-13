@@ -14,4 +14,10 @@ public class Equipment {
   private String name;
   private String number;
   private String location;
+
+  public Equipment(String name, String number, String location) {
+    this.name = name;
+    this.number = number;
+    this.location = location;
+  }
 }
