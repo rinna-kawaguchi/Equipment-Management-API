@@ -6,4 +6,6 @@ import java.util.List;
 public interface EquipmentService {
 
   List<Equipment> findEquipment(String name, String number, String location);
+
+  Equipment findEquipmentById(int equipmentId);
 }
