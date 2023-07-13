@@ -16,17 +16,20 @@ public class EquipmentServiceImpl implements EquipmentService {
     this.equipmentMapper = equipmentMapper;
   }
 
+  // 設備の条件検索
   @Override
   public List<Equipment> findEquipment(String name, String number, String location) {
     return equipmentMapper.findEquipment(name, number, location);
   }
 
+  // 設備のID検索
   @Override
   public Equipment findEquipmentById(int equipmentId) {
     return equipmentMapper.findEquipmentById(equipmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
   }
 
+  // 設備の登録処理
   @Override
   public Equipment createEquipment(EquipmentForm form) {
     Equipment equipment = new Equipment(form.getName(), form.getNumber(), form.getLocation());
@@ -34,6 +37,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     return equipment;
   }
 
+  // 設備の更新処理
   @Override
   public void updateEquipment(int equipmentId, String name, String number, String location) {
     equipmentMapper.findEquipmentById(equipmentId)
@@ -41,6 +45,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     equipmentMapper.updateEquipment(equipmentId, name, number, location);
   }
 
+  // 設備の削除処理
   @Override
   public void deleteEquipment(int equipmentId) {
     equipmentMapper.findEquipmentById(equipmentId)
