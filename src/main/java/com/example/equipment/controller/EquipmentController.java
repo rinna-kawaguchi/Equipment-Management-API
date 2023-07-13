@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -59,6 +60,13 @@ public class EquipmentController {
     equipmentService.updateEquipment(
         equipmentId, form.getName(), form.getNumber(), form.getLocation());
     return ResponseEntity.ok(Map.of("message", "設備が正常に更新されました"));
+  }
+
+  @DeleteMapping("/equipment/{equipmentId}")
+  public ResponseEntity<Map<String, String>> deleteEquipment(
+      @PathVariable("equipmentId") int equipmentId) {
+    equipmentService.deleteEquipment(equipmentId);
+    return ResponseEntity.ok(Map.of("message", "設備が正常に削除されました"));
   }
 
   @ExceptionHandler(value = ResourceNotFoundException.class)

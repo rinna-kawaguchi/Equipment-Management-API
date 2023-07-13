@@ -40,4 +40,11 @@ public class EquipmentServiceImpl implements EquipmentService {
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
     equipmentMapper.updateEquipment(equipmentId, name, number, location);
   }
+
+  @Override
+  public void deleteEquipment(int equipmentId) {
+    equipmentMapper.findEquipmentById(equipmentId)
+        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    equipmentMapper.deleteEquipment(equipmentId);
+  }
 }

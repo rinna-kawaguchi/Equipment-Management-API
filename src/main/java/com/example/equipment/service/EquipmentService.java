@@ -13,4 +13,6 @@ public interface EquipmentService {
   Equipment createEquipment(EquipmentForm form);
 
   void updateEquipment(int equipmentId, String name, String number, String location);
+
+  void deleteEquipment(int equipmentId);
 }
