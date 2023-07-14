@@ -31,7 +31,7 @@ public class EquipmentController {
     this.equipmentService = equipmentService;
   }
 
-  @GetMapping("/equipment")
+  @GetMapping("/equipments")
   public List<Equipment> getEquipments(
       @RequestParam(value = "name", required = false) String name,
       @RequestParam(value = "number", required = false) String number,
@@ -40,12 +40,12 @@ public class EquipmentController {
     return equipmentService.findEquipment(name, number, location);
   }
 
-  @GetMapping("/equipment/{equipmentId}")
+  @GetMapping("/equipments/{equipmentId}")
   public Equipment getEquipmentById(@PathVariable("equipmentId") int equipmentId) {
     return equipmentService.findEquipmentById(equipmentId);
   }
 
-  @PostMapping("/equipment")
+  @PostMapping("/equipments")
   public ResponseEntity<Map<String, String>> createEquipment(
       @RequestBody @Validated EquipmentForm form, UriComponentsBuilder uriBuilder) {
     Equipment equipment = equipmentService.createEquipment(form);
@@ -53,7 +53,7 @@ public class EquipmentController {
     return ResponseEntity.created(url).body(Map.of("message", "設備が正常に登録されました"));
   }
 
-  @PatchMapping("/equipment/{equipmentId}")
+  @PatchMapping("/equipments/{equipmentId}")
   public ResponseEntity<Map<String, String>> updateEquipment(
       @PathVariable("equipmentId") int equipmentId,
       @RequestBody @Validated EquipmentForm form) {
@@ -62,7 +62,7 @@ public class EquipmentController {
     return ResponseEntity.ok(Map.of("message", "設備が正常に更新されました"));
   }
 
-  @DeleteMapping("/equipment/{equipmentId}")
+  @DeleteMapping("/equipments/{equipmentId}")
   public ResponseEntity<Map<String, String>> deleteEquipment(
       @PathVariable("equipmentId") int equipmentId) {
     equipmentService.deleteEquipment(equipmentId);
