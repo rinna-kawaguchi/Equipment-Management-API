@@ -143,7 +143,8 @@ public class EquipmentManagementApiIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドで正しくリクエストした時に、設備が登録できステータスコード201とメッセージが返されること
+  // POSTメソッドで正しくリクエスト（name,number,locationをすべて20文字以内で入力）した時に、
+  // 設備が登録できステータスコード201とメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipments.yml")
   @ExpectedDataSet(value = "datasets/insert_equipment.yml", ignoreCols = "equipment_id")
@@ -167,6 +168,100 @@ public class EquipmentManagementApiIntegrationTest {
         "message": "設備が正常に登録されました"
         }
         """, response, JSONCompareMode.STRICT);
+  }
+
+  // POSTメソッドでリクエストのname,number,locationのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
+  // （NotBlankのバリデーション確認、name,number,locationはすべて同じアノテーションを付与しており同じString型のため、
+  // 代表してnameで確認）
+  @Test
+  @DataSet(value = "datasets/equipments.yml")
+  @Transactional
+  void 登録時のリクエストでnullの項目がある時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                {
+                "name": null,
+                "number": "A1-C001B",
+                "location": "Area1"
+                }                                
+                """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+        "status": "400",
+        "error": "Bad Request",
+        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+        "path": "/equipments"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  // POSTメソッドでリクエストのname,number,locationのいずれかが空文字の時に、
+  // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認）
+  @Test
+  @DataSet(value = "datasets/equipments.yml")
+  @Transactional
+  void 登録時のリクエストで空文字の項目がある時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                {
+                "name": "",
+                "number": "A1-C001B",
+                "location": "Area1"
+                }                                
+                """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+        "status": "400",
+        "error": "Bad Request",
+        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+        "path": "/equipments"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  // POSTメソッドでリクエストのname,number,locationのいずれかが20文字を超えている時に、
+  // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認）
+  @Test
+  @DataSet(value = "datasets/equipments.yml")
+  @Transactional
+  void 登録時のリクエストで20文字を超えている項目がある時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                {
+                "name": "aaaaaaaaaaaaaaaaaaaaa",
+                "number": "A1-C001B",
+                "location": "Area1"
+                }                                
+                """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+        "status": "400",
+        "error": "Bad Request",
+        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+        "path": "/equipments"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
   }
 
   // PATCHメソッドで存在する設備IDを指定し正しくリクエストした時に、設備が更新できステータスコード200とメッセージが返されること
@@ -220,6 +315,37 @@ public class EquipmentManagementApiIntegrationTest {
         "error": "Not Found",
         "message": "Not Found",
         "path": "/equipments/4"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  // PATCHメソッドでリクエストのname,number,locationのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
+  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているためnullと20文字を超える場合は割愛）
+  @Test
+  @DataSet(value = "datasets/equipments.yml")
+  @Transactional
+  void 更新リクエストでnullの項目がある時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.patch("/equipments/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                {
+                "name": null,
+                "number": "A1-C001B",
+                "location": "Area1"
+                }                                
+                """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+        "status": "400",
+        "error": "Bad Request",
+        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+        "path": "/equipments/1"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
