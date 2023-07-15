@@ -52,6 +52,6 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          title: "Checkstyle"
+          title: "Checkstyle and Test"
           url: "https://github.com/sarisia/actions-status-discord"
           username: GitHub Actions

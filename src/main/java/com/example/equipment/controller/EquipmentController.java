@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class EquipmentController {
     this.equipmentService = equipmentService;
   }
 
-  @GetMapping("/equipment")
+  @GetMapping("/equipments")
   public List<Equipment> getEquipments(
       @RequestParam(value = "name", required = false) String name,
       @RequestParam(value = "number", required = false) String number,
@@ -40,12 +41,12 @@ public class EquipmentController {
     return equipmentService.findEquipment(name, number, location);
   }
 
-  @GetMapping("/equipment/{equipmentId}")
+  @GetMapping("/equipments/{equipmentId}")
   public Equipment getEquipmentById(@PathVariable("equipmentId") int equipmentId) {
     return equipmentService.findEquipmentById(equipmentId);
   }
 
-  @PostMapping("/equipment")
+  @PostMapping("/equipments")
   public ResponseEntity<Map<String, String>> createEquipment(
       @RequestBody @Validated EquipmentForm form, UriComponentsBuilder uriBuilder) {
     Equipment equipment = equipmentService.createEquipment(form);
@@ -53,7 +54,7 @@ public class EquipmentController {
     return ResponseEntity.created(url).body(Map.of("message", "設備が正常に登録されました"));
   }
 
-  @PatchMapping("/equipment/{equipmentId}")
+  @PatchMapping("/equipments/{equipmentId}")
   public ResponseEntity<Map<String, String>> updateEquipment(
       @PathVariable("equipmentId") int equipmentId,
       @RequestBody @Validated EquipmentForm form) {
@@ -62,7 +63,7 @@ public class EquipmentController {
     return ResponseEntity.ok(Map.of("message", "設備が正常に更新されました"));
   }
 
-  @DeleteMapping("/equipment/{equipmentId}")
+  @DeleteMapping("/equipments/{equipmentId}")
   public ResponseEntity<Map<String, String>> deleteEquipment(
       @PathVariable("equipmentId") int equipmentId) {
     equipmentService.deleteEquipment(equipmentId);
@@ -79,5 +80,17 @@ public class EquipmentController {
         "message", e.getMessage(),
         "path", request.getRequestURI());
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(value = MethodArgumentNotValidException.class)
+  public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException e, HttpServletRequest request) {
+    Map<String, String> body = Map.of(
+        "timestamp", ZonedDateTime.now().toString(),
+        "status", String.valueOf(HttpStatus.BAD_REQUEST.value()),
+        "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
+        "message", "name,number,locationは必須項目です。20文字以内で入力してください",
+        "path", request.getRequestURI());
+    return new ResponseEntity(body, HttpStatus.BAD_REQUEST);
   }
 }

@@ -1,0 +1,13 @@
+equipments:
+  - equipment_id: 1
+    name: "真空ポンプA"
+    number: "A1-C001A"
+    location: "Area1"
+  - equipment_id: 2
+    name: "吸込ポンプB"
+    number: "A2-C002B"
+    location: "Area2"
+  - equipment_id: 3
+    name: "吐出ポンプC"
+    number: "A3-C003C"
+    location: "Area3"
