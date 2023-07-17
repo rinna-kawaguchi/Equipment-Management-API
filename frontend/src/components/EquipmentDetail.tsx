@@ -7,16 +7,19 @@ import axios from "axios";
 
 export const EquipmentDetail: FC = () => {
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
+  const [deleteMessage, setDeleteMessage] = useState("")
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
   const onClickBackFindPage = () => navigate("/find")
-  const onClickUpdatePage = () => navigate("/update")
+  const onClickUpdatePage = () => navigate(`/update/${id}`, {state: { id: id }})
 
   const onClickDelete = () => {
-    alert("削除しますか？");
+    alert("この設備を削除しますか？");
+    axios.delete<string>(`http://localhost:8080/equipments/${id}`).then((res) => setDeleteMessage(res.data))
+    alert(deleteMessage);
   }
 
   useEffect(() => {
