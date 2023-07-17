@@ -1,6 +1,8 @@
 import { Box, Button, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import axios from "axios";
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { BaseButton } from "./atoms/BaseButton";
 
 type Equipment = {
   equipmentId: number;
@@ -19,6 +21,10 @@ export const FindEquipment = () => {
   const onChangeNumber = (e: ChangeEvent<HTMLInputElement>) => setNumber(e.target.value)
   const onChangeLocation = (e: ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)
 
+  const navigate = useNavigate();
+
+  const onClickCreatePage = () => navigate("/create")
+
   const onClickFindEquipment = () => {
     axios.get<Array<Equipment>>(`http://localhost:8080/equipments?name=${name}&number=${number}&location=${location}`)
       .then((res) => setEquipments(res.data))
@@ -27,6 +33,9 @@ export const FindEquipment = () => {
   return (
     <Box padding={"20px"}>
       <Heading>設備検索</Heading>
+      <br />
+      <BaseButton onClick={onClickCreatePage}>新規設備登録</BaseButton>
+      <br />
       <br />
       <Heading size='lg'>検索条件入力</Heading>
       <br />
@@ -46,7 +55,7 @@ export const FindEquipment = () => {
         </Box>
       </HStack>
       <br />
-      <Button colorScheme="teal" variant={"outline"} onClick={onClickFindEquipment}>設備検索</Button>
+      <BaseButton onClick={onClickFindEquipment}>設備検索</BaseButton>
       <br />
       <br />
       <br />
@@ -71,6 +80,7 @@ export const FindEquipment = () => {
           ))}
         </Table>
       </TableContainer>
+      <br />
     </Box>
   )
 }
