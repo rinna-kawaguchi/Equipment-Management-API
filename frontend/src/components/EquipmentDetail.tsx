@@ -1,8 +1,15 @@
-import { Heading } from "@chakra-ui/react"
+import { Divider, HStack, Heading, Input } from "@chakra-ui/react"
 import { BaseButton } from "./atoms/BaseButton"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { FC, useEffect, useState } from "react";
+import { Equipment } from "./FindEquipment";
+import axios from "axios";
 
-export const EquipmentDetail = () => {
+export const EquipmentDetail: FC = () => {
+  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
+
+  const { id } = useParams();
+
   const navigate = useNavigate();
 
   const onClickBackFindPage = () => navigate("/find")
@@ -12,10 +19,24 @@ export const EquipmentDetail = () => {
     alert("削除しますか？");
   }
 
+  useEffect(() => {
+    axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setSelectedEquipment(res.data))
+  }, [])
+
   return (
     <div>
       <Heading>設備情報詳細</Heading>
       <br />
+      <Heading size={"md"}>設備情報詳細</Heading>
+      <Divider my={3} />
+      <HStack>
+        <p>設備名称</p>
+        <Input value={selectedEquipment?.name} width={"400px"} backgroundColor={"gray.100"} placeholder="設備名称" />
+        <p>設備番号</p>
+        <Input value={selectedEquipment?.number} width={"400px"} backgroundColor={"gray.100"} placeholder="設備番号" />
+        <p>設置場所</p>
+        <Input value={selectedEquipment?.location} width={"400px"} backgroundColor={"gray.100"} placeholder="設置場所" />
+      </HStack>
       <br />
       <br />
       <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>

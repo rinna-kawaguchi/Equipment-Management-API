@@ -1,10 +1,10 @@
-import { Box, Button, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BaseButton } from "./atoms/BaseButton";
 
-type Equipment = {
+export type Equipment = {
   equipmentId: number;
   name: string;
   number: string;
@@ -15,7 +15,7 @@ export const FindEquipment = () => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [location, setLocation] = useState("");
-  const [equipments, setEquipments] = useState<Equipment[] | null>(null);
+  const [equipments, setEquipments] = useState<Array<Equipment>>([]);
 
   const onChangeName = (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)
   const onChangeNumber = (e: ChangeEvent<HTMLInputElement>) => setNumber(e.target.value)
@@ -71,16 +71,17 @@ export const FindEquipment = () => {
           </Thead>
           {equipments?.map((equipment) => (
             <Tbody>
-              <Tr>
-                <Td>{equipment.name}</Td>
-                <Td>{equipment.number}</Td>
+              <Tr key={equipment.equipmentId}>
+                <Td color={"blue"}>
+                  <Link to={`/detail/${equipment.equipmentId}`} state={{ id: equipment.equipmentId }}>{equipment.name}</Link>
+                </Td>
+                <Td >{equipment.number}</Td>
                 <Td>{equipment.location}</Td>
               </Tr>
             </Tbody>
           ))}
         </Table>
       </TableContainer>
-      <br />
     </Box>
   )
 }
