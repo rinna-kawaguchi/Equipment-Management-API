@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 @AutoConfigureMockMvc
 @DBRider
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class EquipmentManagementApiIntegrationTest {
+public class EquipmentIntegrationTest {
 
   @Autowired
   MockMvc mockMvc;
