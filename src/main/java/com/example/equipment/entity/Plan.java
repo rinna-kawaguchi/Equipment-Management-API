@@ -17,6 +17,13 @@ public class Plan {
   private String period;
   private String deadline;
 
+  public Plan(int equipmentId, String checkType, String period, String deadline) {
+    this.equipmentId = equipmentId;
+    this.checkType = checkType;
+    this.period = period;
+    this.deadline = deadline;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
