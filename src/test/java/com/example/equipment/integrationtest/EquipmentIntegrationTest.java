@@ -172,7 +172,7 @@ public class EquipmentIntegrationTest {
 
   // POSTメソッドでリクエストのname,number,locationのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
   // （NotBlankのバリデーション確認、name,number,locationはすべて同じアノテーションを付与しており同じString型のため、
-  // 代表してnameで確認）
+  // 代表してnameで確認。以下同様）
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -234,7 +234,7 @@ public class EquipmentIntegrationTest {
   }
 
   // POSTメソッドでリクエストのname,number,locationのいずれかが20文字を超えている時に、
-  // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認）
+  // ステータスコード400とエラーメッセージが返されること（@Size(max = 10)のバリデーション確認）
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
