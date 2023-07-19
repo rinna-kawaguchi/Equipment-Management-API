@@ -2,6 +2,7 @@ package com.example.equipment.mapper;
 
 import com.example.equipment.entity.Plan;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -35,5 +36,15 @@ class PlanMapperTest {
   @Transactional
   void 点検計画が無い時に空のListが返されること() {
     assertThat(planMapper.findPlanByEquipmentId(1)).isEmpty();
+  }
+
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @ExpectedDataSet(value = "datasets/plan/insert_plan.yml", ignoreCols = "check_plan_id")
+  @Transactional
+  void 点検計画の登録ができ既存のIDより大きい数字の点検計画IDが採番されること() {
+    Plan plan =new Plan(1, "取替", "10年", "2030-09-30");
+    planMapper.insertPlan(plan);
+    assertThat(plan.getCheckPlanId()).isGreaterThan(4);
   }
 }

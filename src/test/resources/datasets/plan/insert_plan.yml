@@ -1,0 +1,26 @@
+plans:
+  - check_plan_id: 1
+    equipment_id: 1
+    check_type: "簡易点検"
+    period: "1年"
+    deadline: "2023-09-30"
+  - check_plan_id: 2
+    equipment_id: 1
+    check_type: "本格点検"
+    period: "5年"
+    deadline: "2026-09-30"
+  - check_plan_id: 3
+    equipment_id: 2
+    check_type: "簡易点検"
+    period: "1年"
+    deadline: "2023-10-30"
+  - check_plan_id: 4
+    equipment_id: 2
+    check_type: "本格点検"
+    period: "4年"
+    deadline: "2025-11-30"
+  - check_plan_id: 5
+    equipment_id: 1
+    check_type: "取替"
+    period: "10年"
+    deadline: "2030-09-30"
