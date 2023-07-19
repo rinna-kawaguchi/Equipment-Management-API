@@ -59,6 +59,28 @@ public class PlanIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
+  // GETメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
+  @Transactional
+  void 指定したIDの設備が存在しない時に例外がスローされること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/4/plan"))
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "404",
+          "error": "Not Found",
+          "message": "Not Found",
+          "path": "/equipments/4/plan"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
   // GETメソッドで点検計画が存在しない時に、空のListが返されステータスコード200が返されること
   @Test
   @DataSet(value = "datasets/plan/empty.yml")
@@ -99,6 +121,36 @@ public class PlanIntegrationTest {
           "message": "点検計画が正常に登録されました"
         }
         """, response, JSONCompareMode.STRICT);
+  }
+
+  // POSTメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
+  @Transactional
+  void 登録の際に指定した設備IDが存在しない時に例外がスローされること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/4/plan")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                    {
+                      "checkType": "取替",
+                      "period": "10年",
+                      "deadline": "2030-09-30"
+                    }                                
+                    """))
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "404",
+          "error": "Not Found",
+          "message": "Not Found",
+          "path": "/equipments/4/plan"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
   }
 
   // POSTメソッドでリクエストのcheckType,periodのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること

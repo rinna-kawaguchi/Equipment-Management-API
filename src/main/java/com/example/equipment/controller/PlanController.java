@@ -1,6 +1,7 @@
 package com.example.equipment.controller;
 
 import com.example.equipment.entity.Plan;
+import com.example.equipment.exception.ResourceNotFoundException;
 import com.example.equipment.form.PlanForm;
 import com.example.equipment.service.PlanService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,6 +47,19 @@ public class PlanController {
         .path("/equipments/" + equipmentId + "/plan/" + plan.getCheckPlanId()).build().toUri();
     return ResponseEntity.created(url).body(Map.of("message", "点検計画が正常に登録されました"));
   }
+
+  @ExceptionHandler(value = ResourceNotFoundException.class)
+  public ResponseEntity<Map<String, String>> handleNoResourceFound(
+      ResourceNotFoundException e, HttpServletRequest request) {
+    Map<String, String> body = Map.of(
+        "timestamp", ZonedDateTime.now().toString(),
+        "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
+        "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
+        "message", e.getMessage(),
+        "path", request.getRequestURI());
+    return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
+
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
   public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException e, HttpServletRequest request) {
