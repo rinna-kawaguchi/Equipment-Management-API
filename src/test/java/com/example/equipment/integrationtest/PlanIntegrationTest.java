@@ -246,4 +246,92 @@ public class PlanIntegrationTest {
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
+
+  // PATCHメソッドで存在する点検計画IDを指定し正しくリクエスト（checkType,periodをいずれも10文字以内で入力）した時に、
+  // 点検計画が更新できステータスコード200とメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @ExpectedDataSet(value = "datasets/plan/update_plan.yml")
+  @Transactional
+  void 指定したIDの点検計画が更新できること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.patch("/plan/2")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                {
+                  "checkType": "取替",
+                  "period": "10年",
+                  "deadline": "2030-09-30"
+                }                                
+                """))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "message": "点検計画が正常に更新されました"
+        }
+        """, response, JSONCompareMode.STRICT);
+  }
+
+  // PATCHメソッドで存在しない点検計画IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @Transactional
+  void 更新の際に指定した設備IDが存在しない時に例外がスローされること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.patch("/plan/5")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                {
+                  "checkType": "取替",
+                  "period": "10年",
+                  "deadline": "2030-09-30"
+                }                                
+                """))
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "404",
+          "error": "Not Found",
+          "message": "Not Found",
+          "path": "/plan/5"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  // PATCHメソッドでリクエストのcheckType,periodのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
+  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているため空文字と20文字を超える場合は割愛）
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @Transactional
+  void 更新リクエストでnullの項目がある時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.patch("/plan/2")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                    {
+                      "checkType": null,
+                      "period": "10年",
+                      "deadline": "2030-09-30"
+                    }                                
+                    """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "checkType,periodは必須項目です。10文字以内で入力してください",
+          "path": "/plan/2"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
 }

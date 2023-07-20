@@ -57,4 +57,16 @@ class PlanServiceImplTest {
     verify(equipmentMapper, times(1)).findEquipmentById(99);
     verify(planMapper, never()).insertPlan(plan);
   }
+
+  @Test
+  public void 点検計画更新の際に存在しない点検計画IDを指定した時に例外がスローされること() {
+    doReturn(Optional.empty()).when(planMapper).findPlanByCheckPlanId(99);
+
+    assertThatThrownBy(() -> planserviceImpl.updatePlan(99, "簡易点検", "1年", "2023-09-30"))
+        .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
+          assertThat(e.getMessage()).isEqualTo("Not Found");
+        });
+    verify(planMapper, times(1)).findPlanByCheckPlanId(99);
+    verify(planMapper, never()).updatePlan(99, "簡易点検", "1年", "2023-09-30");
+  }
 }
