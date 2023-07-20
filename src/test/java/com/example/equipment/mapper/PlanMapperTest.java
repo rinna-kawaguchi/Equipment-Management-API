@@ -62,4 +62,12 @@ class PlanMapperTest {
   void 指定したIDの点検計画が更新できること() {
     planMapper.updatePlan(2, "取替", "10年", "2030-09-30");
   }
+
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @ExpectedDataSet(value = "datasets/plan/delete_plan.yml")
+  @Transactional
+  void 指定したIDの点検計画が削除できること() {
+    planMapper.deletePlan(4);
+  }
 }

@@ -278,7 +278,7 @@ public class PlanIntegrationTest {
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @Transactional
-  void 更新の際に指定した設備IDが存在しない時に例外がスローされること() throws Exception {
+  void 更新の際に指定した点検計画IDが存在しない時に例外がスローされること() throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.patch("/plan/5")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -330,6 +330,46 @@ public class PlanIntegrationTest {
           "error": "Bad Request",
           "message": "checkType,periodは必須項目です。10文字以内で入力してください",
           "path": "/plan/2"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  // DELETEメソッドで存在する点検計画IDを指定した時に、点検計画が削除できステータスコード200とメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @ExpectedDataSet(value = "datasets/plan/delete_plan.yml")
+  @Transactional
+  void 指定したIDの点検計画が削除できること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.delete("/plan/4"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "message": "点検計画が正常に削除されました"
+        }
+        """, response, JSONCompareMode.STRICT);
+  }
+
+  // DELETEメソッドで存在しない点検計画IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @Transactional
+  void 削除の際に指定した点検計画IDが存在しない時に例外がスローされること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.delete("/plan/5"))
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "404",
+          "error": "Not Found",
+          "message": "Not Found",
+          "path": "/plan/5"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
