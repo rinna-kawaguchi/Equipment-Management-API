@@ -1,6 +1,7 @@
 package com.example.equipment.mapper;
 
 import com.example.equipment.entity.Plan;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +27,7 @@ public interface PlanMapper {
   @Update("UPDATE plans SET check_type = #{checkType}, period = #{period}, deadline = #{deadline}"
       + " WHERE check_plan_id = #{checkPlanId}")
   void updatePlan(int checkPlanId, String checkType, String period, String deadline);
+
+  @Delete("DELETE FROM plans WHERE check_plan_id = #{checkPlanId}")
+  void deletePlan(int checkPlanId);
 }

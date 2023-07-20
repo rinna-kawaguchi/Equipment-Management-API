@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,6 +55,13 @@ public class PlanController {
       @PathVariable("checkPlanId") int checkPlanId, @RequestBody @Validated PlanForm form) {
     planService.updatePlan(checkPlanId, form.getCheckType(), form.getPeriod(), form.getDeadline());
     return ResponseEntity.ok(Map.of("message", "点検計画が正常に更新されました"));
+  }
+
+  @DeleteMapping("/plan/{checkPlanId}")
+  public ResponseEntity<Map<String, String>> deletePlan(
+      @PathVariable("checkPlanId") int checkPlanId) {
+    planService.deletePlan(checkPlanId);
+    return ResponseEntity.ok(Map.of("message", "点検計画が正常に削除されました"));
   }
 
   @ExceptionHandler(value = ResourceNotFoundException.class)

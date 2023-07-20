@@ -11,4 +11,6 @@ public interface PlanService {
   Plan createPlan(int equipmentId, PlanForm form);
 
   void updatePlan(int checkPlanId, String checkType, String period, String deadline);
+
+  void deletePlan(int checkPlanId);
 }

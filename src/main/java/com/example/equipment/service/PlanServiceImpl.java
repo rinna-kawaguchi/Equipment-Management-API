@@ -45,4 +45,11 @@ public class PlanServiceImpl implements PlanService {
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
     planMapper.updatePlan(checkPlanId, checkType, period, deadline);
   }
+
+  @Override
+  public void deletePlan(int checkPlanId) {
+    planMapper.findPlanByCheckPlanId(checkPlanId)
+        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    planMapper.deletePlan(checkPlanId);
+  }
 }
