@@ -38,4 +38,11 @@ public class PlanServiceImpl implements PlanService {
     planMapper.insertPlan(plan);
     return plan;
   }
+
+  @Override
+  public void updatePlan(int checkPlanId, String checkType, String period, String deadline) {
+    planMapper.findPlanByCheckPlanId(checkPlanId)
+        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    planMapper.updatePlan(checkPlanId, checkType, period, deadline);
+  }
 }

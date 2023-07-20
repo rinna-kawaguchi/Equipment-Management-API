@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +47,13 @@ public class PlanController {
     URI url = uriBuilder
         .path("/equipments/" + equipmentId + "/plan/" + plan.getCheckPlanId()).build().toUri();
     return ResponseEntity.created(url).body(Map.of("message", "点検計画が正常に登録されました"));
+  }
+
+  @PatchMapping("/plan/{checkPlanId}")
+  public ResponseEntity<Map<String, String>> updatePlan(
+      @PathVariable("checkPlanId") int checkPlanId, @RequestBody @Validated PlanForm form) {
+    planService.updatePlan(checkPlanId, form.getCheckType(), form.getPeriod(), form.getDeadline());
+    return ResponseEntity.ok(Map.of("message", "点検計画が正常に更新されました"));
   }
 
   @ExceptionHandler(value = ResourceNotFoundException.class)

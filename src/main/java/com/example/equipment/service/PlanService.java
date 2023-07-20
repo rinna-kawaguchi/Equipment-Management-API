@@ -9,4 +9,6 @@ public interface PlanService {
   List<Plan> findPlanByEquipmentId(int equipmentId);
 
   Plan createPlan(int equipmentId, PlanForm form);
+
+  void updatePlan(int checkPlanId, String checkType, String period, String deadline);
 }
