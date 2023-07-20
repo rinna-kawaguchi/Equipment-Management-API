@@ -321,7 +321,7 @@ public class EquipmentIntegrationTest {
   }
 
   // PATCHメソッドでリクエストのname,number,locationのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
-  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているためnullと20文字を超える場合は割愛）
+  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているため空文字と20文字を超える場合は割愛）
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
