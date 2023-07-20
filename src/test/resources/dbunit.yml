@@ -1,9 +1,9 @@
 cacheConnection: false
 cacheTableNames: false
 properties:
-  schema: equipment
+  schema: equipment_management
 caseInsensitiveStrategy: LOWERCASE
 connectionConfig:
-  url: "jdbc:mysql://localhost:3306/equipment"
+  url: "jdbc:mysql://localhost:3306/equipment_management"
   user: "user"
   password: "password"
