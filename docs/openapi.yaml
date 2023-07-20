@@ -14,7 +14,7 @@ tags:
   - name: history
     description: 点検履歴に関する操作
 paths:
-  /equipment:
+  /equipments:
     get:
       tags:
         - equipment
@@ -116,7 +116,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-  /equipment/{id}:
+  /equipments/{equipmentId}:
     get:
       tags:
         - equipment
@@ -254,7 +254,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-  /equipment/{id}/plan:
+  /equipments/{equipmentId}/plans:
     get:
       tags:
         - plan
@@ -336,7 +336,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-  /plan/{id}:
+  /plans/{checkPlanId}:
     patch:
       tags:
         - plan
@@ -410,7 +410,7 @@ paths:
                   message:
                     type: string
                     example: 点検計画が正常に削除されました
-  /equipment/{id}/history:
+  /equipments/{equipmentId}/histories:
     get:
       tags:
         - history
@@ -499,7 +499,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-  /history/{id}:
+  /histories/{checkHistoryId}:
     patch:
       tags:
         - history
