@@ -4,7 +4,7 @@ import { Plan } from "../components/EquipmentDetail";
 type Props = {
   checkPlanId: number;
   plans: Array<Plan>;
-  onOpen: () => void;
+  openUpdatePlanModal: () => void;
 }
 
 // 選択した点検計画を特定し、モーダルを表示するカスタムフック
@@ -12,10 +12,10 @@ export const useSelectPlan = () => {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
   const onSelectPlan = useCallback((props: Props) => {
-    const { checkPlanId, plans, onOpen } = props;
+    const { checkPlanId, plans, openUpdatePlanModal } = props;
     const targetPlan = plans.find((plan) => plan.checkPlanId === checkPlanId);
     setSelectedPlan(targetPlan ?? null);
-    onOpen();
+    openUpdatePlanModal();
   }, [])
 
   return { onSelectPlan, selectedPlan };

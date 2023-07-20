@@ -16,18 +16,29 @@ export const UpdateEquipment = () => {
   const [updateLocation, setUpdateLocation] = useState("");
   const [updateEquipment, setUpdateEquipment] = useState<Equipment | null>(null);
   const [updateMessage, setUpdateMessage] = useState("")
+
+  const [createCheckType, setCreateCheckType] = useState("");
+  const [createPeriod, setCreatePeriod] = useState("");
+  const [createDeadline, setCreateDeadline] = useState("");
+
   const [updatePlans, setUpdatePlans] = useState<Array<Plan>>([]);
   const [updateCheckType, setUpdateCheckType] = useState("");
   const [updatePeriod, setUpdatePeriod] = useState("");
   const [updateDeadline, setUpdateDeadline] = useState("");
+
+  const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
+  const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
+
+  const openCreatePlanModal = () => setCreatePlanModalOpen(true);
+  const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
+  const openUpdatePlanModal = () => setUpdatePlanModalOpen(true);
+  const closeUpdatePlanModal = () => setUpdatePlanModalOpen(false);
 
   const { id } = useParams();
 
   useEffect(() => {
     axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setUpdateEquipment(res.data))
   }, [id])
-
-  const onClickCreatePlan = () => alert("点検計画追加");
 
   useEffect(() => {
     setUpdateName(updateEquipment?.name ?? "");
@@ -39,13 +50,24 @@ export const UpdateEquipment = () => {
   const onChangeUpdateNumber = (e: ChangeEvent<HTMLInputElement>) => setUpdateNumber(e.target.value)
   const onChangeUpdateLocation = (e: ChangeEvent<HTMLInputElement>) => setUpdateLocation(e.target.value)
 
+  const onChangeCreateCheckType = (e: ChangeEvent<HTMLInputElement>) => setCreateCheckType(e.target.value)
+  const onChangeCreatePeriod = (e: ChangeEvent<HTMLInputElement>) => setCreatePeriod(e.target.value)
+  const onChangeCreateDeadline = (e: ChangeEvent<HTMLInputElement>) => setCreateDeadline(e.target.value)
+
+  const onClickCreatePlan = () => {
+    alert("点検計画を追加しますか？")
+    axios.post(`http://localhost:8080/equipments/${id}/plans`,
+    { "checkType": createCheckType, "period": createPeriod, "deadline": createDeadline });
+    closeCreatePlanModal();
+  }
+
   useEffect(() => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
-  }, [id])
+  }, [id, onClickCreatePlan])
 
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
-    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, onOpen })
-  }, [updatePlans, onSelectPlan, onOpen]);
+    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal })
+  }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
   useEffect(() => {
     setUpdateCheckType(selectedPlan?.checkType ?? "");
@@ -63,17 +85,19 @@ export const UpdateEquipment = () => {
     axios.patch(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`,
       { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline });
     alert("点検計画を修正します");
-    onClose();
+    closeUpdatePlanModal();
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
   }
 
   const onClickDeletePlan = (checkPlanId: number) => {
     alert("点検計画を削除しますか？")
     axios.delete(`http://localhost:8080/plans/${checkPlanId}`)
+    alert("点検計画を削除しました")
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
   };
 
   const onClickBackDetailPage = () => navigate(`/detail/${id}`)
+
   const onClickUpdate = () => {
     alert("更新しますか？")
     axios.patch(`http://localhost:8080/equipments/${id}`,
@@ -101,7 +125,33 @@ export const UpdateEquipment = () => {
       <br />
       <Heading size={"md"}>点検計画</Heading>
       <Divider my={3} />
-      <BaseButton onClick={onClickCreatePlan}>点検計画追加</BaseButton>
+      <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
+      <Modal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal} size={"xl"}>
+        <ModalOverlay />
+        <ModalContent pb={6}>
+          <ModalHeader>点検計画追加</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody mx={4}>
+            <HStack spacing={4}>
+              <FormControl>
+                <FormLabel>点検種別</FormLabel>
+                <Input placeholder="点検種別" onChange={onChangeCreateCheckType} />
+              </FormControl>
+              <FormControl>
+                <FormLabel>点検周期</FormLabel>
+                <Input placeholder="点検周期" onChange={onChangeCreatePeriod} />
+              </FormControl>
+              <FormControl>
+                <FormLabel>点検期限</FormLabel>
+                <Input placeholder="点検期限" onChange={onChangeCreateDeadline} />
+              </FormControl>
+            </HStack>
+          </ModalBody>
+          <ModalFooter>
+            <BaseButton onClick={onClickCreatePlan}>点検計画追加</BaseButton>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <br />
       <TableContainer>
         <Table variant='simple'>
@@ -128,7 +178,7 @@ export const UpdateEquipment = () => {
           </Tbody>
         </Table>
       </TableContainer>
-      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+      <Modal isOpen={updatePlanModalOpen} onClose={closeUpdatePlanModal} size={"xl"}>
         <ModalOverlay />
         <ModalContent pb={6}>
           <ModalHeader>点検計画修正</ModalHeader>
