@@ -34,30 +34,30 @@ public class PlanController {
   }
 
   // 指定した設備の点検計画を取得する
-  @GetMapping("/equipments/{equipmentId}/plan")
+  @GetMapping("/equipments/{equipmentId}/plans")
   public List<Plan> getPlanByEquipmentId(@PathVariable("equipmentId") int equipmentId) {
     return planService.findPlanByEquipmentId(equipmentId);
   }
 
   // 指定した設備の点検計画を登録する
-  @PostMapping("/equipments/{equipmentId}/plan")
+  @PostMapping("/equipments/{equipmentId}/plans")
   public ResponseEntity<Map<String, String>> createPlan(
       @PathVariable("equipmentId") int equipmentId,
       @RequestBody @Validated PlanForm form, UriComponentsBuilder uriBuilder) {
     Plan plan = planService.createPlan(equipmentId, form);
     URI url = uriBuilder
-        .path("/equipments/" + equipmentId + "/plan/" + plan.getCheckPlanId()).build().toUri();
+        .path("/equipments/" + equipmentId + "/plans/" + plan.getCheckPlanId()).build().toUri();
     return ResponseEntity.created(url).body(Map.of("message", "点検計画が正常に登録されました"));
   }
 
-  @PatchMapping("/plan/{checkPlanId}")
+  @PatchMapping("/plans/{checkPlanId}")
   public ResponseEntity<Map<String, String>> updatePlan(
       @PathVariable("checkPlanId") int checkPlanId, @RequestBody @Validated PlanForm form) {
     planService.updatePlan(checkPlanId, form.getCheckType(), form.getPeriod(), form.getDeadline());
     return ResponseEntity.ok(Map.of("message", "点検計画が正常に更新されました"));
   }
 
-  @DeleteMapping("/plan/{checkPlanId}")
+  @DeleteMapping("/plans/{checkPlanId}")
   public ResponseEntity<Map<String, String>> deletePlan(
       @PathVariable("checkPlanId") int checkPlanId) {
     planService.deletePlan(checkPlanId);

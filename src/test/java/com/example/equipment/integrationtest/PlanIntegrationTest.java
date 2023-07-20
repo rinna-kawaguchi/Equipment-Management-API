@@ -35,7 +35,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 指定した設備IDの点検計画が取得できること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/1/plan"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/1/plans"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -65,7 +65,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 指定したIDの設備が存在しない時に例外がスローされること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/4/plan"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/4/plans"))
             .andExpect(MockMvcResultMatchers.status().isNotFound())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -75,7 +75,7 @@ public class PlanIntegrationTest {
           "status": "404",
           "error": "Not Found",
           "message": "Not Found",
-          "path": "/equipments/4/plan"
+          "path": "/equipments/4/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -87,7 +87,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 点検計画が存在しない時に空のListが取得できること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/1/plan"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/1/plans"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -104,7 +104,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 指定した設備の点検計画が登録できること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plan")
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
@@ -129,7 +129,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 登録の際に指定した設備IDが存在しない時に例外がスローされること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/4/plan")
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/4/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                     {
@@ -147,7 +147,7 @@ public class PlanIntegrationTest {
           "status": "404",
           "error": "Not Found",
           "message": "Not Found",
-          "path": "/equipments/4/plan"
+          "path": "/equipments/4/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -161,7 +161,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 登録時のリクエストでnullの項目がある時にエラーメッセージが返されること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plan")
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
@@ -179,7 +179,7 @@ public class PlanIntegrationTest {
           "status": "400",
           "error": "Bad Request",
           "message": "checkType,periodは必須項目です。10文字以内で入力してください",
-          "path": "/equipments/1/plan"
+          "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -192,7 +192,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 登録時のリクエストで空文字の項目がある時にエラーメッセージが返されること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plan")
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
@@ -210,7 +210,7 @@ public class PlanIntegrationTest {
           "status": "400",
           "error": "Bad Request",
           "message": "checkType,periodは必須項目です。10文字以内で入力してください",
-          "path": "/equipments/1/plan"
+          "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -223,7 +223,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 登録時のリクエストで10文字を超える項目がある時にエラーメッセージが返されること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plan")
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
@@ -241,7 +241,7 @@ public class PlanIntegrationTest {
           "status": "400",
           "error": "Bad Request",
           "message": "checkType,periodは必須項目です。10文字以内で入力してください",
-          "path": "/equipments/1/plan"
+          "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -255,7 +255,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 指定したIDの点検計画が更新できること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.patch("/plan/2")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/plans/2")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
@@ -280,7 +280,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 更新の際に指定した点検計画IDが存在しない時に例外がスローされること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.patch("/plan/5")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/plans/5")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
@@ -298,7 +298,7 @@ public class PlanIntegrationTest {
           "status": "404",
           "error": "Not Found",
           "message": "Not Found",
-          "path": "/plan/5"
+          "path": "/plans/5"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -311,7 +311,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 更新リクエストでnullの項目がある時にエラーメッセージが返されること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.patch("/plan/2")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/plans/2")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                     {
@@ -329,7 +329,7 @@ public class PlanIntegrationTest {
           "status": "400",
           "error": "Bad Request",
           "message": "checkType,periodは必須項目です。10文字以内で入力してください",
-          "path": "/plan/2"
+          "path": "/plans/2"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -342,7 +342,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 指定したIDの点検計画が削除できること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.delete("/plan/4"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/plans/4"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -359,7 +359,7 @@ public class PlanIntegrationTest {
   @Transactional
   void 削除の際に指定した点検計画IDが存在しない時に例外がスローされること() throws Exception {
     String response =
-        mockMvc.perform(MockMvcRequestBuilders.delete("/plan/5"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/plans/5"))
             .andExpect(MockMvcResultMatchers.status().isNotFound())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -369,7 +369,7 @@ public class PlanIntegrationTest {
           "status": "404",
           "error": "Not Found",
           "message": "Not Found",
-          "path": "/plan/5"
+          "path": "/plans/5"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
