@@ -5,7 +5,7 @@ import { FC, useEffect, useState } from "react";
 import { Equipment } from "./FindEquipment";
 import axios from "axios";
 
-type Plan = {
+export type Plan = {
   checkPlanId: number;
   equipmentId: number;
   checkType: string;
@@ -23,7 +23,7 @@ export const EquipmentDetail: FC = () => {
   const navigate = useNavigate();
 
   const onClickBackFindPage = () => navigate("/find")
-  const onClickUpdatePage = () => navigate(`/update/${id}`, {state: { id: id }})
+  const onClickUpdatePage = () => navigate(`/update/${id}`, { state: { id: id } })
 
   const onClickDelete = () => {
     alert("この設備を削除しますか？");
@@ -33,11 +33,11 @@ export const EquipmentDetail: FC = () => {
 
   useEffect(() => {
     axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setSelectedEquipment(res.data))
-  }, [])
+  }, [id])
 
   useEffect(() => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setSelectedEquipmentPlans(res.data))
-  }, [])
+  }, [id])
 
   return (
     <div>
@@ -66,15 +66,15 @@ export const EquipmentDetail: FC = () => {
               <Th>点検期限</Th>
             </Tr>
           </Thead>
-          {selectedEquipmentPlans.map((plan) => (
-            <Tbody>
+          <Tbody>
+            {selectedEquipmentPlans.map((plan) => (
               <Tr key={plan.checkPlanId}>
                 <Td>{plan.checkType}</Td>
                 <Td>{plan.period}</Td>
                 <Td>{plan.deadline}</Td>
               </Tr>
-            </Tbody>
-          ))}
+            ))}
+          </Tbody>
         </Table>
       </TableContainer>
       <br />
