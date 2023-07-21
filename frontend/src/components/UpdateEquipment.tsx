@@ -65,13 +65,25 @@ export const UpdateEquipment = () => {
       <UpdateEquipmentModal updateEquipment={updateEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} />
       <br />
       <br />
-      <HStack>
-        <p>設備名称</p>
-        <Input value={updateEquipment?.name} width={"400px"} backgroundColor={"gray.100"} placeholder="設備名称" />
-        <p>設備番号</p>
-        <Input value={updateEquipment?.number} width={"400px"} backgroundColor={"gray.100"} placeholder="設備番号" />
-        <p>設置場所</p>
-        <Input value={updateEquipment?.location} width={"400px"} backgroundColor={"gray.100"} placeholder="設置場所" />
+      <HStack spacing={10}>
+        <Box>
+          <FormControl>
+            <FormLabel>設備名称</FormLabel>
+            <Input value={updateEquipment?.name} width={"400px"} backgroundColor={"gray.100"} placeholder="設備名称" />
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>設備番号</FormLabel>
+            <Input value={updateEquipment?.number} width={"400px"} backgroundColor={"gray.100"} placeholder="設備番号" />
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>設置場所</FormLabel>
+            <Input value={updateEquipment?.location} width={"400px"} backgroundColor={"gray.100"} placeholder="設置場所" />
+          </FormControl>
+        </Box>
       </HStack>
       <br />
       <br />
