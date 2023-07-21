@@ -1,4 +1,4 @@
-import { Divider, FormControl, FormLabel, HStack, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFocusScope, ModalFooter, ModalHeader, ModalOverlay, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
+import { Divider, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
 import { useNavigate, useParams } from "react-router-dom";
 import { BaseButton } from "./atoms/BaseButton";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
@@ -6,6 +6,8 @@ import { Equipment } from "./FindEquipment";
 import axios from "axios";
 import { Plan } from "./EquipmentDetail";
 import { useSelectPlan } from "../hooks/useSelectPlan";
+import { UpdatePlanModal } from "./organisms/UpdatePlanModal";
+import { CreatePlanModal } from "./organisms/CreatePlanModal";
 
 export const UpdateEquipment = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -17,14 +19,7 @@ export const UpdateEquipment = () => {
   const [updateEquipment, setUpdateEquipment] = useState<Equipment | null>(null);
   const [updateMessage, setUpdateMessage] = useState("")
 
-  const [createCheckType, setCreateCheckType] = useState("");
-  const [createPeriod, setCreatePeriod] = useState("");
-  const [createDeadline, setCreateDeadline] = useState("");
-
   const [updatePlans, setUpdatePlans] = useState<Array<Plan>>([]);
-  const [updateCheckType, setUpdateCheckType] = useState("");
-  const [updatePeriod, setUpdatePeriod] = useState("");
-  const [updateDeadline, setUpdateDeadline] = useState("");
 
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
@@ -50,44 +45,16 @@ export const UpdateEquipment = () => {
   const onChangeUpdateNumber = (e: ChangeEvent<HTMLInputElement>) => setUpdateNumber(e.target.value)
   const onChangeUpdateLocation = (e: ChangeEvent<HTMLInputElement>) => setUpdateLocation(e.target.value)
 
-  const onChangeCreateCheckType = (e: ChangeEvent<HTMLInputElement>) => setCreateCheckType(e.target.value)
-  const onChangeCreatePeriod = (e: ChangeEvent<HTMLInputElement>) => setCreatePeriod(e.target.value)
-  const onChangeCreateDeadline = (e: ChangeEvent<HTMLInputElement>) => setCreateDeadline(e.target.value)
-
-  const onClickCreatePlan = () => {
-    alert("点検計画を追加しますか？")
-    axios.post(`http://localhost:8080/equipments/${id}/plans`,
-    { "checkType": createCheckType, "period": createPeriod, "deadline": createDeadline });
-    closeCreatePlanModal();
-  }
-
   useEffect(() => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
-  }, [id, onClickCreatePlan])
+  }, [id])
 
+  // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
     onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal })
   }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
-  useEffect(() => {
-    setUpdateCheckType(selectedPlan?.checkType ?? "");
-    setUpdatePeriod(selectedPlan?.period ?? "");
-    setUpdateDeadline(selectedPlan?.deadline ?? "");
-  }, [selectedPlan])
-
-  const onChangeUpdateCheckType = (e: ChangeEvent<HTMLInputElement>) => setUpdateCheckType(e.target.value);
-  const onChangeUpdatePeriod = (e: ChangeEvent<HTMLInputElement>) => setUpdatePeriod(e.target.value);
-  const onChangeUpdateDeadline = (e: ChangeEvent<HTMLInputElement>) => setUpdateDeadline(e.target.value);
-
   const navigate = useNavigate();
-
-  const onClickUpdatePlan = () => {
-    axios.patch(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`,
-      { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline });
-    alert("点検計画を修正します");
-    closeUpdatePlanModal();
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
-  }
 
   const onClickDeletePlan = (checkPlanId: number) => {
     alert("点検計画を削除しますか？")
@@ -126,32 +93,7 @@ export const UpdateEquipment = () => {
       <Heading size={"md"}>点検計画</Heading>
       <Divider my={3} />
       <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
-      <Modal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal} size={"xl"}>
-        <ModalOverlay />
-        <ModalContent pb={6}>
-          <ModalHeader>点検計画追加</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody mx={4}>
-            <HStack spacing={4}>
-              <FormControl>
-                <FormLabel>点検種別</FormLabel>
-                <Input placeholder="点検種別" onChange={onChangeCreateCheckType} />
-              </FormControl>
-              <FormControl>
-                <FormLabel>点検周期</FormLabel>
-                <Input placeholder="点検周期" onChange={onChangeCreatePeriod} />
-              </FormControl>
-              <FormControl>
-                <FormLabel>点検期限</FormLabel>
-                <Input placeholder="点検期限" onChange={onChangeCreateDeadline} />
-              </FormControl>
-            </HStack>
-          </ModalBody>
-          <ModalFooter>
-            <BaseButton onClick={onClickCreatePlan}>点検計画追加</BaseButton>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal} />
       <br />
       <TableContainer>
         <Table variant='simple'>
@@ -178,32 +120,7 @@ export const UpdateEquipment = () => {
           </Tbody>
         </Table>
       </TableContainer>
-      <Modal isOpen={updatePlanModalOpen} onClose={closeUpdatePlanModal} size={"xl"}>
-        <ModalOverlay />
-        <ModalContent pb={6}>
-          <ModalHeader>点検計画修正</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody mx={4}>
-            <HStack spacing={4}>
-              <FormControl>
-                <FormLabel>点検種別</FormLabel>
-                <Input value={updateCheckType} onChange={onChangeUpdateCheckType} />
-              </FormControl>
-              <FormControl>
-                <FormLabel>点検周期</FormLabel>
-                <Input value={updatePeriod} onChange={onChangeUpdatePeriod} />
-              </FormControl>
-              <FormControl>
-                <FormLabel>点検期限</FormLabel>
-                <Input value={updateDeadline} onChange={onChangeUpdateDeadline} />
-              </FormControl>
-            </HStack>
-          </ModalBody>
-          <ModalFooter>
-            <BaseButton onClick={onClickUpdatePlan}>点検計画修正</BaseButton>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen} onClose={closeUpdatePlanModal} />
       <br />
       <BaseButton onClick={onClickBackDetailPage}>戻る</BaseButton>
       <BaseButton onClick={onClickUpdate}>更新</BaseButton>
