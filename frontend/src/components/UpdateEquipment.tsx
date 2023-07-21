@@ -1,4 +1,4 @@
-import { Divider, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
+import { Box, Divider, FormControl, FormLabel, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
 import { useNavigate, useParams } from "react-router-dom";
 import { BaseButton } from "./atoms/BaseButton";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
@@ -8,22 +8,22 @@ import { Plan } from "./EquipmentDetail";
 import { useSelectPlan } from "../hooks/useSelectPlan";
 import { UpdatePlanModal } from "./organisms/UpdatePlanModal";
 import { CreatePlanModal } from "./organisms/CreatePlanModal";
+import { UpdateEquipmentModal } from "./organisms/UpdateEquipmentModal";
 
 export const UpdateEquipment = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { onSelectPlan, selectedPlan } = useSelectPlan();
-
-  const [updateName, setUpdateName] = useState("");
-  const [updateNumber, setUpdateNumber] = useState("");
-  const [updateLocation, setUpdateLocation] = useState("");
   const [updateEquipment, setUpdateEquipment] = useState<Equipment | null>(null);
   const [updateMessage, setUpdateMessage] = useState("")
 
   const [updatePlans, setUpdatePlans] = useState<Array<Plan>>([]);
 
+  const [updateEquiipmentModalOpen, setUpdateEquipmentModalOpen] = useState(false);
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
 
+  const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
+  const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
   const openCreatePlanModal = () => setCreatePlanModalOpen(true);
   const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
   const openUpdatePlanModal = () => setUpdatePlanModalOpen(true);
@@ -34,16 +34,6 @@ export const UpdateEquipment = () => {
   useEffect(() => {
     axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setUpdateEquipment(res.data))
   }, [id])
-
-  useEffect(() => {
-    setUpdateName(updateEquipment?.name ?? "");
-    setUpdateNumber(updateEquipment?.number ?? "");
-    setUpdateLocation(updateEquipment?.location ?? "");
-  }, [updateEquipment]);
-
-  const onChangeUpdateName = (e: ChangeEvent<HTMLInputElement>) => setUpdateName(e.target.value)
-  const onChangeUpdateNumber = (e: ChangeEvent<HTMLInputElement>) => setUpdateNumber(e.target.value)
-  const onChangeUpdateLocation = (e: ChangeEvent<HTMLInputElement>) => setUpdateLocation(e.target.value)
 
   useEffect(() => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
@@ -65,28 +55,23 @@ export const UpdateEquipment = () => {
 
   const onClickBackDetailPage = () => navigate(`/detail/${id}`)
 
-  const onClickUpdate = () => {
-    alert("更新しますか？")
-    axios.patch(`http://localhost:8080/equipments/${id}`,
-      { "name": updateName, "number": updateNumber, "location": updateLocation })
-      .then((res) => setUpdateMessage(res.data.message));
-    alert(updateMessage);
-    navigate(`/detail/${id}`)
-  }
-
   return (
     <div>
       <Heading>設備情報修正</Heading>
       <br />
       <Heading size={"md"}>設備情報詳細</Heading>
       <Divider my={3} />
+      <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
+      <UpdateEquipmentModal updateEquipment={updateEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} />
+      <br />
+      <br />
       <HStack>
         <p>設備名称</p>
-        <Input value={updateName} width={"400px"} placeholder="設備名称" onChange={onChangeUpdateName} />
+        <Input value={updateEquipment?.name} width={"400px"} backgroundColor={"gray.100"} placeholder="設備名称" />
         <p>設備番号</p>
-        <Input value={updateNumber} width={"400px"} placeholder="設備番号" onChange={onChangeUpdateNumber} />
+        <Input value={updateEquipment?.number} width={"400px"} backgroundColor={"gray.100"} placeholder="設備番号" />
         <p>設置場所</p>
-        <Input value={updateLocation} width={"400px"} placeholder="設置場所" onChange={onChangeUpdateLocation} />
+        <Input value={updateEquipment?.location} width={"400px"} backgroundColor={"gray.100"} placeholder="設置場所" />
       </HStack>
       <br />
       <br />
@@ -123,7 +108,6 @@ export const UpdateEquipment = () => {
       <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen} onClose={closeUpdatePlanModal} />
       <br />
       <BaseButton onClick={onClickBackDetailPage}>戻る</BaseButton>
-      <BaseButton onClick={onClickUpdate}>更新</BaseButton>
     </div>
   )
 }
