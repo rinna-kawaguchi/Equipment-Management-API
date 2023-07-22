@@ -47,9 +47,16 @@ public class PlanServiceImpl implements PlanService {
   }
 
   @Override
-  public void deletePlan(int checkPlanId) {
+  public void deletePlanByCheckPlanId(int checkPlanId) {
     planMapper.findPlanByCheckPlanId(checkPlanId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-    planMapper.deletePlan(checkPlanId);
+    planMapper.deletePlanByCheckPlanId(checkPlanId);
+  }
+
+  @Override
+  public void deletePlanByEquipmentId(int equipmentId) {
+    equipmentMapper.findEquipmentById(equipmentId)
+        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    planMapper.deletePlanByEquipmentId(equipmentId);
   }
 }

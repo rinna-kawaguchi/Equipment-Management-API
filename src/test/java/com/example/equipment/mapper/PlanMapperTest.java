@@ -68,6 +68,14 @@ class PlanMapperTest {
   @ExpectedDataSet(value = "datasets/plan/delete_plan.yml")
   @Transactional
   void 指定したIDの点検計画が削除できること() {
-    planMapper.deletePlan(4);
+    planMapper.deletePlanByCheckPlanId(4);
+  }
+
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @ExpectedDataSet(value = "datasets/plan/delete_by_equipment_id.yml")
+  @Transactional
+  void 指定した設備IDに紐づく点検計画が削除できること() {
+    planMapper.deletePlanByEquipmentId(2);
   }
 }
