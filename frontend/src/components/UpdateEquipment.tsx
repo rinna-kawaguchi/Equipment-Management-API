@@ -4,11 +4,18 @@ import { BaseButton } from "./atoms/BaseButton";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Equipment } from "./FindEquipment";
 import axios from "axios";
-import { Plan } from "./EquipmentDetail";
 import { useSelectPlan } from "../hooks/useSelectPlan";
 import { UpdatePlanModal } from "./organisms/UpdatePlanModal";
 import { CreatePlanModal } from "./organisms/CreatePlanModal";
 import { UpdateEquipmentModal } from "./organisms/UpdateEquipmentModal";
+
+export type Plan = {
+  checkPlanId: number;
+  equipmentId: number;
+  checkType: string;
+  period: string;
+  deadline: string;
+}
 
 export const UpdateEquipment = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,7 +62,8 @@ export const UpdateEquipment = () => {
 
   const onClickDeleteEquipment = () => {
     alert("この設備と点検計画を削除しますか？");
-    axios.delete<string>(`http://localhost:8080/equipments/${id}`)
+    axios.delete<Map<string, string>>(`http://localhost:8080/equipments/${id}/plans`);
+    axios.delete(`http://localhost:8080/equipments/${id}`);
   }
 
   const onClickBackFindPage = () => navigate("/find")

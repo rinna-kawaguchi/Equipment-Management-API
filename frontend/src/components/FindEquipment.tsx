@@ -73,7 +73,7 @@ export const FindEquipment = () => {
             <Tbody>
               <Tr key={equipment.equipmentId}>
                 <Td color={"blue"}>
-                  <Link to={`/detail/${equipment.equipmentId}`} state={{ id: equipment.equipmentId }}>{equipment.name}</Link>
+                  <Link to={`/update/${equipment.equipmentId}`} state={{ id: equipment.equipmentId }}>{equipment.name}</Link>
                 </Td>
                 <Td >{equipment.number}</Td>
                 <Td>{equipment.location}</Td>

@@ -1,8 +1,8 @@
 import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import axios from "axios";
-import { Plan } from "../EquipmentDetail";
 import { BaseButton } from "../atoms/BaseButton";
+import { Plan } from "../UpdateEquipment";
 
 type Props = {
   selectedPlan: Plan | null;
