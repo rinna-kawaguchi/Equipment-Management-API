@@ -58,9 +58,9 @@ public class PlanController {
   }
 
   @DeleteMapping("/plans/{checkPlanId}")
-  public ResponseEntity<Map<String, String>> deletePlan(
+  public ResponseEntity<Map<String, String>> deletePlanByCheckPlanId(
       @PathVariable("checkPlanId") int checkPlanId) {
-    planService.deletePlan(checkPlanId);
+    planService.deletePlanByCheckPlanId(checkPlanId);
     return ResponseEntity.ok(Map.of("message", "点検計画が正常に削除されました"));
   }
 

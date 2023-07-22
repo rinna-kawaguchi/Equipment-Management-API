@@ -76,12 +76,12 @@ class PlanServiceImplTest {
   public void 点検計画削除の際に存在しない点検計画IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(planMapper).findPlanByCheckPlanId(99);
 
-    assertThatThrownBy(() -> planserviceImpl.deletePlan(99))
+    assertThatThrownBy(() -> planserviceImpl.deletePlanByCheckPlanId(99))
         .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
           assertThat(e.getMessage()).isEqualTo("Not Found");
         });
     verify(planMapper, times(1)).findPlanByCheckPlanId(99);
-    verify(planMapper, never()).deletePlan(99);
+    verify(planMapper, never()).deletePlanByCheckPlanId(99);
   }
 
   @Test

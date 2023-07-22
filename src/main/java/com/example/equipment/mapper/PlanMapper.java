@@ -29,7 +29,7 @@ public interface PlanMapper {
   void updatePlan(int checkPlanId, String checkType, String period, String deadline);
 
   @Delete("DELETE FROM plans WHERE check_plan_id = #{checkPlanId}")
-  void deletePlan(int checkPlanId);
+  void deletePlanByCheckPlanId(int checkPlanId);
 
   @Delete("DELETE FROM plans WHERE equipment_id = #{equipmentId}")
   void deletePlanByEquipmentId(int equipmentId);
