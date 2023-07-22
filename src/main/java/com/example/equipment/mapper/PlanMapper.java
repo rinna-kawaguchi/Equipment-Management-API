@@ -30,4 +30,7 @@ public interface PlanMapper {
 
   @Delete("DELETE FROM plans WHERE check_plan_id = #{checkPlanId}")
   void deletePlan(int checkPlanId);
+
+  @Delete("DELETE FROM plans WHERE equipment_id = #{equipmentId}")
+  void deletePlanByEquipmentId(int equipmentId);
 }

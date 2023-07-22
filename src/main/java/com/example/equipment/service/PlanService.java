@@ -13,4 +13,5 @@ public interface PlanService {
   void updatePlan(int checkPlanId, String checkType, String period, String deadline);
 
   void deletePlan(int checkPlanId);
-}
+
+  void deletePlanByEquipmentId(int equipmentId);}

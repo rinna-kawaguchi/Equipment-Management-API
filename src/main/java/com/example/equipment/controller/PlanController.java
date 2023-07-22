@@ -64,6 +64,13 @@ public class PlanController {
     return ResponseEntity.ok(Map.of("message", "点検計画が正常に削除されました"));
   }
 
+  @DeleteMapping("/equipments/{equipmentId}/plans")
+  public ResponseEntity<Map<String, String>> deletePlanByEquipmentId(
+      @PathVariable("equipmentId") int equipmentId) {
+    planService.deletePlanByEquipmentId(equipmentId);
+    return ResponseEntity.ok(Map.of("message", "点検計画が正常に削除されました"));
+  }
+
   @ExceptionHandler(value = ResourceNotFoundException.class)
   public ResponseEntity<Map<String, String>> handleNoResourceFound(
       ResourceNotFoundException e, HttpServletRequest request) {
