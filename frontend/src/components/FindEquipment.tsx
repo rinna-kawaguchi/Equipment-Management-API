@@ -9,7 +9,7 @@ export type Equipment = {
   name: string;
   number: string;
   location: string;
-}
+};
 
 export const FindEquipment = () => {
   const [name, setName] = useState("");
@@ -17,24 +17,27 @@ export const FindEquipment = () => {
   const [location, setLocation] = useState("");
   const [equipments, setEquipments] = useState<Array<Equipment>>([]);
 
-  const onChangeName = (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)
-  const onChangeNumber = (e: ChangeEvent<HTMLInputElement>) => setNumber(e.target.value)
-  const onChangeLocation = (e: ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)
-
   const navigate = useNavigate();
 
-  const onClickCreatePage = () => navigate("/create")
+  // 設備登録画面に遷移する
+  const onClickCreatePage = () => navigate("/create");
 
+  // 入力した内容を設備情報の各項目に渡す
+  const onChangeName = (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+  const onChangeNumber = (e: ChangeEvent<HTMLInputElement>) => setNumber(e.target.value);
+  const onChangeLocation = (e: ChangeEvent<HTMLInputElement>) => setLocation(e.target.value);
+
+  // Spring BootのAPIを叩いて、前段で入力した条件に合致する設備情報を取得する。
   const onClickFindEquipment = () => {
     axios.get<Array<Equipment>>(`http://localhost:8080/equipments?name=${name}&number=${number}&location=${location}`)
-      .then((res) => setEquipments(res.data))
-  }
+      .then((res) => setEquipments(res.data));
+  };
 
   return (
-    <Box padding={"20px"}>
+    <Box padding={5}>
       <HStack spacing={10}>
-      <Heading>設備検索</Heading>
-      <BaseButton onClick={onClickCreatePage}>新規設備登録</BaseButton>
+        <Heading>設備検索</Heading>
+        <BaseButton onClick={onClickCreatePage}>新規設備登録</BaseButton>
       </HStack>
       <br />
       <br />
@@ -71,8 +74,8 @@ export const FindEquipment = () => {
               <Th>設置場所</Th>
             </Tr>
           </Thead>
-          {equipments?.map((equipment) => (
-            <Tbody>
+          <Tbody>
+            {equipments?.map((equipment) => (
               <Tr key={equipment.equipmentId}>
                 <Td color={"blue"}>
                   <Link to={`/update/${equipment.equipmentId}`} state={{ id: equipment.equipmentId }}>{equipment.name}</Link>
@@ -80,10 +83,10 @@ export const FindEquipment = () => {
                 <Td >{equipment.number}</Td>
                 <Td>{equipment.location}</Td>
               </Tr>
-            </Tbody>
-          ))}
+            ))}
+          </Tbody>
         </Table>
       </TableContainer>
     </Box>
-  )
-}
+  );
+};

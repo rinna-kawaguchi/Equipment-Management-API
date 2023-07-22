@@ -11,5 +11,5 @@ export const Router: FC = () => {
       <Route path='/create' element={<CreateEquipment />} />
       <Route path='/update/:id' element={<UpdateEquipment />} />
     </Routes>
-  )
-}
+  );
+};

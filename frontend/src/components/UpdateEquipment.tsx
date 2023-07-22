@@ -1,4 +1,4 @@
-import { Box, Divider, FormControl, FormLabel, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
+import { Box, Divider, FormControl, FormLabel, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BaseButton } from "./atoms/BaseButton";
 import { FC, memo, useCallback, useEffect, useState } from "react";
@@ -15,7 +15,7 @@ export type Plan = {
   checkType: string;
   period: string;
   deadline: string;
-}
+};
 
 export const UpdateEquipment: FC = memo(() => {
   const { onSelectPlan, selectedPlan } = useSelectPlan();
@@ -27,6 +27,8 @@ export const UpdateEquipment: FC = memo(() => {
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
 
+  const [message, setMessage] = useState("");
+
   const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
   const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
   const openCreatePlanModal = () => setCreatePlanModalOpen(true);
@@ -36,44 +38,53 @@ export const UpdateEquipment: FC = memo(() => {
 
   const { id } = useParams();
 
-  console.log("レンダリングされました")
+  // レンダリング確認用
+  console.log("レンダリングされました");
 
+  // 画面更新
   const onClickReload = () => {
     window.location.reload();
-  }
+  };
 
+  // Spring BootのAPIを叩いて指定した設備IDの設備情報を取得する
   useEffect(() => {
-    axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setUpdateEquipment(res.data))
-  }, [id])
+    axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setUpdateEquipment(res.data));
+  }, [id]);
+
+  // Spring BootのAPIを叩いて指定した設備IDと紐づく点検計画を取得する
+  useEffect(() => {
+    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data));
+  }, [id]);
 
   // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
-    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal })
+    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal });
   }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
+  // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
   const onClickDeletePlan = (checkPlanId: number) => {
-    alert("点検計画を削除しますか？")
-    axios.delete(`http://localhost:8080/plans/${checkPlanId}`)
-    alert("点検計画を削除しました")
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
+    alert("点検計画を削除しますか？");
+    axios.delete(`http://localhost:8080/plans/${checkPlanId}`).then((res) => setMessage(res.data));
+    alert(message);
+    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data));
   };
 
-  useEffect(() => {
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
-  }, [id])
+  const navigate = useNavigate();
 
+  // Spring BootのAPIを叩いて指定した設備IDの設備情報と点検計画を削除する。その後設備検索画面に遷移する。
   const onClickDeleteEquipment = () => {
     alert("この設備と点検計画を削除しますか？");
     axios.delete(`http://localhost:8080/equipments/${id}/plans`);
     axios.delete(`http://localhost:8080/equipments/${id}`);
-  }
+    alert("設備検索画面に戻ります");
+    navigate("/find")
+  };
 
-  const navigate = useNavigate();
-
+  // 設備検索画面に遷移
   const onClickBackFindPage = () => navigate("/find");
 
   return (
-    <Box padding={"20px"}>
+    <Box padding={5}>
       <HStack spacing={10}>
         <Heading>設備詳細</Heading>
         <BaseButton onClick={onClickReload}>画面更新</BaseButton>
@@ -149,5 +160,5 @@ export const UpdateEquipment: FC = memo(() => {
         <BaseButton onClick={onClickDeleteEquipment}>削除</BaseButton>
       </HStack>
     </Box>
-  )
+  );
 });

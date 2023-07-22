@@ -9,7 +9,7 @@ type Props = {
   updateEquipment: Equipment | null;
   isOpen: boolean;
   onClose: () => void;
-}
+};
 
 export const UpdateEquipmentModal: FC<Props> = memo((props) => {
   const { updateEquipment, isOpen, onClose } = props;
@@ -20,22 +20,26 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
 
   const { id } = useParams();
 
+  // propsで渡された設備情報を各項目に渡す
   useEffect(() => {
     setUpdateName(updateEquipment?.name ?? "");
     setUpdateNumber(updateEquipment?.number ?? "");
     setUpdateLocation(updateEquipment?.location ?? "");
   }, [updateEquipment]);
 
-  const onChangeUpdateName = (e: ChangeEvent<HTMLInputElement>) => setUpdateName(e.target.value)
-  const onChangeUpdateNumber = (e: ChangeEvent<HTMLInputElement>) => setUpdateNumber(e.target.value)
-  const onChangeUpdateLocation = (e: ChangeEvent<HTMLInputElement>) => setUpdateLocation(e.target.value)
+  // 入力した内容を設備情報の各項目に渡す
+  const onChangeUpdateName = (e: ChangeEvent<HTMLInputElement>) => setUpdateName(e.target.value);
+  const onChangeUpdateNumber = (e: ChangeEvent<HTMLInputElement>) => setUpdateNumber(e.target.value);
+  const onChangeUpdateLocation = (e: ChangeEvent<HTMLInputElement>) => setUpdateLocation(e.target.value);
 
+  // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの設備情報を更新する。
+  // できれば更新実行後、設備詳細画面に更新後の設備情報を自動反映させたい。
   const onClickUpdate = () => {
     alert("設備情報を修正しますか？");
     axios.patch(`http://localhost:8080/equipments/${id}`,
       { "name": updateName, "number": updateNumber, "location": updateLocation });
     onClose();
-  }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
@@ -64,5 +68,5 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
+  );
 });
