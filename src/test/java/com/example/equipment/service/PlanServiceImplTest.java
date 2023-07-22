@@ -20,6 +20,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+// 例外スロー以外の処理はmapperを呼び出しているだけのため、単体テストは割愛し、mapper単体テスト及び結合テストで確認する。
+
 @ExtendWith(MockitoExtension.class)
 class PlanServiceImplTest {
 
@@ -80,5 +82,17 @@ class PlanServiceImplTest {
         });
     verify(planMapper, times(1)).findPlanByCheckPlanId(99);
     verify(planMapper, never()).deletePlan(99);
+  }
+
+  @Test
+  public void 点検計画削除の際に存在しない設備IDを指定した時に例外がスローされること() {
+    doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
+
+    assertThatThrownBy(() -> planserviceImpl.deletePlanByEquipmentId(99))
+        .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
+          assertThat(e.getMessage()).isEqualTo("Not Found");
+        });
+    verify(equipmentMapper, times(1)).findEquipmentById(99);
+    verify(planMapper, never()).deletePlanByEquipmentId(99);
   }
 }
