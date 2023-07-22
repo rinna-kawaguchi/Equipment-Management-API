@@ -19,9 +19,8 @@ export const CreateEquipment = () => {
   const onClickBackFindPage = () => navigate("/find")
   const onClickCreateEquipment = () => {
     alert("設備を登録しますか？")
-    axios.post("http://localhost:8080/equipments", { "name": newName, "number": newNumber, "location": newLocation })
-    .then((res) => setCreateMessage(res.data.message));
-    alert(createMessage);
+    axios.post("http://localhost:8080/equipments", { "name": newName, "number": newNumber, "location": newLocation });
+    alert("設備が登録されました");
   }
 
   return (

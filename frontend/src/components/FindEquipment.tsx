@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,35 +32,37 @@ export const FindEquipment = () => {
 
   return (
     <Box padding={"20px"}>
+      <HStack spacing={10}>
       <Heading>設備検索</Heading>
-      <br />
       <BaseButton onClick={onClickCreatePage}>新規設備登録</BaseButton>
+      </HStack>
       <br />
       <br />
-      <Heading size='lg'>検索条件入力</Heading>
-      <br />
-      <HStack>
+      <Heading size='md'>検索条件入力</Heading>
+      <Divider my={3} />
+      <HStack spacing={4}>
         <Box>
           <p>設備名称</p>
-          <Input width={"400px"} placeholder="設備名称" onChange={onChangeName} />
+          <Input width={"400px"} placeholder="ポンプ" onChange={onChangeName} />
         </Box>
         <Box>
           <p>設備番号
           </p>
-          <Input width={"400px"} placeholder="設備番号" onChange={onChangeNumber} />
+          <Input width={"400px"} placeholder="C001" onChange={onChangeNumber} />
         </Box>
         <Box>
           <p>設置場所</p>
-          <Input width={"400px"} placeholder="設置場所" onChange={onChangeLocation} />
+          <Input width={"400px"} placeholder="Area1" onChange={onChangeLocation} />
         </Box>
       </HStack>
       <br />
-      <BaseButton onClick={onClickFindEquipment}>設備検索</BaseButton>
+      <BaseButton onClick={onClickFindEquipment}>検索</BaseButton>
       <br />
       <br />
       <br />
       <Heading size='lg'>検索結果</Heading>
-      <TableContainer>
+      <Divider my={3} />
+      <TableContainer width={1200}>
         <Table variant='simple'>
           <Thead>
             <Tr>

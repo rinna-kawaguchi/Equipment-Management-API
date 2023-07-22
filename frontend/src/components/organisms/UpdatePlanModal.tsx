@@ -1,5 +1,5 @@
-import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react"
+import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
 import { Plan } from "../UpdateEquipment";
@@ -10,7 +10,7 @@ type Props = {
   onClose: () => void;
 }
 
-export const UpdatePlanModal: FC<Props> = (props) => {
+export const UpdatePlanModal: FC<Props> = memo((props) => {
   const { selectedPlan, isOpen, onClose } = props;
 
   const [updateCheckType, setUpdateCheckType] = useState("");
@@ -35,13 +35,13 @@ export const UpdatePlanModal: FC<Props> = (props) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+    <Modal isOpen={isOpen} onClose={onClose} size={"sm"}>
     <ModalOverlay />
     <ModalContent pb={6}>
       <ModalHeader>点検計画修正</ModalHeader>
       <ModalCloseButton />
       <ModalBody mx={4}>
-        <HStack spacing={4}>
+        <Stack spacing={4}>
           <FormControl>
             <FormLabel>点検種別</FormLabel>
             <Input value={updateCheckType} onChange={onChangeUpdateCheckType} />
@@ -54,7 +54,7 @@ export const UpdatePlanModal: FC<Props> = (props) => {
             <FormLabel>点検期限</FormLabel>
             <Input value={updateDeadline} onChange={onChangeUpdateDeadline} />
           </FormControl>
-        </HStack>
+        </Stack>
       </ModalBody>
       <ModalFooter>
         <BaseButton onClick={onClickUpdatePlan}>点検計画修正</BaseButton>
@@ -62,4 +62,4 @@ export const UpdatePlanModal: FC<Props> = (props) => {
     </ModalContent>
   </Modal>
   )
-}
+});

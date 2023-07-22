@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import { Equipment } from "../FindEquipment";
 import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
 import { BaseButton } from "../atoms/BaseButton";
@@ -11,7 +11,7 @@ type Props = {
   onClose: () => void;
 }
 
-export const UpdateEquipmentModal: FC<Props> = (props) => {
+export const UpdateEquipmentModal: FC<Props> = memo((props) => {
   const { updateEquipment, isOpen, onClose } = props;
 
   const [updateName, setUpdateName] = useState("");
@@ -65,4 +65,4 @@ export const UpdateEquipmentModal: FC<Props> = (props) => {
       </ModalContent>
     </Modal>
   )
-}
+});

@@ -1,8 +1,7 @@
-import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react"
 import { BaseButton } from "../atoms/BaseButton"
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, memo, useState } from "react";
 import axios from "axios";
-import { type } from "os";
 import { useParams } from "react-router-dom";
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
   onClose: () => void;
 }
 
-export const CreatePlanModal: FC<Props> = (props) => {
+export const CreatePlanModal: FC<Props> = memo((props) => {
   const { isOpen, onClose } = props;
 
   const [createCheckType, setCreateCheckType] = useState("");
@@ -31,26 +30,26 @@ export const CreatePlanModal: FC<Props> = (props) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+    <Modal isOpen={isOpen} onClose={onClose} size={"sm"}>
     <ModalOverlay />
     <ModalContent pb={6}>
       <ModalHeader>点検計画追加</ModalHeader>
       <ModalCloseButton />
       <ModalBody mx={4}>
-        <HStack spacing={4}>
+        <Stack spacing={4}>
           <FormControl>
             <FormLabel>点検種別</FormLabel>
-            <Input placeholder="点検種別" onChange={onChangeCreateCheckType} />
+            <Input placeholder="本格点検" onChange={onChangeCreateCheckType} />
           </FormControl>
           <FormControl>
             <FormLabel>点検周期</FormLabel>
-            <Input placeholder="点検周期" onChange={onChangeCreatePeriod} />
+            <Input placeholder="1年" onChange={onChangeCreatePeriod} />
           </FormControl>
           <FormControl>
             <FormLabel>点検期限</FormLabel>
-            <Input placeholder="点検期限" onChange={onChangeCreateDeadline} />
+            <Input placeholder="2023-12-31" onChange={onChangeCreateDeadline} />
           </FormControl>
-        </HStack>
+        </Stack>
       </ModalBody>
       <ModalFooter>
         <BaseButton onClick={onClickCreatePlan}>点検計画追加</BaseButton>
@@ -58,4 +57,4 @@ export const CreatePlanModal: FC<Props> = (props) => {
     </ModalContent>
   </Modal>
   )
-}
+});
