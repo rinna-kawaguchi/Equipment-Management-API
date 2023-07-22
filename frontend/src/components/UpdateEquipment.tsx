@@ -53,13 +53,18 @@ export const UpdateEquipment = () => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data))
   };
 
-  const onClickBackDetailPage = () => navigate(`/detail/${id}`)
+  const onClickDeleteEquipment = () => {
+    alert("この設備と点検計画を削除しますか？");
+    axios.delete<string>(`http://localhost:8080/equipments/${id}`)
+  }
+
+  const onClickBackFindPage = () => navigate("/find")
 
   return (
     <div>
-      <Heading>設備情報修正</Heading>
+      <Heading>設備詳細</Heading>
       <br />
-      <Heading size={"md"}>設備情報詳細</Heading>
+      <Heading size={"md"}>設備情報</Heading>
       <Divider my={3} />
       <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
       <UpdateEquipmentModal updateEquipment={updateEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} />
@@ -119,7 +124,8 @@ export const UpdateEquipment = () => {
       </TableContainer>
       <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen} onClose={closeUpdatePlanModal} />
       <br />
-      <BaseButton onClick={onClickBackDetailPage}>戻る</BaseButton>
+      <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
+      <BaseButton onClick={onClickDeleteEquipment}>削除</BaseButton>
     </div>
   )
 }
