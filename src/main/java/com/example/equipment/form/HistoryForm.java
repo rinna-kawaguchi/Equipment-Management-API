@@ -16,7 +16,7 @@ public class HistoryForm {
   @NotBlank(message = "必須項目です")
   private String checkType;
 
-  @Size(max = 50, message = "10文字以内で入力してください")
+  @Size(max = 50, message = "50文字以内で入力してください")
   @NotBlank(message = "必須項目です")
   private String result;
 }

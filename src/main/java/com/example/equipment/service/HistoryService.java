@@ -2,7 +2,6 @@ package com.example.equipment.service;
 
 import com.example.equipment.entity.History;
 import com.example.equipment.form.HistoryForm;
-
 import java.util.List;
 
 public interface HistoryService {

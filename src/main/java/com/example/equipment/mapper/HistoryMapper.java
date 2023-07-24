@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +24,7 @@ public interface HistoryMapper {
   @Options(useGeneratedKeys = true, keyProperty = "checkHistoryId")
   void insertHistory(History history);
 
-  @Update("UPDATE histories SET implementation_date = #{implementationDate} check_type = "
+  @Update("UPDATE histories SET implementation_date = #{implementationDate}, check_type = "
       + "#{checkType}, result = #{result} WHERE check_history_id = #{checkHistoryId}")
   void updateHistory(int checkHistoryId, String implementationDate, String checkType,
                      String result);
