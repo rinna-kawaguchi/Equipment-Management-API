@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ export type Equipment = {
   name: string;
   number: string;
   location: string;
-}
+};
 
 export const FindEquipment = () => {
   const [name, setName] = useState("");
@@ -17,50 +17,55 @@ export const FindEquipment = () => {
   const [location, setLocation] = useState("");
   const [equipments, setEquipments] = useState<Array<Equipment>>([]);
 
-  const onChangeName = (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)
-  const onChangeNumber = (e: ChangeEvent<HTMLInputElement>) => setNumber(e.target.value)
-  const onChangeLocation = (e: ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)
-
   const navigate = useNavigate();
 
-  const onClickCreatePage = () => navigate("/create")
+  // 設備登録画面に遷移する
+  const onClickCreatePage = () => navigate("/create");
 
+  // 入力した内容を設備情報の各項目に渡す
+  const onChangeName = (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+  const onChangeNumber = (e: ChangeEvent<HTMLInputElement>) => setNumber(e.target.value);
+  const onChangeLocation = (e: ChangeEvent<HTMLInputElement>) => setLocation(e.target.value);
+
+  // Spring BootのAPIを叩いて、前段で入力した条件に合致する設備情報を取得する。
   const onClickFindEquipment = () => {
     axios.get<Array<Equipment>>(`http://localhost:8080/equipments?name=${name}&number=${number}&location=${location}`)
-      .then((res) => setEquipments(res.data))
-  }
+      .then((res) => setEquipments(res.data));
+  };
 
   return (
-    <Box padding={"20px"}>
-      <Heading>設備検索</Heading>
+    <Box padding={5}>
+      <HStack spacing={10}>
+        <Heading>設備検索</Heading>
+        <BaseButton onClick={onClickCreatePage}>新規設備登録</BaseButton>
+      </HStack>
       <br />
-      <BaseButton onClick={onClickCreatePage}>新規設備登録</BaseButton>
       <br />
-      <br />
-      <Heading size='lg'>検索条件入力</Heading>
-      <br />
-      <HStack>
+      <Heading size='md'>検索条件入力</Heading>
+      <Divider my={3} />
+      <HStack spacing={4}>
         <Box>
           <p>設備名称</p>
-          <Input width={"400px"} placeholder="設備名称" onChange={onChangeName} />
+          <Input width={"400px"} placeholder="ポンプ" onChange={onChangeName} />
         </Box>
         <Box>
           <p>設備番号
           </p>
-          <Input width={"400px"} placeholder="設備番号" onChange={onChangeNumber} />
+          <Input width={"400px"} placeholder="C001" onChange={onChangeNumber} />
         </Box>
         <Box>
           <p>設置場所</p>
-          <Input width={"400px"} placeholder="設置場所" onChange={onChangeLocation} />
+          <Input width={"400px"} placeholder="Area1" onChange={onChangeLocation} />
         </Box>
       </HStack>
       <br />
-      <BaseButton onClick={onClickFindEquipment}>設備検索</BaseButton>
+      <BaseButton onClick={onClickFindEquipment}>検索</BaseButton>
       <br />
       <br />
       <br />
       <Heading size='lg'>検索結果</Heading>
-      <TableContainer>
+      <Divider my={3} />
+      <TableContainer width={1200}>
         <Table variant='simple'>
           <Thead>
             <Tr>
@@ -69,19 +74,19 @@ export const FindEquipment = () => {
               <Th>設置場所</Th>
             </Tr>
           </Thead>
-          {equipments?.map((equipment) => (
-            <Tbody>
+          <Tbody>
+            {equipments?.map((equipment) => (
               <Tr key={equipment.equipmentId}>
                 <Td color={"blue"}>
-                  <Link to={`/detail/${equipment.equipmentId}`} state={{ id: equipment.equipmentId }}>{equipment.name}</Link>
+                  <Link to={`/update/${equipment.equipmentId}`} state={{ id: equipment.equipmentId }}>{equipment.name}</Link>
                 </Td>
                 <Td >{equipment.number}</Td>
                 <Td>{equipment.location}</Td>
               </Tr>
-            </Tbody>
-          ))}
+            ))}
+          </Tbody>
         </Table>
       </TableContainer>
     </Box>
-  )
-}
+  );
+};
