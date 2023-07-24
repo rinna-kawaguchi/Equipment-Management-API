@@ -2,7 +2,7 @@ import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButt
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
-import { Plan } from "../UpdateEquipment";
+import { Plan } from "../EquipmentDetail";
 import { useParams } from "react-router-dom";
 
 type Props = {
@@ -39,8 +39,8 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
       { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline })
       .then(() => {
         axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => {
-          onPlanUpdate(res.data)
-        })
+          onPlanUpdate(res.data);
+        });
       });
     alert("点検計画を修正します");
     onClose();

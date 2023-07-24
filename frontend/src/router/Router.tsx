@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { FindEquipment } from '../components/FindEquipment';
 import { CreateEquipment } from '../components/CreateEquipment';
-import { UpdateEquipment } from '../components/UpdateEquipment';
+import { EquipmentDetail } from '../components/EquipmentDetail';
 import { FC } from 'react';
 
 export const Router: FC = () => {
@@ -9,7 +9,7 @@ export const Router: FC = () => {
     <Routes>
       <Route path='/find' element={<FindEquipment />} />
       <Route path='/create' element={<CreateEquipment />} />
-      <Route path='/update/:id' element={<UpdateEquipment />} />
+      <Route path='/update/:id' element={<EquipmentDetail />} />
     </Routes>
   );
 };

@@ -3,7 +3,7 @@ import { BaseButton } from "../atoms/BaseButton";
 import { ChangeEvent, FC, memo, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Plan } from "../UpdateEquipment";
+import { Plan } from "../EquipmentDetail";
 
 type Props = {
   isOpen: boolean;
@@ -33,7 +33,7 @@ export const CreatePlanModal: FC<Props> = memo((props) => {
       .then(() => {
         axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => {
           onPlanCreate(res.data);
-        })
+        });
       });
     onClose();
   };

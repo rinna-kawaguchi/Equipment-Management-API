@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Plan } from "../components/UpdateEquipment";
+import { Plan } from "../components/EquipmentDetail";
 
 type Props = {
   checkPlanId: number;
