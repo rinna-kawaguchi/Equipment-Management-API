@@ -51,22 +51,38 @@ export const UpdateEquipment: FC = memo(() => {
     axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setUpdateEquipment(res.data));
   }, [id]);
 
+  // UpdateEquipmentModalで更新処理が実行されたら、更新後の設備情報を反映する。
+  const handleEquipmentUpdate = (updatedEquipments: Equipment) => {
+    setUpdateEquipment(updatedEquipments);
+  }
+
   // Spring BootのAPIを叩いて指定した設備IDと紐づく点検計画を取得する
   useEffect(() => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data));
   }, [id]);
+
+  // CreatePlanModalで点検計画が追加されたら、追加後の点検計画を反映する。
+  const handlePlanCreate = (createdPlans: Array<Plan>) => {
+    setUpdatePlans(createdPlans);
+  }
 
   // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
     onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal });
   }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
+  // UpdatePlanModalで更新処理が実行されたら、更新後の点検計画を反映する。
+  const handlePlanUpdate = (updatedPlans: Array<Plan>) => {
+    setUpdatePlans(updatedPlans);
+  }
+
   // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
   const onClickDeletePlan = (checkPlanId: number) => {
     alert("点検計画を削除しますか？");
-    axios.delete(`http://localhost:8080/plans/${checkPlanId}`).then((res) => setMessage(res.data));
+    axios.delete(`http://localhost:8080/plans/${checkPlanId}`).then((res) => setMessage(res.data)).then(() => {
+      axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data));
+    });
     alert(message);
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => setUpdatePlans(res.data));
   };
 
   const navigate = useNavigate();
@@ -94,7 +110,7 @@ export const UpdateEquipment: FC = memo(() => {
       <HStack spacing={10}>
         <Heading size={"md"}>設備情報</Heading>
         <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
-        <UpdateEquipmentModal updateEquipment={updateEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} />
+        <UpdateEquipmentModal updateEquipment={updateEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} onEquipmentsUpdate={handleEquipmentUpdate} />
       </HStack>
       <Divider my={3} />
       <HStack spacing={10}>
@@ -122,7 +138,8 @@ export const UpdateEquipment: FC = memo(() => {
       <HStack spacing={10}>
         <Heading size={"md"}>点検計画</Heading>
         <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
-        <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal} />
+        <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal} 
+        onPlanCreate={handlePlanCreate} />
       </HStack>
       <Divider my={3} />
       <TableContainer width={900}>
@@ -152,7 +169,8 @@ export const UpdateEquipment: FC = memo(() => {
           </Tbody>
         </Table>
       </TableContainer>
-      <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen} onClose={closeUpdatePlanModal} />
+      <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen} 
+      onClose={closeUpdatePlanModal} onPlanUpdate={handlePlanUpdate} />
       <br />
       <br />
       <HStack>

@@ -3,19 +3,23 @@ import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
 import { Plan } from "../UpdateEquipment";
+import { useParams } from "react-router-dom";
 
 type Props = {
   selectedPlan: Plan | null;
   isOpen: boolean;
   onClose: () => void;
+  onPlanUpdate: (updatedPlans: Array<Plan>) => void;
 };
 
 export const UpdatePlanModal: FC<Props> = memo((props) => {
-  const { selectedPlan, isOpen, onClose } = props;
+  const { selectedPlan, isOpen, onClose, onPlanUpdate } = props;
 
   const [updateCheckType, setUpdateCheckType] = useState("");
   const [updatePeriod, setUpdatePeriod] = useState("");
   const [updateDeadline, setUpdateDeadline] = useState("");
+
+  const { id } = useParams();
 
   // propsで渡された点検計画を各項目に渡す
   useEffect(() => {
@@ -29,11 +33,15 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
   const onChangeUpdatePeriod = (e: ChangeEvent<HTMLInputElement>) => setUpdatePeriod(e.target.value);
   const onChangeUpdateDeadline = (e: ChangeEvent<HTMLInputElement>) => setUpdateDeadline(e.target.value);
 
-  // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検計画を更新する。
-  // できれば更新実行後、設備詳細画面に更新後の点検計画一覧を自動反映させたい。
+  // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検計画を更新し、更新後の点検計画を取得して反映する
   const onClickUpdatePlan = () => {
     axios.patch(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`,
-      { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline });
+      { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline })
+      .then(() => {
+        axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => {
+          onPlanUpdate(res.data)
+        })
+      });
     alert("点検計画を修正します");
     onClose();
   };

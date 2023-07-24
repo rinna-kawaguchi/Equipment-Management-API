@@ -3,14 +3,16 @@ import { BaseButton } from "../atoms/BaseButton";
 import { ChangeEvent, FC, memo, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { Plan } from "../UpdateEquipment";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onPlanCreate: (createdPlans: Array<Plan>) => void;
 };
 
 export const CreatePlanModal: FC<Props> = memo((props) => {
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, onPlanCreate } = props;
 
   const [createCheckType, setCreateCheckType] = useState("");
   const [createPeriod, setCreatePeriod] = useState("");
@@ -23,12 +25,16 @@ export const CreatePlanModal: FC<Props> = memo((props) => {
   const onChangeCreatePeriod = (e: ChangeEvent<HTMLInputElement>) => setCreatePeriod(e.target.value);
   const onChangeCreateDeadline = (e: ChangeEvent<HTMLInputElement>) => setCreateDeadline(e.target.value);
 
-  // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの点検計画を登録する。
-  // できれば登録実行後、設備詳細画面に登録後の点検計画一覧を自動反映させたい。
+  // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの点検計画を登録し、登録後の点検計画を取得して反映する。
   const onClickCreatePlan = () => {
     alert("点検計画を追加しますか？");
     axios.post(`http://localhost:8080/equipments/${id}/plans`,
-      { "checkType": createCheckType, "period": createPeriod, "deadline": createDeadline });
+      { "checkType": createCheckType, "period": createPeriod, "deadline": createDeadline })
+      .then(() => {
+        axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => {
+          onPlanCreate(res.data);
+        })
+      });
     onClose();
   };
 

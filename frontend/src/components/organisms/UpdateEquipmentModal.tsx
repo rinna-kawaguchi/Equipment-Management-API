@@ -9,10 +9,11 @@ type Props = {
   updateEquipment: Equipment | null;
   isOpen: boolean;
   onClose: () => void;
+  onEquipmentsUpdate: (updatedEquipments: Equipment) => void
 };
 
 export const UpdateEquipmentModal: FC<Props> = memo((props) => {
-  const { updateEquipment, isOpen, onClose } = props;
+  const { updateEquipment, isOpen, onClose, onEquipmentsUpdate } = props;
 
   const [updateName, setUpdateName] = useState("");
   const [updateNumber, setUpdateNumber] = useState("");
@@ -32,12 +33,15 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
   const onChangeUpdateNumber = (e: ChangeEvent<HTMLInputElement>) => setUpdateNumber(e.target.value);
   const onChangeUpdateLocation = (e: ChangeEvent<HTMLInputElement>) => setUpdateLocation(e.target.value);
 
-  // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの設備情報を更新する。
-  // できれば更新実行後、設備詳細画面に更新後の設備情報を自動反映させたい。
+  // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの設備情報を更新し、更新後の設備情報を取得して反映する
   const onClickUpdate = () => {
     alert("設備情報を修正しますか？");
     axios.patch(`http://localhost:8080/equipments/${id}`,
-      { "name": updateName, "number": updateNumber, "location": updateLocation });
+      { "name": updateName, "number": updateNumber, "location": updateLocation }).then(() => {
+        axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => {
+          onEquipmentsUpdate(res.data);
+        })
+      });
     onClose();
   };
 
