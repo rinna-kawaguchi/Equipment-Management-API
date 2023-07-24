@@ -84,95 +84,97 @@ export const EquipmentDetail: FC = memo(() => {
       .then((res) => setUpdatePlans(res.data));
   };
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-// Spring BootのAPIを叩いて指定した設備IDの設備情報と点検計画を削除する。その後設備検索画面に遷移する。
-const onClickDeleteEquipment = () => {
-  alert("この設備と点検計画を削除しますか？");
-  axios.delete(`http://localhost:8080/equipments/${id}/plans`);
-  axios.delete(`http://localhost:8080/equipments/${id}`);
-  alert("設備検索画面に戻ります");
-  navigate("/find");
-};
+  // Spring BootのAPIを叩いて指定した設備IDの設備情報と点検計画を削除する。その後設備検索画面に遷移する。
+  const onClickDeleteEquipment = async () => {
+    alert("この設備と点検計画を削除しますか？");
+    let res = await axios.delete(`http://localhost:8080/equipments/${id}/plans`)
+    .then(() => axios.delete(`http://localhost:8080/equipments/${id}`));
+    const response: Response = res.data.message;
+    alert(response);    
+    alert("設備検索画面に戻ります");
+    navigate("/find");
+  };
 
-// 設備検索画面に遷移
-const onClickBackFindPage = () => navigate("/find");
+  // 設備検索画面に遷移
+  const onClickBackFindPage = () => navigate("/find");
 
-return (
-  <Box padding={5}>
-    <Heading>設備詳細</Heading>
-    <br />
-    <br />
-    <HStack spacing={10}>
-      <Heading size={"md"}>設備情報</Heading>
-      <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
-      <UpdateEquipmentModal updateEquipment={updateEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} onEquipmentsUpdate={handleEquipmentUpdate} />
-    </HStack>
-    <Divider my={3} />
-    <HStack spacing={10}>
-      <Box>
-        <FormControl>
-          <FormLabel>設備名称</FormLabel>
-          <Input value={updateEquipment?.name} width={"400px"} placeholder="設備名称" />
-        </FormControl>
-      </Box>
-      <Box>
-        <FormControl>
-          <FormLabel>設備番号</FormLabel>
-          <Input value={updateEquipment?.number} width={"400px"} placeholder="設備番号" />
-        </FormControl>
-      </Box>
-      <Box>
-        <FormControl>
-          <FormLabel>設置場所</FormLabel>
-          <Input value={updateEquipment?.location} width={"400px"} placeholder="設置場所" />
-        </FormControl>
-      </Box>
-    </HStack>
-    <br />
-    <br />
-    <HStack spacing={10}>
-      <Heading size={"md"}>点検計画</Heading>
-      <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
-      <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal}
-        onPlanCreate={handlePlanCreate} />
-    </HStack>
-    <Divider my={3} />
-    <TableContainer width={900}>
-      <Table variant='simple'>
-        <Thead>
-          <Tr>
-            <Th width={250}>点検種別</Th>
-            <Th width={250}>点検周期</Th>
-            <Th width={200}>点検期限</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {updatePlans.map((plan) => (
-            <Tr key={plan.checkPlanId}>
-              <Td >{plan.checkType}</Td>
-              <Td>{plan.period}</Td>
-              <Td>{plan.deadline}</Td>
-              <Td>
-                <HStack>
-                  <BaseButton onClick={() => onClickUpdatePlanModal(plan.checkPlanId)}>修正</BaseButton>
-                  <BaseButton onClick={() => onClickDeletePlan(plan.checkPlanId)}>削除</BaseButton>
-                </HStack>
-              </Td>
+  return (
+    <Box padding={5}>
+      <Heading>設備詳細</Heading>
+      <br />
+      <br />
+      <HStack spacing={10}>
+        <Heading size={"md"}>設備情報</Heading>
+        <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
+        <UpdateEquipmentModal updateEquipment={updateEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} onEquipmentsUpdate={handleEquipmentUpdate} />
+      </HStack>
+      <Divider my={3} />
+      <HStack spacing={10}>
+        <Box>
+          <FormControl>
+            <FormLabel>設備名称</FormLabel>
+            <Input value={updateEquipment?.name} width={"400px"} placeholder="設備名称" />
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>設備番号</FormLabel>
+            <Input value={updateEquipment?.number} width={"400px"} placeholder="設備番号" />
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>設置場所</FormLabel>
+            <Input value={updateEquipment?.location} width={"400px"} placeholder="設置場所" />
+          </FormControl>
+        </Box>
+      </HStack>
+      <br />
+      <br />
+      <HStack spacing={10}>
+        <Heading size={"md"}>点検計画</Heading>
+        <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
+        <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal}
+          onPlanCreate={handlePlanCreate} />
+      </HStack>
+      <Divider my={3} />
+      <TableContainer width={900}>
+        <Table variant='simple'>
+          <Thead>
+            <Tr>
+              <Th width={250}>点検種別</Th>
+              <Th width={250}>点検周期</Th>
+              <Th width={200}>点検期限</Th>
+              <Th></Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
-    <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen}
-      onClose={closeUpdatePlanModal} onPlanUpdate={handlePlanUpdate} />
-    <br />
-    <br />
-    <HStack>
-      <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
-      <BaseButton onClick={onClickDeleteEquipment}>削除</BaseButton>
-    </HStack>
-  </Box>
-);
+          </Thead>
+          <Tbody>
+            {updatePlans.map((plan) => (
+              <Tr key={plan.checkPlanId}>
+                <Td >{plan.checkType}</Td>
+                <Td>{plan.period}</Td>
+                <Td>{plan.deadline}</Td>
+                <Td>
+                  <HStack>
+                    <BaseButton onClick={() => onClickUpdatePlanModal(plan.checkPlanId)}>修正</BaseButton>
+                    <BaseButton onClick={() => onClickDeletePlan(plan.checkPlanId)}>削除</BaseButton>
+                  </HStack>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen}
+        onClose={closeUpdatePlanModal} onPlanUpdate={handlePlanUpdate} />
+      <br />
+      <br />
+      <HStack>
+        <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
+        <BaseButton onClick={onClickDeleteEquipment}>削除</BaseButton>
+      </HStack>
+    </Box>
+  );
 });

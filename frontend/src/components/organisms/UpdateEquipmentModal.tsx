@@ -9,7 +9,7 @@ type Props = {
   updateEquipment: Equipment | null;
   isOpen: boolean;
   onClose: () => void;
-  onEquipmentsUpdate: (updatedEquipments: Equipment) => void
+  onEquipmentsUpdate: (updatedEquipments: Equipment) => void;
 };
 
 export const UpdateEquipmentModal: FC<Props> = memo((props) => {
@@ -34,14 +34,14 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
   const onChangeUpdateLocation = (e: ChangeEvent<HTMLInputElement>) => setUpdateLocation(e.target.value);
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの設備情報を更新し、更新後の設備情報を取得して反映する
-  const onClickUpdate = () => {
+  const onClickUpdate = async () => {
     alert("設備情報を修正しますか？");
-    axios.patch(`http://localhost:8080/equipments/${id}`,
-      { "name": updateName, "number": updateNumber, "location": updateLocation }).then(() => {
-        axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => {
-          onEquipmentsUpdate(res.data);
-        })
-      });
+    let res = await axios.patch(`http://localhost:8080/equipments/${id}`,
+      { "name": updateName, "number": updateNumber, "location": updateLocation });
+    const response: Response = res.data.message;
+    alert(response);
+    axios.get<Equipment>(`http://localhost:8080/equipments/${id}`)
+    .then((res) => onEquipmentsUpdate(res.data));
     onClose();
   };
 

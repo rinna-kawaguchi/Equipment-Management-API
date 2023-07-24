@@ -22,10 +22,12 @@ export const CreateEquipment = () => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で設備情報を登録する。
   // できれば登録実行後に登録した設備の詳細画面に遷移するようにしたいが、設備IDの取得方法が分からず。。。
-  const onClickCreateEquipment = () => {
+  const onClickCreateEquipment = async () => {
     alert("設備を登録しますか？");
-    axios.post("http://localhost:8080/equipments", { "name": newName, "number": newNumber, "location": newLocation });
-    alert("設備が登録されました");
+    let res = await axios.post("http://localhost:8080/equipments", 
+    { "name": newName, "number": newNumber, "location": newLocation });
+    const response: Response = res.data.message;
+    alert(response);
   };
 
   return (

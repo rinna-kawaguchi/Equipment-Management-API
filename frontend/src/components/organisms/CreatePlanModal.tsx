@@ -26,15 +26,14 @@ export const CreatePlanModal: FC<Props> = memo((props) => {
   const onChangeCreateDeadline = (e: ChangeEvent<HTMLInputElement>) => setCreateDeadline(e.target.value);
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの点検計画を登録し、登録後の点検計画を取得して反映する。
-  const onClickCreatePlan = () => {
+  const onClickCreatePlan = async () => {
     alert("点検計画を追加しますか？");
-    axios.post(`http://localhost:8080/equipments/${id}/plans`,
-      { "checkType": createCheckType, "period": createPeriod, "deadline": createDeadline })
-      .then(() => {
-        axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`).then((res) => {
-          onPlanCreate(res.data);
-        });
-      });
+    let res = await axios.post(`http://localhost:8080/equipments/${id}/plans`,
+      { "checkType": createCheckType, "period": createPeriod, "deadline": createDeadline });
+    const response: Response = res.data.message;
+    alert(response);
+    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
+      .then((res) => onPlanCreate(res.data));
     onClose();
   };
 
