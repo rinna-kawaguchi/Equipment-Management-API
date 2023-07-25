@@ -17,15 +17,26 @@ export type Plan = {
   deadline: string;
 };
 
+export type History = {
+  checkHistoryId: number;
+  equipmentId: number;
+  implementationDate: string;
+  checkType: string;
+  result: string;
+};
+
 export const EquipmentDetail: FC = memo(() => {
   const { onSelectPlan, selectedPlan } = useSelectPlan();
   const [updateEquipment, setUpdateEquipment] = useState<Equipment | null>(null);
 
   const [updatePlans, setUpdatePlans] = useState<Array<Plan>>([]);
 
+  const [updateHistories, setUpdateHistories] = useState<Array<History>>([]);
+
   const [updateEquiipmentModalOpen, setUpdateEquipmentModalOpen] = useState(false);
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
+  const [createHistoryModalOpen, setCreateHistoryModalOpen] = useState(false);
 
   const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
   const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
@@ -33,16 +44,13 @@ export const EquipmentDetail: FC = memo(() => {
   const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
   const openUpdatePlanModal = () => setUpdatePlanModalOpen(true);
   const closeUpdatePlanModal = () => setUpdatePlanModalOpen(false);
+  const openCreateHistoryModal = () => setCreateHistoryModalOpen(true);
+  const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
 
   const { id } = useParams();
 
   // レンダリング確認用
   console.log("レンダリングされました");
-
-  // 画面更新
-  const onClickReload = () => {
-    window.location.reload();
-  };
 
   // Spring BootのAPIを叩いて指定した設備IDの設備情報を取得する
   useEffect(() => {
@@ -84,15 +92,25 @@ export const EquipmentDetail: FC = memo(() => {
       .then((res) => setUpdatePlans(res.data));
   };
 
+  // Spring BootのAPIを叩いて指定した設備IDと紐づく点検履歴を取得する
+  useEffect(() => {
+    axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
+    .then((res) => setUpdateHistories(res.data));
+  }, [id]);
+
+  const onClickUpdateistoryModal = (checkHistoryId: number) => alert("点検履歴更新モーダルを開く")
+
+  const onClickDeleteHistory = (checkHistoryId: number) => alert("点検履歴削除モーダルを開く")
+
   const navigate = useNavigate();
 
   // Spring BootのAPIを叩いて指定した設備IDの設備情報と点検計画を削除する。その後設備検索画面に遷移する。
   const onClickDeleteEquipment = async () => {
     alert("この設備と点検計画を削除しますか？");
     let res = await axios.delete(`http://localhost:8080/equipments/${id}/plans`)
-    .then(() => axios.delete(`http://localhost:8080/equipments/${id}`));
+      .then(() => axios.delete(`http://localhost:8080/equipments/${id}`));
     const response: Response = res.data.message;
-    alert(response);    
+    alert(response);
     alert("設備検索画面に戻ります");
     navigate("/find");
   };
@@ -169,6 +187,40 @@ export const EquipmentDetail: FC = memo(() => {
       </TableContainer>
       <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen}
         onClose={closeUpdatePlanModal} onPlanUpdate={handlePlanUpdate} />
+      <br />
+      <br />
+      <HStack spacing={10}>
+        <Heading size={"md"}>点検履歴</Heading>
+        <BaseButton onClick={openCreateHistoryModal}>点検履歴追加</BaseButton>
+      </HStack>
+      <Divider my={3} />
+      <TableContainer width={900}>
+        <Table variant='simple'>
+          <Thead>
+            <Tr>
+              <Th width={250}>実施日</Th>
+              <Th width={250}>点検種別</Th>
+              <Th width={200}>点検結果</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {updateHistories.map((history) => (
+              <Tr key={history.checkHistoryId}>
+                <Td>{history.implementationDate}</Td>
+                <Td >{history.checkType}</Td>
+                <Td>{history.result}</Td>
+                <Td>
+                  <HStack>
+                    <BaseButton onClick={() => onClickUpdateistoryModal(history.checkHistoryId)}>修正</BaseButton>
+                    <BaseButton onClick={() => onClickDeleteHistory(history.checkHistoryId)}>削除</BaseButton>
+                  </HStack>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
       <br />
       <br />
       <HStack>
