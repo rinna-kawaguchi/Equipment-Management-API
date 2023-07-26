@@ -8,6 +8,7 @@ import { useSelectPlan } from "../hooks/useSelectPlan";
 import { UpdatePlanModal } from "./organisms/UpdatePlanModal";
 import { CreatePlanModal } from "./organisms/CreatePlanModal";
 import { UpdateEquipmentModal } from "./organisms/UpdateEquipmentModal";
+import { CreateHistoryModal } from "./organisms/CreateHistoryModal";
 
 export type Plan = {
   checkPlanId: number;
@@ -97,6 +98,11 @@ export const EquipmentDetail: FC = memo(() => {
     axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
     .then((res) => setUpdateHistories(res.data));
   }, [id]);
+
+  // CreatePlanModalで点検計画が追加されたら、追加後の点検計画を反映する。
+  const handleHistoryCreate = (createdHistories: Array<History>) => {
+    setUpdateHistories(createdHistories);
+  };
 
   const onClickUpdateistoryModal = (checkHistoryId: number) => alert("点検履歴更新モーダルを開く")
 
@@ -192,6 +198,8 @@ export const EquipmentDetail: FC = memo(() => {
       <HStack spacing={10}>
         <Heading size={"md"}>点検履歴</Heading>
         <BaseButton onClick={openCreateHistoryModal}>点検履歴追加</BaseButton>
+        <CreateHistoryModal isOpen={createHistoryModalOpen} onClose={closeCreateHistoryModal}
+          onHistoryCreate={handleHistoryCreate} />
       </HStack>
       <Divider my={3} />
       <TableContainer width={900}>
