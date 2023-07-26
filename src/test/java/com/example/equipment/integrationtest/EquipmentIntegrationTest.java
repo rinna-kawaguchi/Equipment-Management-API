@@ -180,10 +180,10 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         {
-        "equipmentId": 1,
-        "name": "真空ポンプA",
-        "number": "A1-C001A",
-        "location": "Area1"
+          "equipmentId": 1,
+          "name": "真空ポンプA",
+          "number": "A1-C001A",
+          "location": "Area1"
         }
         """, response, JSONCompareMode.STRICT);
   }
