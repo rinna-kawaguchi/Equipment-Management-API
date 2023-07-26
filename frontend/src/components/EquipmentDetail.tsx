@@ -5,10 +5,12 @@ import { FC, memo, useCallback, useEffect, useState } from "react";
 import { Equipment } from "./FindEquipment";
 import axios from "axios";
 import { useSelectPlan } from "../hooks/useSelectPlan";
+import { useSelectHistory } from "../hooks/useSelectHistory";
 import { UpdatePlanModal } from "./organisms/UpdatePlanModal";
 import { CreatePlanModal } from "./organisms/CreatePlanModal";
 import { UpdateEquipmentModal } from "./organisms/UpdateEquipmentModal";
 import { CreateHistoryModal } from "./organisms/CreateHistoryModal";
+import { UpdateHistoryModal } from "./organisms/UpdateHistoryModal";
 
 export type Plan = {
   checkPlanId: number;
@@ -28,6 +30,7 @@ export type History = {
 
 export const EquipmentDetail: FC = memo(() => {
   const { onSelectPlan, selectedPlan } = useSelectPlan();
+  const { onSelectHistory, selectedHistory } = useSelectHistory();
   const [updateEquipment, setUpdateEquipment] = useState<Equipment | null>(null);
 
   const [updatePlans, setUpdatePlans] = useState<Array<Plan>>([]);
@@ -38,6 +41,7 @@ export const EquipmentDetail: FC = memo(() => {
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
   const [createHistoryModalOpen, setCreateHistoryModalOpen] = useState(false);
+  const [updateHistoryModalOpen, setUpdateHistoryModalOpen] = useState(false);
 
   const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
   const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
@@ -47,6 +51,8 @@ export const EquipmentDetail: FC = memo(() => {
   const closeUpdatePlanModal = () => setUpdatePlanModalOpen(false);
   const openCreateHistoryModal = () => setCreateHistoryModalOpen(true);
   const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
+  const openUpdateHistoryModal = () => setUpdateHistoryModalOpen(true);
+  const closeUpdateHistoryModal = () => setUpdateHistoryModalOpen(false);
 
   const { id } = useParams();
 
@@ -73,14 +79,14 @@ export const EquipmentDetail: FC = memo(() => {
     setUpdatePlans(createdPlans);
   };
 
-  // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
+  // useSelectHistoryのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
     onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal });
   }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
-  // UpdatePlanModalで更新処理が実行されたら、更新後の点検計画を反映する。
-  const handlePlanUpdate = (updatedPlans: Array<Plan>) => {
-    setUpdatePlans(updatedPlans);
+  // UpdateHistoryModalで更新処理が実行されたら、更新後の点検計画を反映する。
+  const handleHistoryUpdate = (updatedHistories: Array<History>) => {
+    setUpdateHistories(updatedHistories);
   };
 
   // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
@@ -96,7 +102,7 @@ export const EquipmentDetail: FC = memo(() => {
   // Spring BootのAPIを叩いて指定した設備IDと紐づく点検履歴を取得する
   useEffect(() => {
     axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
-    .then((res) => setUpdateHistories(res.data));
+      .then((res) => setUpdateHistories(res.data));
   }, [id]);
 
   // CreatePlanModalで点検計画が追加されたら、追加後の点検計画を反映する。
@@ -104,9 +110,17 @@ export const EquipmentDetail: FC = memo(() => {
     setUpdateHistories(createdHistories);
   };
 
-  const onClickUpdateistoryModal = (checkHistoryId: number) => alert("点検履歴更新モーダルを開く")
+  // useSelectHistoryのカスタムフック内のonSelectHistory関数で点検履歴を特定しモーダルを表示する
+  const onClickUpdateHistoryModal = useCallback((checkHistoryId: number) => {
+    onSelectHistory({ checkHistoryId: checkHistoryId, histories: updateHistories, openUpdateHistoryModal });
+  }, [updateHistories, onSelectHistory, openUpdateHistoryModal]);
 
-  const onClickDeleteHistory = (checkHistoryId: number) => alert("点検履歴削除モーダルを開く")
+  // UpdateHistoryModalで更新処理が実行されたら、更新後の点検履歴を反映する。
+  const handlePlanUpdate = (updatedPlans: Array<Plan>) => {
+    setUpdatePlans(updatedPlans);
+  };
+
+  const onClickDeleteHistory = (checkHistoryId: number) => alert("点検履歴削除モーダルを開く");
 
   const navigate = useNavigate();
 
@@ -220,7 +234,7 @@ export const EquipmentDetail: FC = memo(() => {
                 <Td>{history.result}</Td>
                 <Td>
                   <HStack>
-                    <BaseButton onClick={() => onClickUpdateistoryModal(history.checkHistoryId)}>修正</BaseButton>
+                    <BaseButton onClick={() => onClickUpdateHistoryModal(history.checkHistoryId)}>修正</BaseButton>
                     <BaseButton onClick={() => onClickDeleteHistory(history.checkHistoryId)}>削除</BaseButton>
                   </HStack>
                 </Td>
@@ -229,6 +243,8 @@ export const EquipmentDetail: FC = memo(() => {
           </Tbody>
         </Table>
       </TableContainer>
+      <UpdateHistoryModal selectedHistory={selectedHistory} isOpen={updateHistoryModalOpen}
+        onClose={closeUpdateHistoryModal} onHistoryUpdate={handleHistoryUpdate} />
       <br />
       <br />
       <HStack>
