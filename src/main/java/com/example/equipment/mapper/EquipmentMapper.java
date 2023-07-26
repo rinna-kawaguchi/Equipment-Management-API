@@ -17,14 +17,16 @@ public interface EquipmentMapper {
   @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
       + "FROM equipments LEFT JOIN plans ON equipments.equipment_id = plans.equipment_id "
       + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
-      + "AND location LIKE '%${location}%'")
+      + "AND location LIKE '%${location}%'"
+      + "ORDER BY equipments.equipment_id, deadline ASC")
   List<FindEquipmentResponse> findEquipment(
       String name, String number, String location);
 
   @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
       + "FROM equipments LEFT JOIN plans ON equipments.equipment_id = plans.equipment_id "
       + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
-      + "AND location LIKE '%${location}%' AND deadline <= #{deadline}")
+      + "AND location LIKE '%${location}%' AND deadline <= #{deadline}"
+      + "ORDER BY equipments.equipment_id, deadline ASC")
   List<FindEquipmentResponse> findEquipmentByDate(
       String name, String number, String location, String deadline);
 
