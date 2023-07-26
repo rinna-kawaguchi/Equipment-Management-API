@@ -47,6 +47,7 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "checkPlanId": 1,
             "checkType": "簡易点検",
             "deadline": "2023-09-30"
           },
@@ -55,6 +56,7 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "checkPlanId": 2,
             "checkType": "本格点検",
             "deadline": "2026-09-30"
           },
@@ -63,6 +65,7 @@ public class EquipmentIntegrationTest {
             "name": "吸込ポンプB",
             "number": "A2-C002B",
             "location": "Area2",
+            "checkPlanId": 3,
             "checkType": "簡易点検",
             "deadline": "2023-10-30"
           },
@@ -71,6 +74,7 @@ public class EquipmentIntegrationTest {
             "name": "吸込ポンプB",
             "number": "A2-C002B",
             "location": "Area2",
+            "checkPlanId": 4,
             "checkType": "本格点検",
             "deadline": "2025-11-30"
           },
@@ -79,6 +83,7 @@ public class EquipmentIntegrationTest {
             "name": "吐出ポンプC",
             "number": "A3-C003C",
             "location": "Area3",
+            "checkPlanId": null,
             "checkType": null,
             "deadline": null
           }
@@ -104,6 +109,7 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "checkPlanId": 1,
             "checkType": "簡易点検",
             "deadline": "2023-09-30"
           },
@@ -112,6 +118,7 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "checkPlanId": 2,
             "checkType": "本格点検",
             "deadline": "2026-09-30"
           }
@@ -138,6 +145,7 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "checkPlanId": 1,
             "checkType": "簡易点検",
             "deadline": "2023-09-30"
           }

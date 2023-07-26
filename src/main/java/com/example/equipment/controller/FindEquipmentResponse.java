@@ -12,6 +12,7 @@ public class FindEquipmentResponse {
   private String name;
   private String number;
   private String location;
+  private Integer checkPlanId;
   private String checkType;
   private String deadline;
 

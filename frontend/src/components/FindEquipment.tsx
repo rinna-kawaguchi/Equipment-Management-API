@@ -9,6 +9,7 @@ export type Equipment = {
   name: string;
   number: string;
   location: string;
+  checkPlanId: number;
   checkType: string;
   deadline: string;
 };
@@ -94,7 +95,7 @@ export const FindEquipment = () => {
           </Thead>
           <Tbody>
             {equipments?.map((equipment) => (
-              <Tr key={equipment.equipmentId}>
+              <Tr key={equipment.checkPlanId}>
                 <Td color={"blue"}>
                   <Link to={`/update/${equipment.equipmentId}`} state={{ id: equipment.equipmentId }}>{equipment.name}</Link>
                 </Td>

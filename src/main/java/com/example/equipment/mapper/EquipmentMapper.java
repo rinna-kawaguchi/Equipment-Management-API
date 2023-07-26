@@ -14,7 +14,8 @@ import java.util.Optional;
 @Mapper
 public interface EquipmentMapper {
 
-  @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
+  @Select("SELECT equipments.equipment_id, name, number, location, "
+      + "check_plan_id, check_type, deadline "
       + "FROM equipments LEFT JOIN plans ON equipments.equipment_id = plans.equipment_id "
       + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
       + "AND location LIKE '%${location}%'"
@@ -22,7 +23,8 @@ public interface EquipmentMapper {
   List<FindEquipmentResponse> findEquipment(
       String name, String number, String location);
 
-  @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
+  @Select("SELECT equipments.equipment_id, name, number, location, "
+      + "check_plan_id, check_type, deadline "
       + "FROM equipments LEFT JOIN plans ON equipments.equipment_id = plans.equipment_id "
       + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
       + "AND location LIKE '%${location}%' AND deadline <= #{deadline}"

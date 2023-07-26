@@ -30,7 +30,7 @@ class EquipmentServiceTest {
   @Test
   public void 設備検索で点検期限の指定がある時にMapperのfindEquipmentByDateメソッドが呼び出されること() {
     List<FindEquipmentResponse> equipments = List.of(
-        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", "簡易点検", "2023-09-30"));
+        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", 1, "簡易点検", "2023-09-30"));
     doReturn(equipments).when(equipmentMapper).findEquipmentByDate("真空", "C001", "Area1", "2023-11-30");
 
     List<FindEquipmentResponse> actual =
@@ -43,7 +43,7 @@ class EquipmentServiceTest {
   @Test
   public void 設備検索で点検期限の指定がない時にMapperのfindEquipmentメソッドが呼び出されること() {
     List<FindEquipmentResponse> equipments = List.of(
-        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", "簡易点検", "2023-09-30"));
+        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", 1, "簡易点検", "2023-09-30"));
     doReturn(equipments).when(equipmentMapper).findEquipment("真空", "C001", "Area1");
 
     List<FindEquipmentResponse> actual =
