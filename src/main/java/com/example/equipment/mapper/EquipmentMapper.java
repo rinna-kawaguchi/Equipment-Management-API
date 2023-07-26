@@ -1,5 +1,6 @@
 package com.example.equipment.mapper;
 
+import com.example.equipment.controller.FindEquipmentResponse;
 import com.example.equipment.entity.Equipment;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -13,9 +14,19 @@ import java.util.Optional;
 @Mapper
 public interface EquipmentMapper {
 
-  @Select("SELECT * FROM equipments WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' AND"
-      + " location LIKE '%${location}%'")
-  List<Equipment> findEquipment(String name, String number, String location);
+  @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
+      + "FROM equipments JOIN plans ON equipments.equipment_id = plans.equipment_id "
+      + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
+      + "AND location LIKE '%${location}%'")
+  List<FindEquipmentResponse> findEquipment(
+      String name, String number, String location);
+
+  @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
+      + "FROM equipments JOIN plans ON equipments.equipment_id = plans.equipment_id "
+      + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
+      + "AND location LIKE '%${location}%' AND deadline <= #{deadline}")
+  List<FindEquipmentResponse> findEquipmentByDate(
+      String name, String number, String location, String deadline);
 
   @Select("SELECT * FROM equipments WHERE equipment_id = #{equipmentId}")
   Optional<Equipment> findEquipmentById(int equipmentId);

@@ -1,10 +1,13 @@
 package com.example.equipment.service;
 
+import com.example.equipment.controller.FindEquipmentResponse;
 import com.example.equipment.entity.Equipment;
 import com.example.equipment.exception.ResourceNotFoundException;
 import com.example.equipment.form.EquipmentForm;
 import com.example.equipment.mapper.EquipmentMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import java.util.List;
 
 @Service
@@ -18,8 +21,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 
   // 設備の条件検索
   @Override
-  public List<Equipment> findEquipment(String name, String number, String location) {
-    return equipmentMapper.findEquipment(name, number, location);
+  public List<FindEquipmentResponse> findEquipment(
+      String name, String number, String location, String deadline) {
+    if (StringUtils.hasLength(deadline)) {
+      return equipmentMapper.findEquipmentByDate(name, number, location, deadline);
+    } else {
+      return equipmentMapper.findEquipment(name, number, location);
+    }
   }
 
   // 設備のID検索

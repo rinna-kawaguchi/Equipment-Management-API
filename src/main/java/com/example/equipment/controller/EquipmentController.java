@@ -35,12 +35,13 @@ public class EquipmentController {
   }
 
   @GetMapping("/equipments")
-  public List<Equipment> getEquipments(
+  public List<FindEquipmentResponse> getEquipments(
       @RequestParam(value = "name", required = false) String name,
       @RequestParam(value = "number", required = false) String number,
-      @RequestParam(value = "location", required = false) String location
+      @RequestParam(value = "location", required = false) String location,
+      @RequestParam(value = "deadline", required = false) String deadline
   ) {
-    return equipmentService.findEquipment(name, number, location);
+    return equipmentService.findEquipment(name, number, location, deadline);
   }
 
   @GetMapping("/equipments/{equipmentId}")
