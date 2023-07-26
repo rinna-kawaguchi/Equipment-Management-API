@@ -15,14 +15,14 @@ import java.util.Optional;
 public interface EquipmentMapper {
 
   @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
-      + "FROM equipments JOIN plans ON equipments.equipment_id = plans.equipment_id "
+      + "FROM equipments LEFT JOIN plans ON equipments.equipment_id = plans.equipment_id "
       + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
       + "AND location LIKE '%${location}%'")
   List<FindEquipmentResponse> findEquipment(
       String name, String number, String location);
 
   @Select("SELECT equipments.equipment_id, name, number, location, check_type, deadline "
-      + "FROM equipments JOIN plans ON equipments.equipment_id = plans.equipment_id "
+      + "FROM equipments LEFT JOIN plans ON equipments.equipment_id = plans.equipment_id "
       + "WHERE name LIKE '%${name}%' AND number LIKE '%${number}%' "
       + "AND location LIKE '%${location}%' AND deadline <= #{deadline}")
   List<FindEquipmentResponse> findEquipmentByDate(
