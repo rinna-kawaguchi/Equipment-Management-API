@@ -120,14 +120,23 @@ export const EquipmentDetail: FC = memo(() => {
     setUpdatePlans(updatedPlans);
   };
 
-  const onClickDeleteHistory = (checkHistoryId: number) => alert("点検履歴削除モーダルを開く");
+  // Spring BootのAPIを叩いて指定したIDの点検履歴を削除する
+  const onClickDeleteHistory = async (checkHistoryId: number) => {
+    alert("点検計画を削除しますか？");
+    let res = await axios.delete(`http://localhost:8080/histories/${checkHistoryId}`);
+    const response: Response = res.data.message;
+    alert(response);
+    axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
+      .then((res) => setUpdateHistories(res.data));
+  };
 
   const navigate = useNavigate();
 
-  // Spring BootのAPIを叩いて指定した設備IDの設備情報と点検計画を削除する。その後設備検索画面に遷移する。
+  // Spring BootのAPIを叩いて指定した設備IDの設備情報、点検計画、点検履歴を削除する。その後設備検索画面に遷移する。
   const onClickDeleteEquipment = async () => {
     alert("この設備と点検計画を削除しますか？");
     let res = await axios.delete(`http://localhost:8080/equipments/${id}/plans`)
+      .then(() => axios.delete(`http://localhost:8080/equipments/${id}/histories`))
       .then(() => axios.delete(`http://localhost:8080/equipments/${id}`));
     const response: Response = res.data.message;
     alert(response);
