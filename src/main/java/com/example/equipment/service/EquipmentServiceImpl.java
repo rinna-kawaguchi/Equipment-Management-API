@@ -7,7 +7,6 @@ import com.example.equipment.form.EquipmentForm;
 import com.example.equipment.mapper.EquipmentMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.util.List;
 
 @Service
