@@ -29,11 +29,12 @@ public class EquipmentIntegrationTest {
   @Autowired
   MockMvc mockMvc;
 
-  // GETメソッドでname,number,locationのクエリパラメータを指定しない時に、設備が全数取得できステータスコード200が返されること
+  // GETメソッドでname,number,location,deadlineのクエリパラメータを指定しない時に、
+  // 設備と点検期限が全数取得できステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional
-  void クエリパラメータを指定しない時に設備が全数取得できること() throws Exception {
+  void クエリパラメータを指定しない時に設備と点検期限が全数取得できること() throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.get("/equipments"))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -41,34 +42,61 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         [
-        {
-        "equipmentId": 1,
-        "name": "真空ポンプA",
-        "number": "A1-C001A",
-        "location": "Area1"
-        },
-        {
-        "equipmentId": 2,
-        "name": "吸込ポンプB",
-        "number": "A2-C002B",
-        "location": "Area2"
-        },
-        {
-        "equipmentId": 3,
-        "name": "吐出ポンプC",
-        "number": "A3-C003C",
-        "location": "Area3"       
-        }
+          {
+            "equipmentId": 1,
+            "name": "真空ポンプA",
+            "number": "A1-C001A",
+            "location": "Area1",
+            "checkPlanId": 1,
+            "checkType": "簡易点検",
+            "deadline": "2023-09-30"
+          },
+          {
+            "equipmentId": 1,
+            "name": "真空ポンプA",
+            "number": "A1-C001A",
+            "location": "Area1",
+            "checkPlanId": 2,
+            "checkType": "本格点検",
+            "deadline": "2026-09-30"
+          },
+          {
+            "equipmentId": 2,
+            "name": "吸込ポンプB",
+            "number": "A2-C002B",
+            "location": "Area2",
+            "checkPlanId": 3,
+            "checkType": "簡易点検",
+            "deadline": "2023-10-30"
+          },
+          {
+            "equipmentId": 2,
+            "name": "吸込ポンプB",
+            "number": "A2-C002B",
+            "location": "Area2",
+            "checkPlanId": 4,
+            "checkType": "本格点検",
+            "deadline": "2025-11-30"
+          },
+          {
+            "equipmentId": 3,
+            "name": "吐出ポンプC",
+            "number": "A3-C003C",
+            "location": "Area3",
+            "checkPlanId": null,
+            "checkType": null,
+            "deadline": null
+          }
         ]
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドでname,number,locationのクエリパラメータを指定した時に、
-  // 各内容に部分一致する設備が取得できステータスコード200が返されること
+  // GETメソッドでname,number,locationのクエリパラメータを指定しdeadlineを指定しない時に、
+  // 各内容に部分一致する設備と点検期限が取得できステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional
-  void クエリパラメータに指定した内容と部分一致する設備が取得できること() throws Exception {
+  void name_number_locationに指定した内容と部分一致する設備と点検期限が取得できること() throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.get("/equipments?name=ポンプ&number=C00&location=1"))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -76,19 +104,58 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         [
-        {
-        "equipmentId": 1,
-        "name": "真空ポンプA",
-        "number": "A1-C001A",
-        "location": "Area1"
-        }
+          {
+            "equipmentId": 1,
+            "name": "真空ポンプA",
+            "number": "A1-C001A",
+            "location": "Area1",
+            "checkPlanId": 1,
+            "checkType": "簡易点検",
+            "deadline": "2023-09-30"
+          },
+          {
+            "equipmentId": 1,
+            "name": "真空ポンプA",
+            "number": "A1-C001A",
+            "location": "Area1",
+            "checkPlanId": 2,
+            "checkType": "本格点検",
+            "deadline": "2026-09-30"
+          }
+        ]
+        """, response, JSONCompareMode.STRICT);
+  }
+
+  // GETメソッドでdeadlineのクエリパラメータを指定した時に、
+  // deadlineが指定した日付以前の設備と点検期限が取得できステータスコード200が返されること
+  @Test
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
+  @Transactional
+  void deadlineが指定した日付以前の設備と点検期限が取得できること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/equipments?name=ポンプ&number=C00&location=1&deadline=2023-10-30"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        [
+          {
+            "equipmentId": 1,
+            "name": "真空ポンプA",
+            "number": "A1-C001A",
+            "location": "Area1",
+            "checkPlanId": 1,
+            "checkType": "簡易点検",
+            "deadline": "2023-09-30"
+          }
         ]
         """, response, JSONCompareMode.STRICT);
   }
 
   // GETメソッドで設備が存在しない時に、空のListが返されステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/equipment/empty.yml")
+  @DataSet(value = "datasets/equipment/empty.yml, datasets/plan/plans.yml")
   @Transactional
   void 設備が存在しない時に空のListが取得できること() throws Exception {
     String response =
@@ -113,10 +180,10 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         {
-        "equipmentId": 1,
-        "name": "真空ポンプA",
-        "number": "A1-C001A",
-        "location": "Area1"
+          "equipmentId": 1,
+          "name": "真空ポンプA",
+          "number": "A1-C001A",
+          "location": "Area1"
         }
         """, response, JSONCompareMode.STRICT);
   }
