@@ -54,7 +54,8 @@ public class EquipmentController {
       @RequestBody @Validated EquipmentForm form, UriComponentsBuilder uriBuilder) {
     Equipment equipment = equipmentService.createEquipment(form);
     URI url = uriBuilder.path("/equipment/" + equipment.getEquipmentId()).build().toUri();
-    return ResponseEntity.created(url).body(Map.of("message", "設備が正常に登録されました"));
+    String newId = String.valueOf(equipment.getEquipmentId());
+    return ResponseEntity.created(url).body(Map.of("message", "設備が正常に登録されました", "newId", newId));
   }
 
   @PatchMapping("/equipments/{equipmentId}")
