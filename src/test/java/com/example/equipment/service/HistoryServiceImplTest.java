@@ -33,18 +33,6 @@ class HistoryServiceImplTest {
   EquipmentMapper equipmentMapper;
 
   @Test
-  public void 点検履歴取得の際に存在しない設備IDを指定した時に例外がスローされること() {
-    doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
-
-    assertThatThrownBy(() -> historyServiceImpl.findHistoryByEquipmentId(99))
-        .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
-          assertThat(e.getMessage()).isEqualTo("Not Found");
-        });
-    verify(equipmentMapper, times(1)).findEquipmentById(99);
-    verify(historyMapper, never()).findHistoryByEquipmentId(99);
-  }
-
-  @Test
   public void 点検履歴登録の際に存在しない設備IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
 
@@ -80,17 +68,5 @@ class HistoryServiceImplTest {
         });
     verify(historyMapper, times(1)).findHistoryByCheckHistoryId(99);
     verify(historyMapper, never()).deleteHistoryByCheckHistoryId(99);
-  }
-
-  @Test
-  public void 点検履歴削除の際に存在しない設備IDを指定した時に例外がスローされること() {
-    doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
-
-    assertThatThrownBy(() -> historyServiceImpl.deleteHistoryByEquipmentId(99))
-        .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
-          assertThat(e.getMessage()).isEqualTo("Not Found");
-        });
-    verify(equipmentMapper, times(1)).findEquipmentById(99);
-    verify(historyMapper, never()).deleteHistoryByEquipmentId(99);
   }
 }

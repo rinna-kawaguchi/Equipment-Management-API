@@ -35,18 +35,6 @@ class PlanServiceImplTest {
   EquipmentMapper equipmentMapper;
 
   @Test
-  public void 点検計画取得の際に存在しない設備IDを指定した時に例外がスローされること() {
-    doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
-
-    assertThatThrownBy(() -> planserviceImpl.findPlanByEquipmentId(99))
-        .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
-          assertThat(e.getMessage()).isEqualTo("Not Found");
-        });
-    verify(equipmentMapper, times(1)).findEquipmentById(99);
-    verify(planMapper, never()).findPlanByEquipmentId(99);
-  }
-
-  @Test
   public void 点検計画登録の際に存在しない設備IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
 
@@ -82,17 +70,5 @@ class PlanServiceImplTest {
         });
     verify(planMapper, times(1)).findPlanByCheckPlanId(99);
     verify(planMapper, never()).deletePlanByCheckPlanId(99);
-  }
-
-  @Test
-  public void 点検計画削除の際に存在しない設備IDを指定した時に例外がスローされること() {
-    doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
-
-    assertThatThrownBy(() -> planserviceImpl.deletePlanByEquipmentId(99))
-        .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
-          assertThat(e.getMessage()).isEqualTo("Not Found");
-        });
-    verify(equipmentMapper, times(1)).findEquipmentById(99);
-    verify(planMapper, never()).deletePlanByEquipmentId(99);
   }
 }

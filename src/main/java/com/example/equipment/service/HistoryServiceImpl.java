@@ -19,17 +19,15 @@ public class HistoryServiceImpl implements HistoryService {
     this.equipmentMapper = equipmentMapper;
   }
 
-  // 指定した設備IDの点検履歴を取得するMapperを呼び出す。設備IDが存在しない場合は例外をスローする
+  // 指定した設備IDの点検履歴を取得するMapperを呼び出す。
+  // 指定した設備IDの設備が存在しない場合であっても例外をスローせず取得できるようにする。
   @Override
    public List<History> findHistoryByEquipmentId(int equipmentId) {
-    equipmentMapper.findEquipmentById(equipmentId)
-        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-
     return historyMapper.findHistoryByEquipmentId(equipmentId);
   }
 
   // formからgetしたリクエスト内容で、指定した設備IDの点検履歴を登録するMapperを呼び出す。
-  // 設備IDが存在しない場合は例外をスローする
+  // 指定した設備IDの設備が存在しない場合は登録できないよう例外をスローする
   @Override
   public History createHistory(int equipmentId, HistoryForm form) {
     equipmentMapper.findEquipmentById(equipmentId)
@@ -59,11 +57,10 @@ public class HistoryServiceImpl implements HistoryService {
     historyMapper.deleteHistoryByCheckHistoryId(checkHistoryId);
   }
 
-  // 指定した設備IDに紐づく点検履歴を削除するMapperを呼びだす。設備IDが存在しない場合は例外をスローする
+  // 指定した設備IDに紐づく点検履歴を削除するMapperを呼びだす。
+  // 指定した設備IDの設備が存在しない場合であっても例外はスローせず削除できるようにする。
   @Override
   public void deleteHistoryByEquipmentId(int equipmentId) {
-    equipmentMapper.findEquipmentById(equipmentId)
-        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
     historyMapper.deleteHistoryByEquipmentId(equipmentId);
   }
 }

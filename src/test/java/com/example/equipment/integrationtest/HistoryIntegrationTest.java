@@ -29,9 +29,9 @@ public class HistoryIntegrationTest {
   @Autowired
   MockMvc mockMvc;
 
-  // GETメソッドで存在する設備IDを指定した時に、指定した設備IDの点検履歴が取得できステータスコード200が返されること
+  // GETメソッドで設備IDを指定した時に、指定した設備IDの点検履歴が取得できステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/history/histories.yml")
   @Transactional
   void 指定した設備IDの点検履歴が取得できること() throws Exception {
     String response =
@@ -59,31 +59,9 @@ public class HistoryIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
-  @Test
-  @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
-  @Transactional
-  void 指定したIDの設備が存在しない時に例外がスローされること() throws Exception {
-    String response =
-        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/4/histories"))
-            .andExpect(MockMvcResultMatchers.status().isNotFound())
-            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-
-    JSONAssert.assertEquals("""
-        {
-          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-          "status": "404",
-          "error": "Not Found",
-          "message": "Not Found",
-          "path": "/equipments/4/histories"
-        }
-        """, response, new CustomComparator(JSONCompareMode.STRICT,
-        new Customization("timestamp", ((o1, o2) -> true))));
-  }
-
   // GETメソッドで点検履歴が存在しない時に、空のListが返されステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/history/empty.yml, datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/history/empty.yml")
   @Transactional
   void 点検計画が存在しない時に空のListが取得できること() throws Exception {
     String response =
@@ -378,7 +356,7 @@ public class HistoryIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで存在する設備IDを指定した時に、点検履歴が削除できステータスコード200とメッセージが返されること
+  // DELETEメソッドで設備IDを指定した時に、点検履歴が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/history/histories.yml")
   @ExpectedDataSet(value = "datasets/history/delete_by_equipment_id.yml")
@@ -394,27 +372,5 @@ public class HistoryIntegrationTest {
           "message": "点検履歴が正常に削除されました"
         }
         """, response, JSONCompareMode.STRICT);
-  }
-
-  // DELETEメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
-  @Test
-  @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
-  @Transactional
-  void 削除の際に指定した設備IDが存在しない時に例外がスローされること() throws Exception {
-    String response =
-        mockMvc.perform(MockMvcRequestBuilders.delete("/equipments/4/plans"))
-            .andExpect(MockMvcResultMatchers.status().isNotFound())
-            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-
-    JSONAssert.assertEquals("""
-        {
-          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-          "status": "404",
-          "error": "Not Found",
-          "message": "Not Found",
-          "path": "/equipments/4/plans"
-        }
-        """, response, new CustomComparator(JSONCompareMode.STRICT,
-        new Customization("timestamp", ((o1, o2) -> true))));
   }
 }
