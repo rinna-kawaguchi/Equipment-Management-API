@@ -19,16 +19,15 @@ public class PlanServiceImpl implements PlanService {
     this.equipmentMapper = equipmentMapper;
   }
 
-  // 指定した設備IDが存在しない場合は例外をスローする
+  // 指定した設備IDに紐づく点検計画を取得する。
+  // 指定した設備IDの設備が存在しない場合であっても例外はスローせず取得できるようにする。
   @Override
   public List<Plan> findPlanByEquipmentId(int equipmentId) {
-    equipmentMapper.findEquipmentById(equipmentId)
-        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-
     return planMapper.findPlanByEquipmentId(equipmentId);
   }
 
-  // 指定した設備IDが存在しない場合は例外をスローする
+  // 指定した設備IDの設備に紐づく点検計画を登録する。
+  // 指定した設備IDの設備が存在しない場合は登録できないよう例外をスローする。
   @Override
   public Plan createPlan(int equipmentId, PlanForm form) {
     equipmentMapper.findEquipmentById(equipmentId)
@@ -53,10 +52,10 @@ public class PlanServiceImpl implements PlanService {
     planMapper.deletePlanByCheckPlanId(checkPlanId);
   }
 
+  // 指定した設備IDに紐づく点検計画の削除。
+  // 指定した設備IDをもつ設備が存在しない場合であっても例外はスローせず削除できるようにする。
   @Override
   public void deletePlanByEquipmentId(int equipmentId) {
-    equipmentMapper.findEquipmentById(equipmentId)
-        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
     planMapper.deletePlanByEquipmentId(equipmentId);
   }
 }
