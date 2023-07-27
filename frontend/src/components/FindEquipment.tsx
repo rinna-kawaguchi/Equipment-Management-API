@@ -1,4 +1,4 @@
-import { Box, Divider, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading, Input, Table, TableContainer, Text, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -54,9 +54,9 @@ export const FindEquipment = () => {
       </HStack>
       <br />
       <br />
-      <Heading size='md'>検索条件入力</Heading>
+      <Heading size='lg'>検索条件入力</Heading>
       <Divider my={3} />
-      <HStack spacing={4}>
+      <HStack spacing={4} >
         <Box>
           <p>設備名称</p>
           <Input width={"400px"} placeholder="ポンプ" onChange={onChangeName} />
@@ -71,8 +71,9 @@ export const FindEquipment = () => {
           <Input width={"400px"} placeholder="Area1" onChange={onChangeLocation} />
         </Box>
         <Box>
-          <p>点検期限</p>
-          <Input width={"400px"} placeholder="2023-12-31" onChange={onChangeDeadline} />
+          <p>点検期限（点検期限が指定した日付以前の設備を検索）</p>
+          <Input width={"400px"} placeholder="2023-12-31（yyyy-mm-ddで入力してください）" 
+          onChange={onChangeDeadline} />
         </Box>
       </HStack>
       <br />
