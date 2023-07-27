@@ -1,9 +1,10 @@
-import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
-import { History, Plan } from "../EquipmentDetail";
+import { History } from "../EquipmentDetail";
 import { useParams } from "react-router-dom";
+import { useMessage } from "../../hooks/useMessage";
 
 type Props = {
   selectedHistory: History | null;
@@ -14,6 +15,7 @@ type Props = {
 
 export const UpdateHistoryModal: FC<Props> = memo((props) => {
   const { selectedHistory, isOpen, onClose, onHistoryUpdate } = props;
+  const { showMessage } = useMessage();
 
   const [updateImplementationDate, setUpdateImplementationDate] = useState("");
   const [updateCheckType, setUpdateCheckType] = useState("");
@@ -36,13 +38,19 @@ export const UpdateHistoryModal: FC<Props> = memo((props) => {
   // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検履歴を更新し、更新後の点検履歴を取得して反映する
   const onClickUpdateHistory = async () => {
     alert("点検履歴を修正しますか？");
-    let res = await axios.patch(`http://localhost:8080/histories/${selectedHistory?.checkHistoryId}`,
-      {
-        "implementationDate": updateImplementationDate, "checkType": updateCheckType,
-        "result": updateResult
-      });
-    const response: Response = res.data.message;
-    alert(response);
+    let res =
+      await axios.patch(`http://localhost:8080/histories/${selectedHistory?.checkHistoryId}`,
+        {
+          "implementationDate": updateImplementationDate, "checkType": updateCheckType,
+          "result": updateResult
+        })
+        .catch(() => showMessage({
+          title: "点検履歴の修正に失敗しました。入力に誤りがあります。", status: "error"
+        }));
+    if (res) {
+      const response: string = res.data.message;
+      showMessage({ title: response, status: "success" });
+    }
     axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
       .then((res) => onHistoryUpdate(res.data));
     onClose();
