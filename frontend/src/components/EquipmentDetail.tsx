@@ -151,7 +151,7 @@ export const EquipmentDetail: FC = memo(() => {
       }));
       if (res) {
         const response: string = res.data.message;
-        showMessage({ title: `${response}"設備検索画面に戻ります"`, status: "success" });
+        showMessage({ title: `${response}。設備検索画面に戻ります。`, status: "success" });
       }
     navigate("/find");
   };
