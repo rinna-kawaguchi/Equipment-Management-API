@@ -232,9 +232,11 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         {
-        "message": "設備が正常に登録されました"
+          "message": "設備が正常に登録されました",
+          "newId": "13"
         }
-        """, response, JSONCompareMode.STRICT);
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("newId", ((o1, o2) -> true))));
   }
 
   // POSTメソッドでリクエストのname,number,locationのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
