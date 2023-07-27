@@ -3,6 +3,7 @@ import { FindEquipment } from '../components/FindEquipment';
 import { CreateEquipment } from '../components/CreateEquipment';
 import { EquipmentDetail } from '../components/EquipmentDetail';
 import { FC } from 'react';
+import { NotFound } from '../components/NotFound';
 
 export const Router: FC = () => {
   return (
@@ -10,6 +11,7 @@ export const Router: FC = () => {
       <Route path='/find' element={<FindEquipment />} />
       <Route path='/create' element={<CreateEquipment />} />
       <Route path='/update/:id' element={<EquipmentDetail />} />
+      <Route path='*' element={<NotFound />} />
     </Routes>
   );
 };
