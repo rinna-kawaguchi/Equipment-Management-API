@@ -22,8 +22,7 @@ export const CreateEquipment = () => {
   // 設備検索画面に遷移
   const onClickBackFindPage = () => navigate("/find");
 
-  // Spring BootのAPIを叩いて、前段で入力した内容で設備情報を登録する。
-  // できれば登録実行後に登録した設備の詳細画面に遷移するようにしたいが、設備IDの取得方法が分からず。。。
+  // Spring BootのAPIを叩いて、前段で入力した内容で設備情報を登録する。その後、登録した設備の詳細画面に遷移する。
   const onClickCreateEquipment = async () => {
     alert("設備を登録しますか？");
     let res = await axios.post("http://localhost:8080/equipments",
@@ -33,7 +32,9 @@ export const CreateEquipment = () => {
       }));
     if (res) {
       const response: string = res.data.message;
-      showMessage({ title: response, status: "success" });
+      showMessage({ title: `${response}。設備詳細画面に遷移します。`, status: "success" });
+      const newId = res.data.newId;
+      navigate(`/update/${newId}`);
     }
   };
 
