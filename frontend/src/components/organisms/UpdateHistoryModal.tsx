@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
@@ -63,17 +63,20 @@ export const UpdateHistoryModal: FC<Props> = memo((props) => {
         <ModalHeader>点検履歴修正</ModalHeader>
         <ModalCloseButton />
         <ModalBody mx={4}>
-          <Stack spacing={4}>
+          <Stack spacing={6}>
             <FormControl>
               <FormLabel>実施日</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須  ※ yyyy-mm-ddで入力してください</Text>
               <Input value={updateImplementationDate} onChange={onChangeUpdateImplementationDate} />
             </FormControl>
             <FormControl>
               <FormLabel>点検種別</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須  ※ 10文字以内で入力してください</Text>
               <Input value={updateCheckType} onChange={onChangeUpdateCheckType} />
             </FormControl>
             <FormControl>
               <FormLabel>点検結果</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須  ※ 50文字以内で入力してください</Text>
               <Input value={updateResult} onChange={onChangeUpdateResult} />
             </FormControl>
           </Stack>
