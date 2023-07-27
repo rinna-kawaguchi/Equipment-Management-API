@@ -1,9 +1,10 @@
-import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
 import { Plan } from "../EquipmentDetail";
 import { useParams } from "react-router-dom";
+import { useMessage } from "../../hooks/useMessage";
 
 type Props = {
   selectedPlan: Plan | null;
@@ -14,12 +15,12 @@ type Props = {
 
 export const UpdatePlanModal: FC<Props> = memo((props) => {
   const { selectedPlan, isOpen, onClose, onPlanUpdate } = props;
+  const { showMessage } = useMessage();
+  const { id } = useParams();
 
   const [updateCheckType, setUpdateCheckType] = useState("");
   const [updatePeriod, setUpdatePeriod] = useState("");
   const [updateDeadline, setUpdateDeadline] = useState("");
-
-  const { id } = useParams();
 
   // propsで渡された点検計画を各項目に渡す
   useEffect(() => {
@@ -37,9 +38,14 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
   const onClickUpdatePlan = async () => {
     alert("点検計画を修正しますか？");
     let res = await axios.patch(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`,
-      { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline });
-    const response: Response = res.data.message;
-    alert(response);
+      { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline })
+      .catch(() => showMessage({
+        title: "点検計画の修正に失敗しました。入力に誤りがあります。", status: "error"
+      }));
+      if (res) {
+        const response: string = res.data.message;
+        showMessage({ title: response, status: "success" })
+      }
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
       .then((res) => onPlanUpdate(res.data));
     onClose();
@@ -55,14 +61,17 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
           <Stack spacing={4}>
             <FormControl>
               <FormLabel>点検種別</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 10文字以内で入力してください</Text>
               <Input value={updateCheckType} onChange={onChangeUpdateCheckType} />
             </FormControl>
             <FormControl>
               <FormLabel>点検周期</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 10文字以内で入力してください</Text>
               <Input value={updatePeriod} onChange={onChangeUpdatePeriod} />
             </FormControl>
             <FormControl>
               <FormLabel>点検期限</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ yyyy-mm-ddで入力してください</Text>
               <Input value={updateDeadline} onChange={onChangeUpdateDeadline} />
             </FormControl>
           </Stack>

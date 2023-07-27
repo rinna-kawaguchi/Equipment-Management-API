@@ -1,4 +1,4 @@
-import { Box, Divider, FormControl, FormLabel, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { Box, Divider, FormControl, FormLabel, HStack, Heading, Input, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BaseButton } from "./atoms/BaseButton";
 import { FC, memo, useCallback, useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { CreatePlanModal } from "./organisms/CreatePlanModal";
 import { UpdateEquipmentModal } from "./organisms/UpdateEquipmentModal";
 import { CreateHistoryModal } from "./organisms/CreateHistoryModal";
 import { UpdateHistoryModal } from "./organisms/UpdateHistoryModal";
+import { useMessage } from "../hooks/useMessage";
 
 export type Plan = {
   checkPlanId: number;
@@ -31,6 +32,9 @@ export type History = {
 export const EquipmentDetail: FC = memo(() => {
   const { onSelectPlan, selectedPlan } = useSelectPlan();
   const { onSelectHistory, selectedHistory } = useSelectHistory();
+  const { showMessage } = useMessage();
+  const { id } = useParams();
+
   const [updateEquipment, setUpdateEquipment] = useState<Equipment | null>(null);
 
   const [updatePlans, setUpdatePlans] = useState<Array<Plan>>([]);
@@ -53,8 +57,6 @@ export const EquipmentDetail: FC = memo(() => {
   const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
   const openUpdateHistoryModal = () => setUpdateHistoryModalOpen(true);
   const closeUpdateHistoryModal = () => setUpdateHistoryModalOpen(false);
-
-  const { id } = useParams();
 
   // レンダリング確認用
   console.log("レンダリングされました");
@@ -92,9 +94,12 @@ export const EquipmentDetail: FC = memo(() => {
   // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
   const onClickDeletePlan = async (checkPlanId: number) => {
     alert("点検計画を削除しますか？");
-    let res = await axios.delete(`http://localhost:8080/plans/${checkPlanId}`);
-    const response: Response = res.data.message;
-    alert(response);
+    let res = await axios.delete(`http://localhost:8080/plans/${checkPlanId}`)
+      .catch(() => showMessage({ title: "点検計画の削除に失敗しました。", status: "error" }));
+    if (res) {
+      const response: string = res.data.message;
+      showMessage({ title: response, status: "success" });
+    }
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
       .then((res) => setUpdatePlans(res.data));
   };
@@ -123,9 +128,12 @@ export const EquipmentDetail: FC = memo(() => {
   // Spring BootのAPIを叩いて指定したIDの点検履歴を削除する
   const onClickDeleteHistory = async (checkHistoryId: number) => {
     alert("点検計画を削除しますか？");
-    let res = await axios.delete(`http://localhost:8080/histories/${checkHistoryId}`);
-    const response: Response = res.data.message;
-    alert(response);
+    let res = await axios.delete(`http://localhost:8080/histories/${checkHistoryId}`)
+      .catch(() => showMessage({ title: "点検履歴の削除に失敗しました。", status: "error" }));
+    if (res) {
+      const response: string = res.data.message;
+      showMessage({ title: response, status: "success" });
+    }
     axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
       .then((res) => setUpdateHistories(res.data));
   };
@@ -137,10 +145,14 @@ export const EquipmentDetail: FC = memo(() => {
     alert("この設備と点検計画を削除しますか？");
     let res = await axios.delete(`http://localhost:8080/equipments/${id}/plans`)
       .then(() => axios.delete(`http://localhost:8080/equipments/${id}/histories`))
-      .then(() => axios.delete(`http://localhost:8080/equipments/${id}`));
-    const response: Response = res.data.message;
-    alert(response);
-    alert("設備検索画面に戻ります");
+      .then(() => axios.delete(`http://localhost:8080/equipments/${id}`))
+      .catch(() => showMessage({
+        title: "設備情報、点検計画、点検履歴の削除に失敗しました。", status: "error"
+      }));
+      if (res) {
+        const response: string = res.data.message;
+        showMessage({ title: `${response}"設備検索画面に戻ります"`, status: "success" });
+      }
     navigate("/find");
   };
 

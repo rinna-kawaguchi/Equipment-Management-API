@@ -1,9 +1,10 @@
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import { Equipment } from "../FindEquipment";
-import { FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { BaseButton } from "../atoms/BaseButton";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useMessage } from "../../hooks/useMessage";
 
 type Props = {
   updateEquipment: Equipment | null;
@@ -14,12 +15,12 @@ type Props = {
 
 export const UpdateEquipmentModal: FC<Props> = memo((props) => {
   const { updateEquipment, isOpen, onClose, onEquipmentsUpdate } = props;
+  const { showMessage } = useMessage();
+  const { id } = useParams();
 
   const [updateName, setUpdateName] = useState("");
   const [updateNumber, setUpdateNumber] = useState("");
   const [updateLocation, setUpdateLocation] = useState("");
-
-  const { id } = useParams();
 
   // propsで渡された設備情報を各項目に渡す
   useEffect(() => {
@@ -37,11 +38,16 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
   const onClickUpdate = async () => {
     alert("設備情報を修正しますか？");
     let res = await axios.patch(`http://localhost:8080/equipments/${id}`,
-      { "name": updateName, "number": updateNumber, "location": updateLocation });
-    const response: Response = res.data.message;
-    alert(response);
+      { "name": updateName, "number": updateNumber, "location": updateLocation })
+      .catch(() => showMessage({
+        title: "設備情報の修正に失敗しました。入力に誤りがあります。", status: "error"
+      }));
+    if (res) {
+      const response: string = res.data.message;
+      showMessage({ title: response, status: "success" });
+    }
     axios.get<Equipment>(`http://localhost:8080/equipments/${id}`)
-    .then((res) => onEquipmentsUpdate(res.data));
+      .then((res) => onEquipmentsUpdate(res.data));
     onClose();
   };
 
@@ -55,14 +61,17 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
           <Stack spacing={4}>
             <FormControl>
               <FormLabel>設備名称</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
               <Input value={updateName} placeholder="設備名称" onChange={onChangeUpdateName} />
             </FormControl>
             <FormControl>
               <FormLabel>設備番号</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
               <Input value={updateNumber} placeholder="設備番号" onChange={onChangeUpdateNumber} />
             </FormControl>
             <FormControl>
               <FormLabel>設置場所</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
               <Input value={updateLocation} placeholder="設置場所" onChange={onChangeUpdateLocation} />
             </FormControl>
           </Stack>

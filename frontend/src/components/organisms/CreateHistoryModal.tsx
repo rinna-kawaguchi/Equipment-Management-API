@@ -1,9 +1,10 @@
-import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { BaseButton } from "../atoms/BaseButton";
 import { ChangeEvent, FC, memo, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { History } from "../EquipmentDetail";
+import { useMessage } from "../../hooks/useMessage";
 
 type Props = {
   isOpen: boolean;
@@ -13,12 +14,12 @@ type Props = {
 
 export const CreateHistoryModal: FC<Props> = memo((props) => {
   const { isOpen, onClose, onHistoryCreate } = props;
+  const { showMessage } = useMessage();
+  const { id } = useParams();
 
   const [createImplementationDate, setCreateImplementationDate] = useState("");
   const [createCheckType, setCreateCheckType] = useState("");
   const [createResult, setCreateResult] = useState("");
-
-  const { id } = useParams();
 
   // 入力した内容を点検履歴の各項目に渡す
   const onChangeCreateImplementationDate = (e: ChangeEvent<HTMLInputElement>) => setCreateImplementationDate(e.target.value);
@@ -32,9 +33,14 @@ export const CreateHistoryModal: FC<Props> = memo((props) => {
       {
         "implementationDate": createImplementationDate, "checkType": createCheckType,
         "result": createResult
-      });
-    const response: Response = res.data.message;
-    alert(response);
+      })
+      .catch(() => showMessage({
+        title: "点検履歴の追加に失敗しました。入力に誤りがあります。", status: "error"
+      }));
+    if (res) {
+      const response: string = res.data.message;
+      showMessage({ title: response, status: "success" });
+    }
     axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
       .then((res) => onHistoryCreate(res.data));
     onClose();
@@ -50,14 +56,17 @@ export const CreateHistoryModal: FC<Props> = memo((props) => {
           <Stack spacing={4}>
             <FormControl>
               <FormLabel>実施日</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ yyyy-mm-ddで入力してください</Text>
               <Input placeholder="2023-12-31" onChange={onChangeCreateImplementationDate} />
             </FormControl>
             <FormControl>
               <FormLabel>点検種別</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 10文字以内で入力してください</Text>
               <Input placeholder="本格点検" onChange={onChangeCreateCheckType} />
             </FormControl>
             <FormControl>
               <FormLabel>点検結果</FormLabel>
+              <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 50文字以内で入力してください</Text>
               <Input placeholder="良" onChange={onChangeCreateResult} />
             </FormControl>
           </Stack>
