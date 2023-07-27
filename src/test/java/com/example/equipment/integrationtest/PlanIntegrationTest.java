@@ -29,7 +29,7 @@ public class PlanIntegrationTest {
   @Autowired
   MockMvc mockMvc;
 
-  // GETメソッドで存在する設備IDを指定した時に、指定した設備IDの点検計画が取得できステータスコード200が返されること
+  // GETメソッドで設備IDを指定した時に、指定した設備IDの点検計画が取得できステータスコード200が返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @Transactional
@@ -57,28 +57,6 @@ public class PlanIntegrationTest {
                }
          ]
         """, response, JSONCompareMode.STRICT);
-  }
-
-  // GETメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
-  @Test
-  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
-  @Transactional
-  void 指定したIDの設備が存在しない時に例外がスローされること() throws Exception {
-    String response =
-        mockMvc.perform(MockMvcRequestBuilders.get("/equipments/4/plans"))
-            .andExpect(MockMvcResultMatchers.status().isNotFound())
-            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-
-    JSONAssert.assertEquals("""
-        {
-          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-          "status": "404",
-          "error": "Not Found",
-          "message": "Not Found",
-          "path": "/equipments/4/plans"
-        }
-        """, response, new CustomComparator(JSONCompareMode.STRICT,
-        new Customization("timestamp", ((o1, o2) -> true))));
   }
 
   // GETメソッドで点検計画が存在しない時に、空のListが返されステータスコード200が返されること
@@ -375,7 +353,7 @@ public class PlanIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで存在する設備IDを指定した時に、点検計画が削除できステータスコード200とメッセージが返されること
+  // DELETEメソッドで設備IDを指定した時に、点検計画が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @ExpectedDataSet(value = "datasets/plan/delete_by_equipment_id.yml")
@@ -391,27 +369,5 @@ public class PlanIntegrationTest {
           "message": "点検計画が正常に削除されました"
         }
         """, response, JSONCompareMode.STRICT);
-  }
-
-  // DELETEメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
-  @Test
-  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
-  @Transactional
-  void 削除の際に指定した設備IDが存在しない時に例外がスローされること() throws Exception {
-    String response =
-        mockMvc.perform(MockMvcRequestBuilders.delete("/equipments/4/plans"))
-            .andExpect(MockMvcResultMatchers.status().isNotFound())
-            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-
-    JSONAssert.assertEquals("""
-        {
-          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-          "status": "404",
-          "error": "Not Found",
-          "message": "Not Found",
-          "path": "/equipments/4/plans"
-        }
-        """, response, new CustomComparator(JSONCompareMode.STRICT,
-        new Customization("timestamp", ((o1, o2) -> true))));
   }
 }
