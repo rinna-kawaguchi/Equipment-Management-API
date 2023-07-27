@@ -1,7 +1,9 @@
 package com.example.equipment.service;
 
 import com.example.equipment.controller.FindEquipmentResponse;
+import com.example.equipment.entity.Equipment;
 import com.example.equipment.exception.ResourceNotFoundException;
+import com.example.equipment.form.EquipmentForm;
 import com.example.equipment.mapper.EquipmentMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,11 +16,13 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+// Mapperを呼び出しているだけの部分については、単体テストを割愛しMapper単体テスト及び結合テストで確認する。
 @ExtendWith(MockitoExtension.class)
 class EquipmentServiceTest {
   @InjectMocks
@@ -65,6 +69,16 @@ class EquipmentServiceTest {
   }
 
   @Test
+  public void Formに入力した内容で設備が登録できること() {
+    EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1");
+    Equipment expectedEquipment = new Equipment("ポンプA", "C001A", "Area1");
+    doNothing().when(equipmentMapper).insertEquipment(expectedEquipment);
+
+    assertThat(equipmentServiceImpl.createEquipment(form)).isEqualTo(expectedEquipment);
+    verify(equipmentMapper, times(1)).insertEquipment(expectedEquipment);
+  }
+
+  @Test
   public void 設備更新で存在しないIDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
 
@@ -87,6 +101,4 @@ class EquipmentServiceTest {
     verify(equipmentMapper, times(1)).findEquipmentById(99);
     verify(equipmentMapper, never()).deleteEquipment(99);
   }
-
-  // 設備の条件検索、ID検索、登録処理、更新処理、削除処理のテストについては、Mapperテストおよび結合テストに確認する
 }
