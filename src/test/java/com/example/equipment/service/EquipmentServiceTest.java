@@ -69,7 +69,7 @@ class EquipmentServiceTest {
   }
 
   @Test
-  public void Formに入力した内容で設備が登録できること() {
+  public void formからgetした内容で設備が登録できること() {
     EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1");
     Equipment expectedEquipment = new Equipment("ポンプA", "C001A", "Area1");
     doNothing().when(equipmentMapper).insertEquipment(expectedEquipment);

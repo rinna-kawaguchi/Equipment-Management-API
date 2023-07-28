@@ -1,5 +1,6 @@
 package com.example.equipment.service;
 
+import com.example.equipment.entity.Equipment;
 import com.example.equipment.entity.History;
 import com.example.equipment.exception.ResourceNotFoundException;
 import com.example.equipment.form.HistoryForm;
@@ -15,11 +16,13 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+// Mapperを呼び出しているだけの部分については、単体テストを割愛しMapper単体テスト及び結合テストで確認する。
 @ExtendWith(MockitoExtension.class)
 class HistoryServiceImplTest {
 
@@ -31,6 +34,19 @@ class HistoryServiceImplTest {
 
   @Mock
   EquipmentMapper equipmentMapper;
+
+  @Test
+  public void formからgetした内容で点検履歴を登録できること() {
+    HistoryForm form = new HistoryForm("2022-08-31", "取替", "良");
+    History expectedHistory = new History(1, "2022-08-31", "取替", "良");
+    doReturn(Optional.of(new Equipment("真空ポンプA", "A1-C001A", "Area1")))
+        .when(equipmentMapper).findEquipmentById(1);
+    doNothing().when(historyMapper).insertHistory(expectedHistory);
+
+    assertThat(historyServiceImpl.createHistory(1, form)).isEqualTo(expectedHistory);
+    verify(equipmentMapper, times(1)).findEquipmentById(1);
+    verify(historyMapper, times(1)).insertHistory(expectedHistory);
+  }
 
   @Test
   public void 点検履歴登録の際に存在しない設備IDを指定した時に例外がスローされること() {
