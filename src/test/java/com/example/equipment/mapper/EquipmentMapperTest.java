@@ -20,7 +20,7 @@ class EquipmentMapperTest {
   @Autowired
   EquipmentMapper equipmentMapper;
 
-  // 設備検索でname,number,location,deadlineに文字列を指定しない場合、設備が全数返されることのテスト
+  // 設備検索でname,number,location,deadlineを指定しない場合、設備と設備に紐づく点検計画が全数返されることのテスト
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional

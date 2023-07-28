@@ -76,7 +76,7 @@ public class HistoryIntegrationTest {
 
   // POSTメソッドで正しくリクエスト（implementationDate,checkType,resultが全て入力されており、
   // checkTypeは10文字以内で入力、resultは50文字以内で入力）した時に、
-  // 指定した設備の点検履歴が登録できステータスコード201とメッセージが返されること
+  // 指定した設備IDの点検履歴が登録できステータスコード201とメッセージが返されること
   @Test
   @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
   @ExpectedDataSet(value = "datasets/history/insert_history.yml", ignoreCols = "check_history_id")
@@ -356,7 +356,7 @@ public class HistoryIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで設備IDを指定した時に、点検履歴が削除できステータスコード200とメッセージが返されること
+  // DELETEメソッドで設備IDを指定した時に、指定した設備IDの点検履歴が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/history/histories.yml")
   @ExpectedDataSet(value = "datasets/history/delete_by_equipment_id.yml")

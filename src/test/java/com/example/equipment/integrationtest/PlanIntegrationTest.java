@@ -75,9 +75,9 @@ public class PlanIntegrationTest {
   }
 
   // POSTメソッドで正しくリクエスト（checkType,periodをいずれも10文字以内で入力）した時に、
-  // 指定した設備の点検計画が登録できステータスコード201とメッセージが返されること
+  // 指定した設備IDの点検計画が登録できステータスコード201とメッセージが返されること
   @Test
-  @DataSet(value = "datasets/plan/plans.yml")
+  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
   @ExpectedDataSet(value = "datasets/plan/insert_plan.yml", ignoreCols = "check_plan_id")
   @Transactional
   void 指定した設備の点検計画が登録できること() throws Exception {
@@ -135,7 +135,7 @@ public class PlanIntegrationTest {
   // （NotBlankのバリデーション確認、checkType,periodは同じアノテーションを付与しており同じString型のため、
   // 代表してcheckTypeで確認。以下同様）
   @Test
-  @DataSet(value = "datasets/plan/plans.yml")
+  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
   @Transactional
   void 登録時のリクエストでnullの項目がある時にエラーメッセージが返されること() throws Exception {
     String response =
@@ -166,7 +166,7 @@ public class PlanIntegrationTest {
   // POSTメソッドでリクエストのcheckType,periodのいずれかが空文字の時に、
   // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認）
   @Test
-  @DataSet(value = "datasets/plan/plans.yml")
+  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
   @Transactional
   void 登録時のリクエストで空文字の項目がある時にエラーメッセージが返されること() throws Exception {
     String response =
@@ -197,7 +197,7 @@ public class PlanIntegrationTest {
   // POSTメソッドでリクエストのcheckType,periodのいずれかが10文字を超えている時に、
   // ステータスコード400とエラーメッセージが返されること（@Size(max = 10)のバリデーション確認）
   @Test
-  @DataSet(value = "datasets/plan/plans.yml")
+  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
   @Transactional
   void 登録時のリクエストで10文字を超える項目がある時にエラーメッセージが返されること() throws Exception {
     String response =
@@ -353,7 +353,7 @@ public class PlanIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで設備IDを指定した時に、点検計画が削除できステータスコード200とメッセージが返されること
+  // DELETEメソッドで設備IDを指定した時に、指定した設備IDの点検計画が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @ExpectedDataSet(value = "datasets/plan/delete_by_equipment_id.yml")
