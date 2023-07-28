@@ -75,7 +75,7 @@ public class PlanIntegrationTest {
   }
 
   // POSTメソッドで正しくリクエスト（checkType,periodをいずれも10文字以内で入力）した時に、
-  // 指定した設備の点検計画が登録できステータスコード201とメッセージが返されること
+  // 指定した設備IDの点検計画が登録できステータスコード201とメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
   @ExpectedDataSet(value = "datasets/plan/insert_plan.yml", ignoreCols = "check_plan_id")
@@ -353,7 +353,7 @@ public class PlanIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで設備IDを指定した時に、点検計画が削除できステータスコード200とメッセージが返されること
+  // DELETEメソッドで設備IDを指定した時に、指定した設備IDの点検計画が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @ExpectedDataSet(value = "datasets/plan/delete_by_equipment_id.yml")
