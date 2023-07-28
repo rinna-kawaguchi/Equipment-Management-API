@@ -12,6 +12,7 @@ import { UpdateEquipmentModal } from "./organisms/UpdateEquipmentModal";
 import { CreateHistoryModal } from "./organisms/CreateHistoryModal";
 import { UpdateHistoryModal } from "./organisms/UpdateHistoryModal";
 import { useMessage } from "../hooks/useMessage";
+import { DeletePlanConfirmModal } from "./organisms/DeletePlanConfirmModal";
 
 export type Plan = {
   checkPlanId: number;
@@ -42,17 +43,24 @@ export const EquipmentDetail: FC = memo(() => {
   const [updateHistories, setUpdateHistories] = useState<Array<History>>([]);
 
   const [updateEquiipmentModalOpen, setUpdateEquipmentModalOpen] = useState(false);
+
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
+  const [deletePlanModalOpen, setDeletePlanModalOpen] = useState(false);
+
   const [createHistoryModalOpen, setCreateHistoryModalOpen] = useState(false);
   const [updateHistoryModalOpen, setUpdateHistoryModalOpen] = useState(false);
 
   const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
   const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
+
   const openCreatePlanModal = () => setCreatePlanModalOpen(true);
   const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
   const openUpdatePlanModal = () => setUpdatePlanModalOpen(true);
   const closeUpdatePlanModal = () => setUpdatePlanModalOpen(false);
+  const openDeletePlanModal = () => setDeletePlanModalOpen(true);
+  const closeDeletePlanModal = () => setDeletePlanModalOpen(false);
+
   const openCreateHistoryModal = () => setCreateHistoryModalOpen(true);
   const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
   const openUpdateHistoryModal = () => setUpdateHistoryModalOpen(true);
@@ -83,7 +91,8 @@ export const EquipmentDetail: FC = memo(() => {
 
   // useSelectHistoryのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
-    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal });
+    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans });
+    openUpdatePlanModal();
   }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
   // UpdateHistoryModalで更新処理が実行されたら、更新後の点検計画を反映する。
@@ -92,16 +101,14 @@ export const EquipmentDetail: FC = memo(() => {
   };
 
   // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
-  const onClickDeletePlan = async (checkPlanId: number) => {
-    alert("点検計画を削除しますか？");
-    let res = await axios.delete(`http://localhost:8080/plans/${checkPlanId}`)
-      .catch(() => showMessage({ title: "点検計画の削除に失敗しました。", status: "error" }));
-    if (res) {
-      const response: string = res.data.message;
-      showMessage({ title: response, status: "success" });
-    }
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
-      .then((res) => setUpdatePlans(res.data));
+  const onClickDeletePlan = useCallback((checkPlanId: number) => {
+    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans });
+    openDeletePlanModal();
+  }, [updatePlans, onSelectPlan, openDeletePlanModal]);
+
+  // DeletePlanConfirmModalで削除処理が実行されたら、削除後の点検履歴を反映する。
+  const handlePlanDelete = (deletedPlans: Array<Plan>) => {
+    setUpdatePlans(deletedPlans);
   };
 
   // Spring BootのAPIを叩いて指定した設備IDと紐づく点検履歴を取得する
@@ -149,10 +156,10 @@ export const EquipmentDetail: FC = memo(() => {
       .catch(() => showMessage({
         title: "設備情報、点検計画、点検履歴の削除に失敗しました。", status: "error"
       }));
-      if (res) {
-        const response: string = res.data.message;
-        showMessage({ title: `${response}。設備検索画面に戻ります。`, status: "success" });
-      }
+    if (res) {
+      const response: string = res.data.message;
+      showMessage({ title: `${response}。設備検索画面に戻ります。`, status: "success" });
+    }
     navigate("/find");
   };
 
@@ -228,6 +235,8 @@ export const EquipmentDetail: FC = memo(() => {
       </TableContainer>
       <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen}
         onClose={closeUpdatePlanModal} onPlanUpdate={handlePlanUpdate} />
+      <DeletePlanConfirmModal selectedPlan={selectedPlan} isOpen={deletePlanModalOpen}
+        onClose={closeDeletePlanModal} onPlanDelete={handlePlanDelete} />
       <br />
       <br />
       <HStack spacing={10}>
