@@ -200,11 +200,11 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         {
-        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-        "status": "404",
-        "error": "Not Found",
-        "message": "Not Found",
-        "path": "/equipments/4"
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "404",
+          "error": "Not Found",
+          "message": "Not Found",
+          "path": "/equipments/4"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -222,10 +222,10 @@ public class EquipmentIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content("""
                 {
-                "name": "真空ポンプB",
-                "number": "A1-C001B",
-                "location": "Area1"
-                }                                
+                  "name": "真空ポンプB",
+                  "number": "A1-C001B",
+                  "location": "Area1"
+                }
                 """))
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -251,21 +251,21 @@ public class EquipmentIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
-                "name": null,
-                "number": "A1-C001B",
-                "location": "Area1"
-                }                                
+                  "name": null,
+                  "number": "A1-C001B",
+                  "location": "Area1"
+                }
                 """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
         {
-        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-        "status": "400",
-        "error": "Bad Request",
-        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
-        "path": "/equipments"
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "path": "/equipments"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -282,21 +282,21 @@ public class EquipmentIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
-                "name": "",
-                "number": "A1-C001B",
-                "location": "Area1"
-                }                                
+                  "name": "",
+                  "number": "A1-C001B",
+                  "location": "Area1"
+                }
                 """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
         {
-        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-        "status": "400",
-        "error": "Bad Request",
-        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
-        "path": "/equipments"
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "path": "/equipments"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -313,22 +313,22 @@ public class EquipmentIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
-                "name": "aaaaaaaaaaaaaaaaaaaaa",
-                "number": "A1-C001B",
-                "location": "Area1"
-                }                                
+                  "name": "aaaaaaaaaaaaaaaaaaaaa",
+                  "number": "A1-C001B",
+                  "location": "Area1"
+                }
                 """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
         {
-        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-        "status": "400",
-        "error": "Bad Request",
-        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
-        "path": "/equipments"
-        }
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "path": "/equipments"
+          }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
@@ -344,17 +344,17 @@ public class EquipmentIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
-                "name": "真空ポンプB",
-                "number": "A1-C001B",
-                "location": "Area1"
-                }                                
+                  "name": "真空ポンプB",
+                  "number": "A1-C001B",
+                  "location": "Area1"
+                }
                 """))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
         {
-        "message": "設備が正常に更新されました"
+          "message": "設備が正常に更新されました"
         }
         """, response, JSONCompareMode.STRICT);
   }
@@ -369,21 +369,21 @@ public class EquipmentIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
-                "name": "真空ポンプB",
-                "number": "A1-C001B",
-                "location": "Area1"
-                }                                
+                  "name": "真空ポンプB",
+                  "number": "A1-C001B",
+                  "location": "Area1"
+                }
                 """))
             .andExpect(MockMvcResultMatchers.status().isNotFound())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
         {
-        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-        "status": "404",
-        "error": "Not Found",
-        "message": "Not Found",
-        "path": "/equipments/4"
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "404",
+          "error": "Not Found",
+          "message": "Not Found",
+          "path": "/equipments/4"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -400,21 +400,21 @@ public class EquipmentIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                 {
-                "name": null,
-                "number": "A1-C001B",
-                "location": "Area1"
-                }                                
+                  "name": null,
+                  "number": "A1-C001B",
+                  "location": "Area1"
+                }
                 """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     JSONAssert.assertEquals("""
         {
-        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-        "status": "400",
-        "error": "Bad Request",
-        "message": "name,number,locationは必須項目です。20文字以内で入力してください",
-        "path": "/equipments/1"
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "path": "/equipments/1"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -433,7 +433,7 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         {
-        "message": "設備が正常に削除されました"
+          "message": "設備が正常に削除されました"
         }
         """, response, JSONCompareMode.STRICT);
   }
@@ -450,11 +450,11 @@ public class EquipmentIntegrationTest {
 
     JSONAssert.assertEquals("""
         {
-        "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
-        "status": "404",
-        "error": "Not Found",
-        "message": "Not Found",
-        "path": "/equipments/4"
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "404",
+          "error": "Not Found",
+          "message": "Not Found",
+          "path": "/equipments/4"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
