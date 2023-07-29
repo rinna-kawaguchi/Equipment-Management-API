@@ -6,7 +6,7 @@ type Props = {
   plans: Array<Plan>;
 };
 
-// 選択した点検計画を特定し、モーダルを表示するカスタムフック
+// 選択した点検計画を特定するカスタムフック
 export const useSelectPlan = () => {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 

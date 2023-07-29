@@ -89,15 +89,15 @@ export const EquipmentDetail: FC = memo(() => {
     setUpdatePlans(createdPlans);
   };
 
-  // useSelectHistoryのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
+  // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
     onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans });
     openUpdatePlanModal();
   }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
-  // UpdateHistoryModalで更新処理が実行されたら、更新後の点検計画を反映する。
-  const handleHistoryUpdate = (updatedHistories: Array<History>) => {
-    setUpdateHistories(updatedHistories);
+  // UpdatePlanModalで更新処理が実行されたら、更新後の点検計画を反映する。
+  const handlePlanUpdate = (updatedPlans: Array<Plan>) => {
+    setUpdatePlans(updatedPlans);
   };
 
   // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
@@ -128,8 +128,8 @@ export const EquipmentDetail: FC = memo(() => {
   }, [updateHistories, onSelectHistory, openUpdateHistoryModal]);
 
   // UpdateHistoryModalで更新処理が実行されたら、更新後の点検履歴を反映する。
-  const handlePlanUpdate = (updatedPlans: Array<Plan>) => {
-    setUpdatePlans(updatedPlans);
+  const handleHistoryUpdate = (updatedHistories: Array<History>) => {
+    setUpdateHistories(updatedHistories);
   };
 
   // Spring BootのAPIを叩いて指定したIDの点検履歴を削除する
