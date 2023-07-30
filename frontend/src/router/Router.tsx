@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { FindEquipment } from '../components/pages/FindEquipment';
-import { CreateEquipment } from '../components/CreateEquipment';
+import { CreateEquipment } from '../components/pages/CreateEquipment';
 import { EquipmentDetail } from '../components/EquipmentDetail';
 import { FC } from 'react';
 import { NotFound } from '../components/NotFound';
