@@ -1,5 +1,5 @@
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
-import { ChangeEvent, FC, memo, useEffect, useState } from "react";
+import { ChangeEvent, FC, memo, useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
 import { Plan } from "../../types/Plan";
@@ -35,7 +35,7 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
   const onChangeUpdateDeadline = (e: ChangeEvent<HTMLInputElement>) => setUpdateDeadline(e.target.value);
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検計画を更新し、更新後の点検計画を取得して反映する
-  const onClickUpdatePlan = async () => {
+  const onClickUpdatePlan = useCallback(async() => {
     let res = await axios.patch(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`,
       { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline })
       .catch(() => showMessage({
@@ -48,7 +48,7 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
       .then((res) => onPlanUpdate(res.data));
     onClose();
-  };
+  }, []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={"sm"}>
