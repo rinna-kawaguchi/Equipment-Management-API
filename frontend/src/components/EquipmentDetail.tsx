@@ -14,6 +14,7 @@ import { UpdateHistoryModal } from "./organisms/UpdateHistoryModal";
 import { useMessage } from "../hooks/useMessage";
 import { DeletePlanConfirmModal } from "./organisms/DeletePlanConfirmModal";
 import { DeleteHistoryConfirmModal } from "./organisms/DeleteHistoryConfirmModal";
+import { DeleteEquipmentConfirmModal } from "./organisms/DeleteEquipmentConfirmModal";
 
 export type Plan = {
   checkPlanId: number;
@@ -44,6 +45,7 @@ export const EquipmentDetail: FC = memo(() => {
   const [updateHistories, setUpdateHistories] = useState<Array<History>>([]);
 
   const [updateEquiipmentModalOpen, setUpdateEquipmentModalOpen] = useState(false);
+  const [deleteEquiipmentModalOpen, setDeleteEquipmentModalOpen] = useState(false);
 
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
@@ -55,6 +57,8 @@ export const EquipmentDetail: FC = memo(() => {
 
   const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
   const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
+  const openDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(true);
+  const closeDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(false);
 
   const openCreatePlanModal = () => setCreatePlanModalOpen(true);
   const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
@@ -149,22 +153,6 @@ export const EquipmentDetail: FC = memo(() => {
   };
 
   const navigate = useNavigate();
-
-  // Spring BootのAPIを叩いて指定した設備IDの設備情報、点検計画、点検履歴を削除する。その後設備検索画面に遷移する。
-  const onClickDeleteEquipment = async () => {
-    alert("この設備と点検計画を削除しますか？");
-    let res = await axios.delete(`http://localhost:8080/equipments/${id}/plans`)
-      .then(() => axios.delete(`http://localhost:8080/equipments/${id}/histories`))
-      .then(() => axios.delete(`http://localhost:8080/equipments/${id}`))
-      .catch(() => showMessage({
-        title: "設備情報、点検計画、点検履歴の削除に失敗しました。", status: "error"
-      }));
-    if (res) {
-      const response: string = res.data.message;
-      showMessage({ title: `${response}。設備検索画面に戻ります。`, status: "success" });
-    }
-    navigate("/find");
-  };
 
   // 設備検索画面に遷移
   const onClickBackFindPage = () => navigate("/find");
@@ -283,7 +271,9 @@ export const EquipmentDetail: FC = memo(() => {
       <br />
       <HStack>
         <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
-        <BaseButton onClick={onClickDeleteEquipment}>削除</BaseButton>
+        <BaseButton onClick={openDeleteEquipmentModal}>削除</BaseButton>
+        <DeleteEquipmentConfirmModal isOpen={deleteEquiipmentModalOpen} 
+        onClose={closeDeleteEquipmentModal} />
       </HStack>
     </Box>
   );

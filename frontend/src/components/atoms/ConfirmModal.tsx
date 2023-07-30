@@ -17,7 +17,7 @@ export const ConfirmModal = (props: Props) => {
       <ModalOverlay />
       <ModalContent py={2}>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody mx={4}>
           <VStack spacing={4}>
             <Text>{children}</Text>
             <HStack>
