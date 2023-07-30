@@ -12,6 +12,9 @@ import { UpdateEquipmentModal } from "./organisms/UpdateEquipmentModal";
 import { CreateHistoryModal } from "./organisms/CreateHistoryModal";
 import { UpdateHistoryModal } from "./organisms/UpdateHistoryModal";
 import { useMessage } from "../hooks/useMessage";
+import { DeletePlanConfirmModal } from "./organisms/DeletePlanConfirmModal";
+import { DeleteHistoryConfirmModal } from "./organisms/DeleteHistoryConfirmModal";
+import { DeleteEquipmentConfirmModal } from "./organisms/DeleteEquipmentConfirmModal";
 
 export type Plan = {
   checkPlanId: number;
@@ -42,21 +45,34 @@ export const EquipmentDetail: FC = memo(() => {
   const [updateHistories, setUpdateHistories] = useState<Array<History>>([]);
 
   const [updateEquiipmentModalOpen, setUpdateEquipmentModalOpen] = useState(false);
+  const [deleteEquiipmentModalOpen, setDeleteEquipmentModalOpen] = useState(false);
+
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
+  const [deletePlanModalOpen, setDeletePlanModalOpen] = useState(false);
+
   const [createHistoryModalOpen, setCreateHistoryModalOpen] = useState(false);
   const [updateHistoryModalOpen, setUpdateHistoryModalOpen] = useState(false);
+  const [deleteHistoryModalOpen, setDeleteHistoryModalOpen] = useState(false);
 
   const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
   const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
+  const openDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(true);
+  const closeDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(false);
+
   const openCreatePlanModal = () => setCreatePlanModalOpen(true);
   const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
   const openUpdatePlanModal = () => setUpdatePlanModalOpen(true);
   const closeUpdatePlanModal = () => setUpdatePlanModalOpen(false);
+  const openDeletePlanModal = () => setDeletePlanModalOpen(true);
+  const closeDeletePlanModal = () => setDeletePlanModalOpen(false);
+
   const openCreateHistoryModal = () => setCreateHistoryModalOpen(true);
   const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
   const openUpdateHistoryModal = () => setUpdateHistoryModalOpen(true);
   const closeUpdateHistoryModal = () => setUpdateHistoryModalOpen(false);
+  const openDeleteHistoryModal = () => setDeleteHistoryModalOpen(true);
+  const closeDeleteHistoryModal = () => setDeleteHistoryModalOpen(false);
 
   // レンダリング確認用
   console.log("レンダリングされました");
@@ -81,27 +97,26 @@ export const EquipmentDetail: FC = memo(() => {
     setUpdatePlans(createdPlans);
   };
 
-  // useSelectHistoryのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
+  // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
-    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans, openUpdatePlanModal });
+    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans });
+    openUpdatePlanModal();
   }, [updatePlans, onSelectPlan, openUpdatePlanModal]);
 
-  // UpdateHistoryModalで更新処理が実行されたら、更新後の点検計画を反映する。
-  const handleHistoryUpdate = (updatedHistories: Array<History>) => {
-    setUpdateHistories(updatedHistories);
+  // UpdatePlanModalで更新処理が実行されたら、更新後の点検計画を反映する。
+  const handlePlanUpdate = (updatedPlans: Array<Plan>) => {
+    setUpdatePlans(updatedPlans);
   };
 
-  // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
-  const onClickDeletePlan = async (checkPlanId: number) => {
-    alert("点検計画を削除しますか？");
-    let res = await axios.delete(`http://localhost:8080/plans/${checkPlanId}`)
-      .catch(() => showMessage({ title: "点検計画の削除に失敗しました。", status: "error" }));
-    if (res) {
-      const response: string = res.data.message;
-      showMessage({ title: response, status: "success" });
-    }
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
-      .then((res) => setUpdatePlans(res.data));
+  // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しモーダルを表示する
+  const onClickDeletePlan = useCallback((checkPlanId: number) => {
+    onSelectPlan({ checkPlanId: checkPlanId, plans: updatePlans });
+    openDeletePlanModal();
+  }, [updatePlans, onSelectPlan, openDeletePlanModal]);
+
+  // DeletePlanConfirmModalで削除処理が実行されたら、削除後の点検履歴を反映する。
+  const handlePlanDelete = (deletedPlans: Array<Plan>) => {
+    setUpdatePlans(deletedPlans);
   };
 
   // Spring BootのAPIを叩いて指定した設備IDと紐づく点検履歴を取得する
@@ -110,51 +125,34 @@ export const EquipmentDetail: FC = memo(() => {
       .then((res) => setUpdateHistories(res.data));
   }, [id]);
 
-  // CreatePlanModalで点検計画が追加されたら、追加後の点検計画を反映する。
+  // CreatePlanModalで点検履歴が追加されたら、追加後の点検履歴を反映する。
   const handleHistoryCreate = (createdHistories: Array<History>) => {
     setUpdateHistories(createdHistories);
   };
 
   // useSelectHistoryのカスタムフック内のonSelectHistory関数で点検履歴を特定しモーダルを表示する
   const onClickUpdateHistoryModal = useCallback((checkHistoryId: number) => {
-    onSelectHistory({ checkHistoryId: checkHistoryId, histories: updateHistories, openUpdateHistoryModal });
+    onSelectHistory({ checkHistoryId: checkHistoryId, histories: updateHistories });
+    openUpdateHistoryModal();
   }, [updateHistories, onSelectHistory, openUpdateHistoryModal]);
 
   // UpdateHistoryModalで更新処理が実行されたら、更新後の点検履歴を反映する。
-  const handlePlanUpdate = (updatedPlans: Array<Plan>) => {
-    setUpdatePlans(updatedPlans);
+  const handleHistoryUpdate = (updatedHistories: Array<History>) => {
+    setUpdateHistories(updatedHistories);
   };
 
-  // Spring BootのAPIを叩いて指定したIDの点検履歴を削除する
-  const onClickDeleteHistory = async (checkHistoryId: number) => {
-    alert("点検計画を削除しますか？");
-    let res = await axios.delete(`http://localhost:8080/histories/${checkHistoryId}`)
-      .catch(() => showMessage({ title: "点検履歴の削除に失敗しました。", status: "error" }));
-    if (res) {
-      const response: string = res.data.message;
-      showMessage({ title: response, status: "success" });
-    }
-    axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
-      .then((res) => setUpdateHistories(res.data));
+  // useSelectHistoryのカスタムフック内のonSelectHistory関数で点検履歴を特定しモーダルを表示する
+  const onClickDeleteHistory = useCallback((checkHistoryId: number) => {
+    onSelectHistory({ checkHistoryId: checkHistoryId, histories: updateHistories });
+    openDeleteHistoryModal();
+  }, [updateHistories, onSelectHistory, openDeleteHistoryModal]);
+
+  // DeleteHistoryConfirmModalで削除処理が実行されたら、削除後の点検履歴を反映する。
+  const handleHistoryDelete = (deletedHistories: Array<History>) => {
+    setUpdateHistories(deletedHistories);
   };
 
   const navigate = useNavigate();
-
-  // Spring BootのAPIを叩いて指定した設備IDの設備情報、点検計画、点検履歴を削除する。その後設備検索画面に遷移する。
-  const onClickDeleteEquipment = async () => {
-    alert("この設備と点検計画を削除しますか？");
-    let res = await axios.delete(`http://localhost:8080/equipments/${id}/plans`)
-      .then(() => axios.delete(`http://localhost:8080/equipments/${id}/histories`))
-      .then(() => axios.delete(`http://localhost:8080/equipments/${id}`))
-      .catch(() => showMessage({
-        title: "設備情報、点検計画、点検履歴の削除に失敗しました。", status: "error"
-      }));
-      if (res) {
-        const response: string = res.data.message;
-        showMessage({ title: `${response}。設備検索画面に戻ります。`, status: "success" });
-      }
-    navigate("/find");
-  };
 
   // 設備検索画面に遷移
   const onClickBackFindPage = () => navigate("/find");
@@ -228,6 +226,8 @@ export const EquipmentDetail: FC = memo(() => {
       </TableContainer>
       <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen}
         onClose={closeUpdatePlanModal} onPlanUpdate={handlePlanUpdate} />
+      <DeletePlanConfirmModal selectedPlan={selectedPlan} isOpen={deletePlanModalOpen}
+        onClose={closeDeletePlanModal} onPlanDelete={handlePlanDelete} />
       <br />
       <br />
       <HStack spacing={10}>
@@ -266,11 +266,14 @@ export const EquipmentDetail: FC = memo(() => {
       </TableContainer>
       <UpdateHistoryModal selectedHistory={selectedHistory} isOpen={updateHistoryModalOpen}
         onClose={closeUpdateHistoryModal} onHistoryUpdate={handleHistoryUpdate} />
+      <DeleteHistoryConfirmModal selectedHistory={selectedHistory} isOpen={deleteHistoryModalOpen} onClose={closeDeleteHistoryModal} onHistoryDelete={handleHistoryDelete} />
       <br />
       <br />
       <HStack>
         <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
-        <BaseButton onClick={onClickDeleteEquipment}>削除</BaseButton>
+        <BaseButton onClick={openDeleteEquipmentModal}>削除</BaseButton>
+        <DeleteEquipmentConfirmModal isOpen={deleteEquiipmentModalOpen} 
+        onClose={closeDeleteEquipmentModal} />
       </HStack>
     </Box>
   );

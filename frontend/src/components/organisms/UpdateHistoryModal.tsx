@@ -37,7 +37,6 @@ export const UpdateHistoryModal: FC<Props> = memo((props) => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検履歴を更新し、更新後の点検履歴を取得して反映する
   const onClickUpdateHistory = async () => {
-    alert("点検履歴を修正しますか？");
     let res =
       await axios.patch(`http://localhost:8080/histories/${selectedHistory?.checkHistoryId}`,
         {

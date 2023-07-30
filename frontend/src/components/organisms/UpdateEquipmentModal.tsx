@@ -36,7 +36,6 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの設備情報を更新し、更新後の設備情報を取得して反映する
   const onClickUpdate = async () => {
-    alert("設備情報を修正しますか？");
     let res = await axios.patch(`http://localhost:8080/equipments/${id}`,
       { "name": updateName, "number": updateNumber, "location": updateLocation })
       .catch(() => showMessage({

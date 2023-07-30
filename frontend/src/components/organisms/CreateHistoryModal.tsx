@@ -28,7 +28,6 @@ export const CreateHistoryModal: FC<Props> = memo((props) => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの点検履歴を登録し、登録後の点検履歴を取得して反映する。
   const onClickCreateHistory = async () => {
-    alert("点検履歴を追加しますか？");
     let res = await axios.post(`http://localhost:8080/equipments/${id}/histories`,
       {
         "implementationDate": createImplementationDate, "checkType": createCheckType,
