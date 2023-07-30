@@ -19,8 +19,6 @@ export const Histories = memo((props: Props) => {
   const [updateHistoryModalOpen, setUpdateHistoryModalOpen] = useState(false);
   const [deleteHistoryModalOpen, setDeleteHistoryModalOpen] = useState(false);
 
-  console.log("Historiesがレンダリングされました");
-
   const openUpdateHistoryModal = () => setUpdateHistoryModalOpen(true);
   const closeUpdateHistoryModal = () => setUpdateHistoryModalOpen(false);
   const openDeleteHistoryModal = () => setDeleteHistoryModalOpen(true);

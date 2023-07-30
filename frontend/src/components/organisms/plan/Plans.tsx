@@ -24,8 +24,6 @@ export const Plans = memo((props: Props) => {
   const openDeletePlanModal = () => setDeletePlanModalOpen(true);
   const closeDeletePlanModal = () => setDeletePlanModalOpen(false);
 
-  console.log("Plansがレンダリングされました");
-
   // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しUpdatePlanModalを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
     onSelectPlan({ checkPlanId: checkPlanId, plans: plans });

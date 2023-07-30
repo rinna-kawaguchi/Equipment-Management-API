@@ -1,9 +1,10 @@
-import { ConfirmModal } from "../../atoms/ConfirmModal";
-import { useMessage } from "../../../hooks/useMessage";
+import { memo, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+
+import { ConfirmModal } from "../../atoms/ConfirmModal";
+import { useMessage } from "../../../hooks/useMessage";
 import { History } from "../../../types/History";
-import { memo, useCallback } from "react";
 
 type Props = {
   selectedHistory: History | null;

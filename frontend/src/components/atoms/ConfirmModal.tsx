@@ -1,6 +1,7 @@
-import { HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, VStack } from "@chakra-ui/react";
-import { BaseButton } from "./BaseButton";
 import { ReactNode, memo } from "react";
+import { HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, VStack } from "@chakra-ui/react";
+
+import { BaseButton } from "./BaseButton";
 
 type Props = {
   isOpen: boolean;

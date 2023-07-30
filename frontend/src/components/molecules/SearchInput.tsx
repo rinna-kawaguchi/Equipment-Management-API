@@ -1,5 +1,5 @@
 import { Box, Divider, HStack, Heading, Input } from "@chakra-ui/react";
-import { ChangeEvent, memo, useState } from "react";
+import { ChangeEvent, memo, useEffect, useState } from "react";
 
 type Props = {
   onEquipmentSearch: (name: string, number: string, location: string, deadline: string) => void;
@@ -19,10 +19,8 @@ export const SearchInput = memo((props: Props) => {
   const onChangeLocation = (e: ChangeEvent<HTMLInputElement>) => setInputLocation(e.target.value);
   const onChangeDeadline = (e: ChangeEvent<HTMLInputElement>) => setInputDeadline(e.target.value);
 
-  console.log("SearchInputがレンダリングされました");
-
   // 入力された内容を親コンポーネントに渡す
-  onEquipmentSearch(inputName, inputNumber, inputLocation, inputDeadline);
+  useEffect(() => onEquipmentSearch(inputName, inputNumber, inputLocation, inputDeadline), [inputName, inputName, inputLocation, inputDeadline]);
 
   // 検索条件入力欄の表示
   return (

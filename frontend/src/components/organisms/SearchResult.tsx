@@ -1,7 +1,8 @@
+import { memo, useCallback } from "react";
 import { Divider, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+
 import { Equipment } from "../../types/Equipment";
-import { memo } from "react";
 
 type Props = {
   equipments: Array<Equipment>;
@@ -11,12 +12,12 @@ export const SearchResult = memo((props: Props) => {
   const { equipments } = props;
 
   // １ヶ月後の日付をyyyy-mm-dd形式に変換する
-  const formatOneMonthAhead = (dt: Date) => {
+  const formatOneMonthAhead = useCallback((dt: Date) => {
     var y = dt.getFullYear();
     var m = ('00' + (dt.getMonth() + 2)).slice(-2);
     var d = ('00' + dt.getDate()).slice(-2);
     return (y + '-' + m + '-' + d);
-  };
+  }, []);
 
   // propsで渡された設備リストを検索結果として表示する。点検期限が１ヶ月以内の場合は赤く表示する。
   return (

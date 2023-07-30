@@ -1,18 +1,19 @@
+import { FC, memo, useCallback, useEffect, useState } from "react";
 import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BaseButton } from "../atoms/BaseButton";
-import { FC, memo, useCallback, useEffect, useState } from "react";
-import { Equipment } from "../../types/Equipment";
 import axios from "axios";
+
+import { BaseButton } from "../atoms/BaseButton";
+import { EquipmentInformation } from "../molecules/EquipmentInformation";
 import { CreatePlanModal } from "../organisms/plan/CreatePlanModal";
 import { UpdateEquipmentModal } from "../organisms/UpdateEquipmentModal";
 import { CreateHistoryModal } from "../organisms/History/CreateHistoryModal";
 import { DeleteEquipmentConfirmModal } from "../organisms/DeleteEquipmentConfirmModal";
-import { Plan } from "../../types/Plan";
-import { History } from "../../types/History";
-import { EquipmentInformation } from "../molecules/EquipmentInformation";
 import { Plans } from "../organisms/plan/Plans";
 import { Histories } from "../organisms/History/Histories";
+import { Equipment } from "../../types/Equipment";
+import { Plan } from "../../types/Plan";
+import { History } from "../../types/History";
 
 export const EquipmentDetail: FC = memo(() => {
   const { id } = useParams();
@@ -36,9 +37,6 @@ export const EquipmentDetail: FC = memo(() => {
 
   const openCreateHistoryModal = () => setCreateHistoryModalOpen(true);
   const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
-
-  // レンダリング確認用
-  console.log("EquipmentDetailがレンダリングされました");
 
   // Spring BootのAPIを叩いて指定した設備IDの設備情報を取得する
   useEffect(() => {

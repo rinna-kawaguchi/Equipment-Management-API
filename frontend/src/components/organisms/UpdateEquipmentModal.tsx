@@ -1,9 +1,10 @@
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
-import { Equipment } from "../../types/Equipment";
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
-import { BaseButton } from "../atoms/BaseButton";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+
+import { Equipment } from "../../types/Equipment";
+import { BaseButton } from "../atoms/BaseButton";
 import { useMessage } from "../../hooks/useMessage";
 
 type Props = {
