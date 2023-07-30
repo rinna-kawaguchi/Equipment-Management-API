@@ -1,13 +1,13 @@
 import { Box, HStack, Heading } from "@chakra-ui/react";
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BaseButton } from "../atoms/BaseButton";
 import { SearchInput } from "../molecules/SearchInput";
 import { SearchResult } from "../organisms/SearchResult";
 import { Equipment } from "../../types/Equipment";
 
-export const FindEquipment = () => {
+export const FindEquipment = memo(() => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [location, setLocation] = useState("");
@@ -51,4 +51,4 @@ export const FindEquipment = () => {
       <SearchResult equipments={equipments} />
     </Box>
   );
-};
+});

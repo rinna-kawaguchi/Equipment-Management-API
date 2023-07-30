@@ -3,7 +3,7 @@ import axios from "axios";
 import { useMessage } from "../../../hooks/useMessage";
 import { useParams } from "react-router-dom";
 import { ConfirmModal } from "../../atoms/ConfirmModal";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 
 type Props = {
   selectedPlan: Plan | null;
@@ -12,7 +12,7 @@ type Props = {
   onPlanDelete: (deletedPlans: Array<Plan>) => void;
 };
 
-export const DeletePlanConfirmModal = (props: Props) => {
+export const DeletePlanConfirmModal = memo((props: Props) => {
   const { selectedPlan, isOpen, onClose, onPlanDelete } = props;
   const { showMessage } = useMessage();
   const { id } = useParams();
@@ -36,4 +36,4 @@ export const DeletePlanConfirmModal = (props: Props) => {
     </ConfirmModal>
   );
 
-};
+});

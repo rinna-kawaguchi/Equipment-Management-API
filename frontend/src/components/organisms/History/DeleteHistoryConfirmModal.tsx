@@ -3,7 +3,7 @@ import { useMessage } from "../../../hooks/useMessage";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { History } from "../../../types/History";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 
 type Props = {
   selectedHistory: History | null;
@@ -12,7 +12,7 @@ type Props = {
   onHistoryDelete: (deletedHistories: Array<History>) => void;
 };
 
-export const DeleteHistoryConfirmModal = (props: Props) => {
+export const DeleteHistoryConfirmModal = memo((props: Props) => {
   const { selectedHistory, isOpen, onClose, onHistoryDelete } = props;
   const { showMessage } = useMessage();
   const { id } = useParams();
@@ -35,4 +35,4 @@ export const DeleteHistoryConfirmModal = (props: Props) => {
       点検履歴を削除しますか？
     </ConfirmModal>
   );
-};
+});

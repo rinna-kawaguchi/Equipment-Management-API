@@ -1,6 +1,6 @@
 import { HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, VStack } from "@chakra-ui/react";
 import { BaseButton } from "./BaseButton";
-import { ReactNode } from "react";
+import { ReactNode, memo } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -9,7 +9,7 @@ type Props = {
   onClickExec: () => void;
 };
 
-export const ConfirmModal = (props: Props) => {
+export const ConfirmModal = memo((props: Props) => {
   const { isOpen, onClose, children, onClickExec } = props;
 
   return (
@@ -29,4 +29,4 @@ export const ConfirmModal = (props: Props) => {
       </ModalContent>
     </Modal>
   );
-};
+});
