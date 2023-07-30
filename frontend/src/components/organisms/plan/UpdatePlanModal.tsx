@@ -45,11 +45,11 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
+      axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
+        .then((res) => onPlanUpdate(res.data));
+      onClose();
     }
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
-      .then((res) => onPlanUpdate(res.data));
-    onClose();
-  }, []);
+  }, [updateCheckType, updatePeriod, updateDeadline]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={"sm"}>

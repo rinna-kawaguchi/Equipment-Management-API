@@ -40,10 +40,10 @@ export const CreateHistoryModal: FC<Props> = memo((props) => {
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
+      axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
+        .then((res) => onHistoryCreate(res.data));
+      onClose();
     }
-    axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
-      .then((res) => onHistoryCreate(res.data));
-    onClose();
   };
 
   return (

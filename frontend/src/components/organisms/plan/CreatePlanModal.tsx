@@ -37,10 +37,10 @@ export const CreatePlanModal: FC<Props> = memo((props) => {
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
+      axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
+        .then((res) => onPlanCreate(res.data));
+      onClose();
     }
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
-      .then((res) => onPlanCreate(res.data));
-    onClose();
   };
 
   return (
