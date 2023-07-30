@@ -45,10 +45,10 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
+      axios.get<Equipment>(`http://localhost:8080/equipments/${id}`)
+        .then((res) => onEquipmentsUpdate(res.data));
+      onClose();
     }
-    axios.get<Equipment>(`http://localhost:8080/equipments/${id}`)
-      .then((res) => onEquipmentsUpdate(res.data));
-    onClose();
   };
 
   return (
