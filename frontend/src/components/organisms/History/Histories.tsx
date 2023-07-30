@@ -1,8 +1,8 @@
 import { Box, HStack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { memo, useCallback, useState } from "react";
-import { BaseButton } from "../atoms/BaseButton";
-import { History } from "../../types/History";
-import { useSelectHistory } from "../../hooks/useSelectHistory";
+import { BaseButton } from "../../atoms/BaseButton";
+import { History } from "../../../types/History";
+import { useSelectHistory } from "../../../hooks/useSelectHistory";
 import { UpdateHistoryModal } from "./UpdateHistoryModal";
 import { DeleteHistoryConfirmModal } from "./DeleteHistoryConfirmModal";
 

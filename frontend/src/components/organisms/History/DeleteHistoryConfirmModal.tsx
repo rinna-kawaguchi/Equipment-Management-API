@@ -1,8 +1,8 @@
-import { ConfirmModal } from "../atoms/ConfirmModal";
-import { useMessage } from "../../hooks/useMessage";
+import { ConfirmModal } from "../../atoms/ConfirmModal";
+import { useMessage } from "../../../hooks/useMessage";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { History } from "../../types/History";
+import { History } from "../../../types/History";
 import { useCallback } from "react";
 
 type Props = {

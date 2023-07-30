@@ -4,15 +4,15 @@ import { BaseButton } from "../atoms/BaseButton";
 import { FC, memo, useCallback, useEffect, useState } from "react";
 import { Equipment } from "../../types/Equipment";
 import axios from "axios";
-import { CreatePlanModal } from "../organisms/CreatePlanModal";
+import { CreatePlanModal } from "../organisms/plan/CreatePlanModal";
 import { UpdateEquipmentModal } from "../organisms/UpdateEquipmentModal";
-import { CreateHistoryModal } from "../organisms/CreateHistoryModal";
+import { CreateHistoryModal } from "../organisms/History/CreateHistoryModal";
 import { DeleteEquipmentConfirmModal } from "../organisms/DeleteEquipmentConfirmModal";
 import { Plan } from "../../types/Plan";
 import { History } from "../../types/History";
 import { EquipmentInformation } from "../molecules/EquipmentInformation";
-import { Plans } from "../organisms/Plans";
-import { Histories } from "../organisms/Histories";
+import { Plans } from "../organisms/plan/Plans";
+import { Histories } from "../organisms/History/Histories";
 
 export const EquipmentDetail: FC = memo(() => {
   const { id } = useParams();

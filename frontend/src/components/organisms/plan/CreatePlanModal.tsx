@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
-import { BaseButton } from "../atoms/BaseButton";
+import { BaseButton } from "../../atoms/BaseButton";
 import { ChangeEvent, FC, memo, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Plan } from "../../types/Plan";
-import { useMessage } from "../../hooks/useMessage";
+import { Plan } from "../../../types/Plan";
+import { useMessage } from "../../../hooks/useMessage";
 
 type Props = {
   isOpen: boolean;
@@ -14,7 +14,7 @@ type Props = {
 
 export const CreatePlanModal: FC<Props> = memo((props) => {
   const { isOpen, onClose, onPlanCreate } = props;
-  const { showMessage } = useMessage()
+  const { showMessage } = useMessage();
   const { id } = useParams();
 
   const [createCheckType, setCreateCheckType] = useState("");
@@ -33,10 +33,10 @@ export const CreatePlanModal: FC<Props> = memo((props) => {
       .catch(() => showMessage({
         title: "点検計画の追加に失敗しました。入力に誤りがあります。", status: "error"
       }));
-      if (res) {
-        const response: string = res.data.message;
-        showMessage({ title: response, status: "success" })
-      }
+    if (res) {
+      const response: string = res.data.message;
+      showMessage({ title: response, status: "success" });
+    }
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
       .then((res) => onPlanCreate(res.data));
     onClose();

@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { ChangeEvent, FC, memo, useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { BaseButton } from "../atoms/BaseButton";
-import { History } from "../../types/History";
+import { BaseButton } from "../../atoms/BaseButton";
+import { History } from "../../../types/History";
 import { useParams } from "react-router-dom";
-import { useMessage } from "../../hooks/useMessage";
+import { useMessage } from "../../../hooks/useMessage";
 
 type Props = {
   selectedHistory: History | null;

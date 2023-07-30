@@ -3,7 +3,7 @@ import axios from "axios";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BaseButton } from "../atoms/BaseButton";
-import { SearchInput } from "../organisms/SearchInput";
+import { SearchInput } from "../molecules/SearchInput";
 import { SearchResult } from "../organisms/SearchResult";
 import { Equipment } from "../../types/Equipment";
 

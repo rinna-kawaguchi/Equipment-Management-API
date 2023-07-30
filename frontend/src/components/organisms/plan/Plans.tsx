@@ -1,8 +1,8 @@
 import { Box, HStack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { memo, useCallback, useState } from "react";
-import { BaseButton } from "../atoms/BaseButton";
-import { Plan } from "../../types/Plan";
-import { useSelectPlan } from "../../hooks/useSelectPlan";
+import { BaseButton } from "../../atoms/BaseButton";
+import { Plan } from "../../../types/Plan";
+import { useSelectPlan } from "../../../hooks/useSelectPlan";
 import { UpdatePlanModal } from "./UpdatePlanModal";
 import { DeletePlanConfirmModal } from "./DeletePlanConfirmModal";
 
