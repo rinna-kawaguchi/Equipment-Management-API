@@ -28,7 +28,7 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
     setUpdateCheckType(selectedPlan?.checkType ?? "");
     setUpdatePeriod(selectedPlan?.period ?? "");
     setUpdateDeadline(selectedPlan?.deadline ?? "");
-  }, [selectedPlan]);
+  }, [selectedPlan, isOpen]);
 
   // 入力した内容を設備情報の各項目に渡す
   const onChangeUpdateCheckType = (e: ChangeEvent<HTMLInputElement>) => setUpdateCheckType(e.target.value);

@@ -29,7 +29,7 @@ export const UpdateHistoryModal: FC<Props> = memo((props) => {
     setUpdateImplementationDate(selectedHistory?.implementationDate ?? "");
     setUpdateCheckType(selectedHistory?.checkType ?? "");
     setUpdateResult(selectedHistory?.result ?? "");
-  }, [selectedHistory]);
+  }, [selectedHistory, isOpen]);
 
   // 入力した内容を点検履歴の各項目に渡す
   const onChangeUpdateImplementationDate = (e: ChangeEvent<HTMLInputElement>) => setUpdateImplementationDate(e.target.value);
@@ -54,7 +54,7 @@ export const UpdateHistoryModal: FC<Props> = memo((props) => {
         .then((res) => onHistoryUpdate(res.data));
       onClose();
     }
-  }, []);
+  }, [updateImplementationDate, updateCheckType, updateResult]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={"sm"}>

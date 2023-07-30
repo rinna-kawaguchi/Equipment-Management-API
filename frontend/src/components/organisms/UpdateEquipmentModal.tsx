@@ -28,7 +28,7 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
     setUpdateName(updateEquipment?.name ?? "");
     setUpdateNumber(updateEquipment?.number ?? "");
     setUpdateLocation(updateEquipment?.location ?? "");
-  }, [updateEquipment]);
+  }, [updateEquipment, isOpen]);
 
   // 入力した内容を設備情報の各項目に渡す
   const onChangeUpdateName = (e: ChangeEvent<HTMLInputElement>) => setUpdateName(e.target.value);
