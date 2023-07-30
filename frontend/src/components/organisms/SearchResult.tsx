@@ -1,13 +1,14 @@
 import { Divider, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { type } from "os";
 import { Link } from "react-router-dom";
-import { Equipment } from "../FindEquipment";
+import { Equipment } from "../pages/FindEquipment";
+import { memo } from "react";
 
 type Props = {
   equipments: Array<Equipment>;
 };
 
-export const SearchResult = (props: Props) => {
+export const SearchResult = memo((props: Props) => {
   const { equipments } = props;
 
   // １ヶ月後の日付をyyyy-mm-dd形式に変換する
@@ -18,6 +19,7 @@ export const SearchResult = (props: Props) => {
     return (y + '-' + m + '-' + d);
   };
 
+  // propsで渡された設備リストを検索結果として表示する。点検期限が１ヶ月以内の場合は赤く表示する。
   return (
     <>
       <Heading size='lg'>検索結果</Heading>
@@ -52,4 +54,4 @@ export const SearchResult = (props: Props) => {
       </TableContainer>
     </>
   );
-};
+});

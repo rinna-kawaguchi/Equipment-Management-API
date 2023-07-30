@@ -2,7 +2,7 @@ import { Box, Divider, FormControl, FormLabel, HStack, Heading, Input, Table, Ta
 import { useNavigate, useParams } from "react-router-dom";
 import { BaseButton } from "./atoms/BaseButton";
 import { FC, memo, useCallback, useEffect, useState } from "react";
-import { Equipment } from "./FindEquipment";
+import { Equipment } from "./pages/FindEquipment";
 import axios from "axios";
 import { useSelectPlan } from "../hooks/useSelectPlan";
 import { useSelectHistory } from "../hooks/useSelectHistory";

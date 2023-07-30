@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
-import { Equipment } from "../FindEquipment";
+import { Equipment } from "../pages/FindEquipment";
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { BaseButton } from "../atoms/BaseButton";
 import axios from "axios";
