@@ -36,7 +36,6 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検計画を更新し、更新後の点検計画を取得して反映する
   const onClickUpdatePlan = async () => {
-    alert("点検計画を修正しますか？");
     let res = await axios.patch(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`,
       { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline })
       .catch(() => showMessage({

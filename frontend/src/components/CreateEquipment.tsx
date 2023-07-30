@@ -24,7 +24,6 @@ export const CreateEquipment = () => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で設備情報を登録する。その後、登録した設備の詳細画面に遷移する。
   const onClickCreateEquipment = async () => {
-    alert("設備を登録しますか？");
     let res = await axios.post("http://localhost:8080/equipments",
       { "name": newName, "number": newNumber, "location": newLocation })
       .catch(() => showMessage({

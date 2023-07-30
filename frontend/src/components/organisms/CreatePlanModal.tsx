@@ -28,7 +28,6 @@ export const CreatePlanModal: FC<Props> = memo((props) => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの点検計画を登録し、登録後の点検計画を取得して反映する。
   const onClickCreatePlan = async () => {
-    alert("点検計画を追加しますか？");
     let res = await axios.post(`http://localhost:8080/equipments/${id}/plans`,
       { "checkType": createCheckType, "period": createPeriod, "deadline": createDeadline })
       .catch(() => showMessage({
