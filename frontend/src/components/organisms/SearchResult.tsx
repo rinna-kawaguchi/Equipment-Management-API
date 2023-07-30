@@ -1,7 +1,6 @@
 import { Divider, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { type } from "os";
 import { Link } from "react-router-dom";
-import { Equipment } from "../pages/FindEquipment";
+import { Equipment } from "../../types/Equipment";
 import { memo } from "react";
 
 type Props = {

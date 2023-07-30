@@ -3,7 +3,7 @@ import { BaseButton } from "../atoms/BaseButton";
 import { ChangeEvent, FC, memo, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Plan } from "../EquipmentDetail";
+import { Plan } from "../../types/Plan";
 import { useMessage } from "../../hooks/useMessage";
 
 type Props = {

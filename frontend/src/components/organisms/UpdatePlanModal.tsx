@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, Moda
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { BaseButton } from "../atoms/BaseButton";
-import { Plan } from "../EquipmentDetail";
+import { Plan } from "../../types/Plan";
 import { useParams } from "react-router-dom";
 import { useMessage } from "../../hooks/useMessage";
 

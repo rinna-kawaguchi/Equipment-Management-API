@@ -2,7 +2,7 @@ import { ConfirmModal } from "../atoms/ConfirmModal";
 import { useMessage } from "../../hooks/useMessage";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { History } from "../EquipmentDetail";
+import { History } from "../../types/History";
 
 type Props = {
   selectedHistory: History | null;

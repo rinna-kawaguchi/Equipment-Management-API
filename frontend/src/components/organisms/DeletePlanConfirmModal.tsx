@@ -1,4 +1,4 @@
-import { Plan } from "../EquipmentDetail";
+import { Plan } from "../../types/Plan";
 import axios from "axios";
 import { useMessage } from "../../hooks/useMessage";
 import { useParams } from "react-router-dom";

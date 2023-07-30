@@ -5,16 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { BaseButton } from "../atoms/BaseButton";
 import { SearchInput } from "../organisms/SearchInput";
 import { SearchResult } from "../organisms/SearchResult";
-
-export type Equipment = {
-  equipmentId: number;
-  name: string;
-  number: string;
-  location: string;
-  checkPlanId: number;
-  checkType: string;
-  deadline: string;
-};
+import { Equipment } from "../../types/Equipment";
 
 export const FindEquipment = () => {
   const [name, setName] = useState("");

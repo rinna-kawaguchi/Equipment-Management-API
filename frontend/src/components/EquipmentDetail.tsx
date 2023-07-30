@@ -2,7 +2,7 @@ import { Box, Divider, FormControl, FormLabel, HStack, Heading, Input, Table, Ta
 import { useNavigate, useParams } from "react-router-dom";
 import { BaseButton } from "./atoms/BaseButton";
 import { FC, memo, useCallback, useEffect, useState } from "react";
-import { Equipment } from "./pages/FindEquipment";
+import { Equipment } from "../types/Equipment";
 import axios from "axios";
 import { useSelectPlan } from "../hooks/useSelectPlan";
 import { useSelectHistory } from "../hooks/useSelectHistory";
@@ -15,22 +15,8 @@ import { useMessage } from "../hooks/useMessage";
 import { DeletePlanConfirmModal } from "./organisms/DeletePlanConfirmModal";
 import { DeleteHistoryConfirmModal } from "./organisms/DeleteHistoryConfirmModal";
 import { DeleteEquipmentConfirmModal } from "./organisms/DeleteEquipmentConfirmModal";
-
-export type Plan = {
-  checkPlanId: number;
-  equipmentId: number;
-  checkType: string;
-  period: string;
-  deadline: string;
-};
-
-export type History = {
-  checkHistoryId: number;
-  equipmentId: number;
-  implementationDate: string;
-  checkType: string;
-  result: string;
-};
+import { Plan } from "../types/Plan";
+import { History } from "../types/History";
 
 export const EquipmentDetail: FC = memo(() => {
   const { onSelectPlan, selectedPlan } = useSelectPlan();
