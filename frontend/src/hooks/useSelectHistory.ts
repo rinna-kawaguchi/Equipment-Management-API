@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { History } from "../components/EquipmentDetail";
+import { History } from "../types/History";
 
 type Props = {
   checkHistoryId: number;

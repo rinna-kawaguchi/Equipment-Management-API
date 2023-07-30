@@ -1,14 +1,16 @@
-import { ConfirmModal } from "../atoms/ConfirmModal";
-import { useMessage } from "../../hooks/useMessage";
+import { memo } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+
+import { ConfirmModal } from "../atoms/ConfirmModal";
+import { useMessage } from "../../hooks/useMessage";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-export const DeleteEquipmentConfirmModal = (props: Props) => {
+export const DeleteEquipmentConfirmModal = memo((props: Props) => {
   const { isOpen, onClose } = props;
   const { showMessage } = useMessage();
   const { id } = useParams();
@@ -36,4 +38,4 @@ export const DeleteEquipmentConfirmModal = (props: Props) => {
       この設備情報、点検計画、点検履歴を削除しますか？
     </ConfirmModal>
   );
-};
+});

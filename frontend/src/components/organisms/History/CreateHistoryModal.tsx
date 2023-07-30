@@ -1,10 +1,11 @@
-import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
-import { BaseButton } from "../atoms/BaseButton";
 import { ChangeEvent, FC, memo, useState } from "react";
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { History } from "../EquipmentDetail";
-import { useMessage } from "../../hooks/useMessage";
+
+import { BaseButton } from "../../atoms/BaseButton";
+import { History } from "../../../types/History";
+import { useMessage } from "../../../hooks/useMessage";
 
 type Props = {
   isOpen: boolean;
