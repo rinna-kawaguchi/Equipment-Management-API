@@ -40,6 +40,7 @@ public class MailServiceImpl implements MailService {
             + "\n設備名称：" + findEquipmentResponse.getName()
             + "\n設備番号：" + findEquipmentResponse.getNumber()
             + "\n設置場所：" + findEquipmentResponse.getLocation()
+            + "\n点検種別：" + findEquipmentResponse.getCheckType()
             + "\n点検期限：" + findEquipmentResponse.getDeadline());
         mailSender.send(msg);
       }
