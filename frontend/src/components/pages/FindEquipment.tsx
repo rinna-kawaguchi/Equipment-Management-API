@@ -1,4 +1,4 @@
-import { Box, HStack, Heading } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { memo, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -35,20 +35,22 @@ export const FindEquipment = memo(() => {
 
   // 新規設備登録ボタン、検索条件入力欄、検索結果の表示
   return (
-    <Box padding={5}>
-      <HStack spacing={10}>
-        <Heading>設備検索</Heading>
-        <BaseButton onClick={onClickCreatePage}>新規設備登録</BaseButton>
-      </HStack>
-      <br />
-      <br />
-      <SearchInput onEquipmentSearch={handleSearchCondition} />
-      <br />
-      <BaseButton onClick={onClickFindEquipment}>検索</BaseButton>
-      <br />
-      <br />
-      <br />
-      <SearchResult equipments={equipments} />
+    <Box px={10} py={5}>
+      <Heading size="lg">設備検索</Heading>
+      <Divider my={3} />
+      <Box px={3}>
+        <Heading size='md'>検索条件入力</Heading>
+        <Divider my={3} />
+        <SearchInput onEquipmentSearch={handleSearchCondition} />
+        <br />
+        <BaseButton onClick={onClickFindEquipment}>検索</BaseButton>
+        <br />
+        <br />
+        <br />
+        <Heading size='md'>検索結果</Heading>
+        <Divider my={3} />
+        <SearchResult equipments={equipments} />
+      </Box>
     </Box>
   );
 });

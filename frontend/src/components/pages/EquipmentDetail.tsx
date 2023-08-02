@@ -96,12 +96,12 @@ export const EquipmentDetail: FC = memo(() => {
   const onClickBackFindPage = () => navigate("/find");
 
   return (
-    <Box padding={5}>
-      <Heading>設備詳細</Heading>
-      <br />
-      <br />
+    <Box px={10} py={5}>
+      <Heading size="lg">設備詳細</Heading>
+      <Divider my={3} />
+      <Box px={3}>
       <HStack spacing={10}>
-        <Heading size="lg">設備情報</Heading>
+        <Heading size="md">設備情報</Heading>
         <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
       </HStack>
       <UpdateEquipmentModal updateEquipment={selectedEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} onEquipmentsUpdate={handleEquipmentUpdate} />
@@ -110,7 +110,7 @@ export const EquipmentDetail: FC = memo(() => {
       <br />
       <br />
       <HStack spacing={10}>
-        <Heading size="lg">点検計画</Heading>
+        <Heading size="md">点検計画</Heading>
         <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
       </HStack>
       <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal}
@@ -120,7 +120,7 @@ export const EquipmentDetail: FC = memo(() => {
       <br />
       <br />
       <HStack spacing={10}>
-        <Heading size="lg">点検履歴</Heading>
+        <Heading size="md">点検履歴</Heading>
         <BaseButton onClick={openCreateHistoryModal}>点検履歴追加</BaseButton>
       </HStack>
       <CreateHistoryModal isOpen={createHistoryModalOpen} onClose={closeCreateHistoryModal}
@@ -135,6 +135,7 @@ export const EquipmentDetail: FC = memo(() => {
         <DeleteEquipmentConfirmModal isOpen={deleteEquiipmentModalOpen}
           onClose={closeDeleteEquipmentModal} />
       </HStack>
+      </Box>
     </Box>
   );
 });

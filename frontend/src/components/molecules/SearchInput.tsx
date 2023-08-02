@@ -25,8 +25,6 @@ export const SearchInput = memo((props: Props) => {
   // 検索条件入力欄の表示
   return (
     <>
-      <Heading size='lg'>検索条件入力</Heading>
-      <Divider my={3} />
       <HStack spacing={4} >
         <Box>
           <p>設備名称</p>
