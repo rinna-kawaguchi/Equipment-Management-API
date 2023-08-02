@@ -21,7 +21,7 @@ public class MailController {
   }
 
   // 1日おきに実行する
-  @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
+  @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
   @GetMapping("/mail")
   public void write1() throws ParseException {
     mailService.mailSend();
