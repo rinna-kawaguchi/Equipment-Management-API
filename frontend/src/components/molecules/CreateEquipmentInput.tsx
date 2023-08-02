@@ -18,32 +18,36 @@ export const CreateEquipmentInput = memo((props: Props) => {
   const onChangeNewLocation = (e: ChangeEvent<HTMLInputElement>) => setNewLocation(e.target.value);
 
   // 入力された内容を親コンポーネントに渡す
-  useEffect(() => onEquipmentCreate(newName, newNumber, newLocation), 
-  [newName, newNumber, newLocation]);
+  useEffect(() => onEquipmentCreate(newName, newNumber, newLocation),
+    [newName, newNumber, newLocation]);
 
   return (
-    <HStack spacing={10}>
-      <Box>
-        <FormControl>
-          <FormLabel>設備名称</FormLabel>
-          <Input width={"400px"} placeholder="設備名称" onChange={onChangeNewName} />
-          <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
-        </FormControl>
-      </Box>
-      <Box>
-        <FormControl>
-          <FormLabel>設備番号</FormLabel>
-          <Input width={"400px"} placeholder="設備番号" onChange={onChangeNewNumber} />
-          <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
-        </FormControl>
-      </Box>
-      <Box>
-        <FormControl>
-          <FormLabel>設置場所</FormLabel>
-          <Input width={"400px"} placeholder="設置場所" onChange={onChangeNewLocation} />
-          <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
-        </FormControl>
-      </Box>
-    </HStack>
+    <Box>
+      <Text fontSize="lg">新規登録する設備の情報を入力してください</Text>
+      <br />
+      <HStack spacing={10}>
+        <Box>
+          <FormControl>
+            <FormLabel>設備名称</FormLabel>
+            <Input width={"400px"} placeholder="設備名称" onChange={onChangeNewName} />
+            <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>設備番号</FormLabel>
+            <Input width={"400px"} placeholder="設備番号" onChange={onChangeNewNumber} />
+            <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>設置場所</FormLabel>
+            <Input width={"400px"} placeholder="設置場所" onChange={onChangeNewLocation} />
+            <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
+          </FormControl>
+        </Box>
+      </HStack>
+    </Box>
   );
 });

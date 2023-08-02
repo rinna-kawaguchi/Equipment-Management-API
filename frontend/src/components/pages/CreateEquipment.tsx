@@ -1,5 +1,5 @@
 import { memo, useCallback, useState } from "react";
-import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -42,18 +42,18 @@ export const CreateEquipment = memo(() => {
   };
 
   return (
-    <Box padding={5}>
-      <Heading>新規設備登録</Heading>
-      <br />
-      <Heading size="lg">設備情報詳細</Heading>
+    <Box px={10} py={5}>
+      <Heading size="lg">新規設備登録</Heading>
       <Divider my={3} />
-      <CreateEquipmentInput onEquipmentCreate={handleCreateEquipment} />
-      <br />
-      <br />
-      <HStack>
-        <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
-        <BaseButton onClick={onClickCreateEquipment}>登録</BaseButton>
-      </HStack>
+      <Box px={3}>
+        <CreateEquipmentInput onEquipmentCreate={handleCreateEquipment} />
+        <br />
+        <br />
+        <HStack>
+          <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
+          <BaseButton onClick={onClickCreateEquipment}>登録</BaseButton>
+        </HStack>
+      </Box>
     </Box>
   );
 });

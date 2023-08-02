@@ -22,8 +22,6 @@ export const SearchResult = memo((props: Props) => {
   // propsで渡された設備リストを検索結果として表示する。点検期限が１ヶ月以内の場合は赤く表示する。
   return (
     <>
-      <Heading size='lg'>検索結果</Heading>
-      <Divider my={3} />
       <TableContainer>
         <Table variant='simple'>
           <Thead>
