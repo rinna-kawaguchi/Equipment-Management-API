@@ -8,6 +8,7 @@ export const Header = () => {
       <Heading size="lg">設備点検管理アプリ</Heading>
       <Link to='/find'>設備検索</Link>
       <Link to='/create'>新規設備登録</Link>
+      <Link to='/how_to_use'>使い方</Link>
     </HStack>
   )
 };
