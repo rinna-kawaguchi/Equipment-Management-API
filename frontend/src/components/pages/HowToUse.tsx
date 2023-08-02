@@ -1,4 +1,4 @@
-import { Box, Divider, HStack, Heading, Image } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading, Image, Text } from "@chakra-ui/react";
 
 export const HowToUse = () => {
   return (
@@ -59,6 +59,11 @@ export const HowToUse = () => {
           <Image src="./images/createEquipment1.png" w="700px" />
           <Image src="./images/createEquipment2.png" w="700px" />
         </HStack>
+        <Heading size="md">８．メール通知</Heading>
+        <br />
+        <Text>点検期限の１ヶ月前になると、対象設備の設備情報と点検期限を知らせるメールが送付されます。</Text>
+        <br />
+        <Image src="./images/mail.png" w="400px" />
       </Box>
     </Box>
   );
