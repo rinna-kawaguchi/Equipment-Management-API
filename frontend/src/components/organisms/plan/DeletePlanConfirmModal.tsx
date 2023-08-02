@@ -29,7 +29,7 @@ export const DeletePlanConfirmModal = memo((props: Props) => {
     axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
       .then((res) => onPlanDelete(res.data));
     onClose();
-  }, []);
+  }, [selectedPlan]);
 
   return (
     <ConfirmModal isOpen={isOpen} onClose={onClose} onClickExec={onClickDeletePlanExec}>
