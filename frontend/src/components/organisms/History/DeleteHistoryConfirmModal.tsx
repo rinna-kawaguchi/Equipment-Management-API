@@ -29,7 +29,7 @@ export const DeleteHistoryConfirmModal = memo((props: Props) => {
     axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
       .then((res) => onHistoryDelete(res.data));
     onClose();
-  }, []);
+  }, [selectedHistory]);
 
   return (
     <ConfirmModal isOpen={isOpen} onClose={onClose} onClickExec={deleteHistoryExec}>
