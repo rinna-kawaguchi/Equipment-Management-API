@@ -8,18 +8,18 @@ CREATE TABLE histories (
 );
 
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (1, 1, "2022-09-30", "簡易点検", "良");
+VALUES (1, 1, "2020-09-03", "簡易点検", "補修塗装を実施");
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (2, 1, "2021-09-30", "本格点検", "良");
+VALUES (2, 1, "2021-09-03", "本格点検", "ケーシングの腐食が進んでいたため交換を実施");
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (3, 2, "2022-10-30", "簡易点検", "良");
+VALUES (3, 1, "2022-09-03", "簡易点検", "良");
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (4, 2, "2020-10-30", "本格点検", "良");
+VALUES (4, 2, "2021-10-23", "簡易点検", "良");
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (5, 3, "2021-11-30", "簡易点検", "良");
+VALUES (5, 2, "2022-10-23", "本格点検", "良");
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (6, 3, "2020-11-30", "簡易点検", "補修塗装を実施");
+VALUES (6, 4, "2021-12-09", "漏洩確認", "良");
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (7, 3, "2022-11-30", "本格点検", "ケーシングの腐食が進んでいたため交換を実施");
+VALUES (7, 4, "2022-12-09", "分解点検", "良");
 INSERT INTO histories (check_history_id, equipment_id, implementation_date, check_type, result)
-VALUES (8, 3, "2019-11-30", "本格点検", "良");
+VALUES (8, 5, "2023-03-09", "漏洩確認", "良");

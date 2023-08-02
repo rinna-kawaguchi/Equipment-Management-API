@@ -6,6 +6,9 @@ CREATE TABLE equipments (
   PRIMARY KEY(equipment_id)
 );
 
-INSERT INTO equipments (equipment_id, name, number, location) VALUES (1, "真空ポンプA", "A1-C001A", "Area1");
-INSERT INTO equipments (equipment_id, name, number, location) VALUES (2, "吸込ポンプB", "A2-C002B", "Area2");
-INSERT INTO equipments (equipment_id, name, number, location) VALUES (3, "吐出ポンプC", "A3-C003C", "Area3");
+INSERT INTO equipments (equipment_id, name, number, location) VALUES (1, "循環ポンプA", "A1-C001A", "Area1");
+INSERT INTO equipments (equipment_id, name, number, location) VALUES (2, "循環ポンプB", "A1-C001B", "Area1");
+INSERT INTO equipments (equipment_id, name, number, location) VALUES (3, "真空ポンプ", "A2-C001", "Area2");
+INSERT INTO equipments (equipment_id, name, number, location) VALUES (4, "吸込弁", "A2-F001", "Area2");
+INSERT INTO equipments (equipment_id, name, number, location) VALUES (5, "吐出弁", "A2-F002", "Area2");
+INSERT INTO equipments (equipment_id, name, number, location) VALUES (6, "電源盤", "A2-E001", "Area2");
