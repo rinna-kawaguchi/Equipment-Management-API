@@ -13,38 +13,40 @@ tags:
     description: 点検計画に関する操作
   - name: history
     description: 点検履歴に関する操作
+  - name: mail
+    description: メール送信に関する操作
 paths:
   /equipments:
     get:
       tags:
         - equipment
       summary: 設備情報と点検期限の取得
-      description: クエリパラメータで入力された条件に合致する設備の設備情報とその点検期限を取得する。条件を入力しない場合は全ての設備とその点検期限をを取得する
+      description: クエリパラメータで入力された条件に合致する設備の設備情報とその点検期限を取得する。条件を入力しない場合は全ての設備とその点検期限を取得する
       parameters:
         - name: name
           in: query
-          description: 入力した文字が含まれる設備が検索される
+          description: 設備名称に入力した文字が含まれる設備が検索される
           required: false
           schema:
             type: string
           example: ポンプ
         - name: number
           in: query
-          description: 入力した文字が含まれる設備が検索される
+          description: 設備番号に入力した文字が含まれる設備が検索される
           required: false
           schema:
             type: string
           example: 001
         - name: location
           in: query
-          description: 入力した文字が含まれる設備が検索される
+          description: 設置場所に入力した文字が含まれる設備が検索される
           required: false
           schema:
             type: string
           example: Area1
         - name: deadline
           in: query
-          description: 入力した日付以前の点検期限を持つ設備が検索される
+          description: 点検期限が入力した日付以前の設備が検索される
           required: false
           schema:
             type: string
@@ -79,7 +81,7 @@ paths:
                       example: 簡易点検
                     deadline:
                       type: string
-                      example: 2023/9/03
+                      example: 2023-09-03
     post:
       tags:
         - equipment
