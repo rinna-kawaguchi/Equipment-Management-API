@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: "3.0.3"
 info:
   title: Equipment Management API
   description: |-
@@ -8,7 +8,7 @@ servers:
   - url: http://localhost:8080
 tags:
   - name: equipment
-    description: 設備に関する操作
+    description: 設備情報に関する操作
   - name: plan
     description: 点検計画に関する操作
   - name: history
@@ -18,8 +18,8 @@ paths:
     get:
       tags:
         - equipment
-      summary: 設備の取得
-      description: クエリパラメータで検索条件を入力した条件に合致した設備を取得、条件を入力しない場合は設備を全数取得する
+      summary: 設備情報と点検期限の取得
+      description: クエリパラメータで入力された条件に合致する設備の設備情報とその点検期限を取得する。条件を入力しない場合は全ての設備とその点検期限をを取得する
       parameters:
         - name: name
           in: query
@@ -42,6 +42,13 @@ paths:
           schema:
             type: string
           example: Area1
+        - name: deadline
+          in: query
+          description: 入力した日付以前の点検期限を持つ設備が検索される
+          required: false
+          schema:
+            type: string
+          example: Area1
       responses:
         "200":
           description: OK
@@ -52,21 +59,27 @@ paths:
                 items:
                   type: object
                   properties:
+                    equipmentId:
+                      type: int
+                      example: 1
                     name:
                       type: string
-                      example: 真空ポンプA
+                      example: 循環ポンプA
                     number:
                       type: string
                       example: A1-C001A
                     location:
                       type: string
                       example: Area1
+                    checkPlanId:
+                      type: int
+                      example: 1
+                    checkType:
+                      type: string
+                      example: 簡易点検
                     deadline:
                       type: string
-                      example: 2023/9/30
-                    history:
-                      type: string
-                      example: 2022/9/30
+                      example: 2023/9/03
     post:
       tags:
         - equipment
@@ -82,7 +95,7 @@ paths:
                 name:
                   type: string
                   nullable: false
-                  example: 真空ポンプB
+                  example: 循環ポンプB
                 number:
                   type: string
                   nullable: false
@@ -91,14 +104,6 @@ paths:
                   type: string
                   nullable: false
                   example: Area1
-                deadline:
-                  type: string
-                  nullable: true
-                  example: 2023/11/30
-                history:
-                  type: string
-                  nullable: true
-                  example: 2021/11/30
       responses:
         "201":
           description: Created
@@ -115,20 +120,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BadRequest'
+                $ref: '#/components/schemas/BadRequestEquipment'
   /equipments/{equipmentId}:
     get:
       tags:
         - equipment
-      summary: 指定したIDの設備の取得
-      description: 指定したIDの設備情報を取得する
+      summary: 指定したIDの設備情報の取得
+      description: 指定した設備IDの設備情報を取得する
       parameters:
-        - name: id
+        - name: equipmentId
           in: path
-          description: 取得したい設備のID
+          description: 取得したい設備の設備ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       responses:
         "200":
@@ -140,21 +145,18 @@ paths:
                 items:
                   type: object
                   properties:
+                    equipmentId:
+                      type: int
+                      example: 1
                     name:
                       type: string
-                      example: 真空ポンプA
+                      example: 循環ポンプA
                     number:
                       type: string
                       example: A1-C001A
                     location:
                       type: string
                       example: Area1
-                    deadline:
-                      type: string
-                      example: 2023/9/30
-                    history:
-                      type: string
-                      example: 2022/9/30
         "404":
           description: Not Found
           content:
@@ -165,14 +167,14 @@ paths:
       tags:
         - equipment
       summary: 設備情報の更新
-      description: 指定したIDの設備情報を更新する
+      description: 指定した設備IDの設備情報を更新する
       parameters:
-        - name: id
+        - name: equipmentId
           in: path
-          description: 更新したい設備のID
+          description: 更新したい設備の設備ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       requestBody:
         required: true
@@ -184,7 +186,7 @@ paths:
                 name:
                   type: string
                   nullable: false
-                  example: 真空ポンプB
+                  example: 循環ポンプB
                 number:
                   type: string
                   nullable: false
@@ -193,14 +195,6 @@ paths:
                   type: string
                   nullable: false
                   example: Area1
-                deadline:
-                  type: string
-                  nullable: true
-                  example: 2023/11/30
-                history:
-                  type: string
-                  nullable: true
-                  example: 2021/11/30
       responses:
         "200":
           description: OK
@@ -211,13 +205,13 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: 登録内容が正常に更新されました
+                    example: 設備が正常に更新されました
         "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BadRequest'
+                $ref: '#/components/schemas/BadRequestEquipment'
         "404":
           description: Not Found
           content:
@@ -227,15 +221,15 @@ paths:
     delete:
       tags:
         - equipment
-      summary: 設備の削除
-      description: 指定したIDの設備を削除する
+      summary: 設備情報の削除
+      description: 指定した設備IDの設備情報を削除する
       parameters:
-        - name: id
+        - name: equipmentId
           in: path
-          description: 削除したい設備のID
+          description: 削除したい設備の設備ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       responses:
         "200":
@@ -259,11 +253,11 @@ paths:
       tags:
         - plan
       summary: 点検計画の取得
-      description: 指定したIDの設備の点検計画を取得する
+      description: 指定した設備IDの設備の点検計画を取得する
       parameters:
-        - name: id
+        - name: equipmentId
           in: path
-          description: 点検計画を取得したい設備のID
+          description: 点検計画を取得したい設備の設備ID
           required: true
           schema:
             type: number
@@ -278,7 +272,13 @@ paths:
                 items:
                   type: object
                   properties:
-                    type:
+                    checkPlanId:
+                      type: int
+                      example: 1
+                    equipmentId:
+                      type: int
+                      example: 1
+                    checkType:
                       type: string
                       example: 簡易点検
                     period:
@@ -286,19 +286,19 @@ paths:
                       example: 1年
                     deadline:
                       type: string
-                      example: 2023/9/30
+                      example: 2023-09-03
     post:
       tags:
         - plan
       summary: 点検計画の登録
       description: 指定したIDの設備の点検計画を登録する
       parameters:
-        - name: id
+        - name: equipmentId
           in: path
-          description: 点検計画を登録したい設備のID
+          description: 点検計画を登録したい設備の設備ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       requestBody:
         required: true
@@ -307,7 +307,7 @@ paths:
             schema:
               type: object
               properties:
-                type:
+                checkType:
                   type: string
                   nullable: false
                   example: 簡易点検
@@ -318,7 +318,7 @@ paths:
                 deadline:
                   type: string
                   nullable: false
-                  example: 2023/9/30
+                  example: 2023-09-03
       responses:
         "201":
           description: Created
@@ -335,20 +335,50 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BadRequest'
+                $ref: '#/components/schemas/BadRequestPlan'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    delete:
+      tags:
+        - plan
+      summary: 指定した設備IDの点検計画の削除
+      description: 指定した設備IDに紐づく点検計画を全て削除する
+      parameters:
+        - name: equipmentId
+          in: path
+          description: 点検計画を削除したい設備の設備ID
+          required: true
+          schema:
+            type: int
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検計画が正常に削除されました
   /plans/{checkPlanId}:
     patch:
       tags:
         - plan
       summary: 点検計画の更新
-      description: 指定した点検計画を更新する
+      description: 指定した点検計画IDの点検計画を更新する
       parameters:
-        - name: id
+        - name: checkPlanId
           in: path
-          description: 更新したい点検計画のID
+          description: 更新したい点検計画の点検計画ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       requestBody:
         required: true
@@ -357,7 +387,7 @@ paths:
             schema:
               type: object
               properties:
-                type:
+                checkType:
                   type: string
                   nullable: false
                   example: 簡易点検
@@ -368,7 +398,7 @@ paths:
                 deadline:
                   type: string
                   nullable: false
-                  example: 2023/9/30
+                  example: 2023-09-03
       responses:
         "200":
           description: OK
@@ -385,19 +415,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BadRequest'
+                $ref: '#/components/schemas/BadRequestPlan'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
     delete:
       tags:
         - plan
-      summary: 点検計画の削除
-      description: 指定したIDの点検計画を削除する
+      summary: 指定した点検計画IDの点検計画の削除
+      description: 指定した点検計画IDの点検計画を削除する
       parameters:
-        - name: id
+        - name: checkPlanId
           in: path
-          description: 削除したい点検計画のID
+          description: 削除したい点検計画の点検計画ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       responses:
         "200":
@@ -410,19 +446,25 @@ paths:
                   message:
                     type: string
                     example: 点検計画が正常に削除されました
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
   /equipments/{equipmentId}/histories:
     get:
       tags:
         - history
       summary: 点検履歴の取得
-      description: 指定したIDの設備の点検履歴を取得する
+      description: 指定した設備IDの設備の点検履歴を取得する
       parameters:
-        - name: id
+        - name: equipmentId
           in: path
-          description: 点検履歴を取得したい設備のID
+          description: 点検履歴を取得したい設備の設備ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       responses:
         "200":
@@ -434,30 +476,33 @@ paths:
                 items:
                   type: object
                   properties:
-                    date:
+                    checkHistoryId:
+                      type: int
+                      example: 1
+                    equipmentId:
+                      type: int
+                      example: 1
+                    implementationDate:
                       type: string
-                      example: 2022/9/30
-                    type:
+                      example: 2020-09-03
+                    checkType:
                       type: string
                       example: 簡易点検
                     result:
                       type: string
-                      example: 1年
-                    attachment:
-                      type: string
-                      example: 点検報告書.pdf
+                      example: 補修塗装を実施
     post:
       tags:
         - history
       summary: 点検履歴の登録
-      description: 指定したIDの設備の点検計画を登録する
+      description: 指定した設備IDの設備の点検履歴を登録する
       parameters:
-        - name: id
+        - name: equipmentId
           in: path
-          description: 点検履歴を登録したい設備のID
+          description: 点検履歴を登録したい設備の設備ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       requestBody:
         required: true
@@ -466,22 +511,18 @@ paths:
             schema:
               type: object
               properties:
-                date:
+                implementationDate:
                   type: string
                   nullable: false
-                  example: 2022/9/30
-                type:
+                  example: 2022-09-03
+                checkType:
                   type: string
                   nullable: false
                   example: 簡易点検
                 result:
                   type: string
                   nullable: false
-                  example: 1年
-                attachment:
-                  type: string
-                  nullable: true
-                  example: 点検報告書.pdf
+                  example: 良
       responses:
         "201":
           description: Created
@@ -498,20 +539,50 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BadRequest'
+                $ref: '#/components/schemas/BadRequestHistory'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    delete:
+      tags:
+        - history
+      summary: 指定した設備IDの点検履歴の削除
+      description: 指定した設備IDに紐づく点検履歴を全て削除する
+      parameters:
+        - name: equipmentId
+          in: path
+          description: 点検履歴を削除したい設備の設備ID
+          required: true
+          schema:
+            type: int
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 点検履歴が正常に削除されました
   /histories/{checkHistoryId}:
     patch:
       tags:
         - history
       summary: 点検履歴の更新
-      description: 指定した点検履歴を更新する
+      description: 指定した点検履歴IDの点検履歴を更新する
       parameters:
-        - name: id
+        - name: checkHistoryId
           in: path
-          description: 更新したい点検履歴のID
+          description: 更新したい点検履歴の点検履歴ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       requestBody:
         required: true
@@ -520,22 +591,18 @@ paths:
             schema:
               type: object
               properties:
-                date:
+                implementationDate:
                   type: string
                   nullable: false
-                  example: 2022/9/30
-                type:
+                  example: 2022-09-03
+                checkType:
                   type: string
                   nullable: false
                   example: 簡易点検
                 result:
                   type: string
                   nullable: false
-                  example: 1年
-                attachment:
-                  type: string
-                  nullable: true
-                  example: 点検報告書.pdf
+                  example: 良
       responses:
         "200":
           description: OK
@@ -552,19 +619,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BadRequest'
+                $ref: '#/components/schemas/BadRequestHistory'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
     delete:
       tags:
         - history
-      summary: 点検履歴の削除
-      description: 指定したIDの点検履歴を削除する
+      summary: 指定した点検履歴ID点検履歴の削除
+      description: 指定した点検履歴IDの点検履歴を削除する
       parameters:
-        - name: id
+        - name: checkHistoryId
           in: path
-          description: 削除したい点検履歴のID
+          description: 削除したい点検履歴の点検履歴ID
           required: true
           schema:
-            type: number
+            type: int
           example: 1
       responses:
         "200":
@@ -577,16 +650,22 @@ paths:
                   message:
                     type: string
                     example: 点検履歴が正常に削除されました
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
 components:
   schemas:
-    BadRequest:
-      description: リクエストボディに不備がある場合のレスポンス
+    BadRequestEquipment:
+      description: 設備情報に関する操作でリクエストボディに不備がある場合のレスポンス
       type: object
       properties:
         timestamp:
           type: string
           format: date-time
-        Status:
+        status:
           type: string
           example: 400
         error:
@@ -594,7 +673,48 @@ components:
           example: Bad Request
         message:
           type: string
-          example: 入力が不足している項目があります
+          example: name,number,locationは必須項目です。20文字以内で入力してください
+        path:
+          type: string
+          example: 指定したパス
+    BadRequestPlan:
+      description: 点検計画に関する操作でリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: checkType,periodは必須項目です。10文字以内で入力してください
+        path:
+          type: string
+          example: 指定したパス
+    BadRequestHistory:
+      description: 点検履歴に関する操作でリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: checkType,periodは必須項目です。10文字以内で入力してください
+        path:
+          type: string
+          example: 指定したパス
     NotFound:
       description: 指定したリソースが存在しない場合のレスポンス
       type: object
@@ -602,7 +722,7 @@ components:
         timestamp:
           type: string
           format: date-time
-        Status:
+        status:
           type: string
           example: 404
         error:
@@ -613,4 +733,4 @@ components:
           example: Not Found
         path:
           type: string
-          example: /eqipment/99
+          example: 指定したパス
