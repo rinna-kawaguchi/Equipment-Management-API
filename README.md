@@ -22,11 +22,11 @@
   - MySQL 
   - Docker 
   - 自動テスト 
-  - CI (mainブランチへのpush時、プルリクエスト時にCheckStyleと自動テストを実行)
+  - CI (CheckStyle, 自動テストを実行)
   - AWSデプロイ（これから実施予定）
 
 ## アプリケーション概略図
-<img src="img/application-schematic.png" width="75%"/>
+<img src="img/application-schematic.png"/>
 
 ## 設計書
 ### E-R図
@@ -39,29 +39,23 @@
 [SwaggerによるAPI仕様書](https://rinna-kawaguchi.github.io/Equipment-Management-API/dist/index.html)
 
 ## ローカルでのアプリケーション起動方法
-- Git, Java, Node.Js, Dockerをインストールする。  
-<br />
+- Git, Java, Node.Js, Dockerをインストールする。
 - リポジトリをgit cloneする。  
   `git clone https://github.com/rinna-kawaguchi/Equipment-Management-API.git`  
-  <br />
+
 - クローンしたディレクトリに移動する。  
-  <br />
 - Dockerを起動する。  
-  `docker compose up`  
-  <br />
+`docker compose up`  
 - Spring Bootを起動する。  
   `./gradlew bootRun`  
-  <br />
 - frontendディレクトリに移動する。  
   `cd frontend/`  
-  <br />
 - 依存関係をインストールし、Reactのアプリケーションを起動する。  
   `npm install`
   `npm start`  
   （yarnがインストールされている場合は下記コマンドでも可）   
   `yarn`  
   `yarn start`  
-  <br />
 - ブラウザが立ち上がるので、URLのパスに`/find`を入力すると、設備検索画面が表示される。
 
 ## 自動テスト
@@ -73,7 +67,7 @@
   - EquipmentController, PlanController, HistoryController  
 
 自動テストの実行結果  
-<img src="img/testResult.png"  width="50%"/>
+<img src="img/testResult.png"  width="75%"/>
 
 ## 作成スケジュール
 #### 当初の計画  
