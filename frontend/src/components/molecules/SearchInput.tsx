@@ -1,4 +1,4 @@
-import { Box, Divider, HStack, Heading, Input } from "@chakra-ui/react";
+import { Box, HStack, Input } from "@chakra-ui/react";
 import { ChangeEvent, memo, useEffect, useState } from "react";
 
 type Props = {

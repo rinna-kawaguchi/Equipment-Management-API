@@ -1,7 +1,6 @@
-import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
+import { Box, Divider, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { memo, useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { BaseButton } from "../atoms/BaseButton";
 import { SearchInput } from "../molecules/SearchInput";
 import { SearchResult } from "../organisms/SearchResult";
@@ -13,11 +12,6 @@ export const FindEquipment = memo(() => {
   const [location, setLocation] = useState("");
   const [deadline, setDeadline] = useState("");
   const [equipments, setEquipments] = useState<Array<Equipment>>([]);
-
-  const navigate = useNavigate();
-
-  // 設備登録画面に遷移する
-  const onClickCreatePage = () => navigate("/create");
 
   // Spring BootのAPIを叩いて、全ての設備情報を取得する。
   useEffect(() => {
