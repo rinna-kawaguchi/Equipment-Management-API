@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, memo, useCallback, useEffect, useState } from "react";
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import { BaseButton } from "../../atoms/BaseButton";
 import { History } from "../../../types/History";
 import { useMessage } from "../../../hooks/useMessage";
+import { instance } from "../../../axios/config";
 
 type Props = {
   selectedHistory: History | null;
@@ -39,7 +39,7 @@ export const UpdateHistoryModal: FC<Props> = memo((props) => {
   // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検履歴を更新し、更新後の点検履歴を取得して反映する
   const onClickUpdateHistory = useCallback(async () => {
     let res =
-      await axios.patch(`http://localhost:8080/histories/${selectedHistory?.checkHistoryId}`,
+      await instance.patch(`/histories/${selectedHistory?.checkHistoryId}`,
         {
           "implementationDate": updateImplementationDate, "checkType": updateCheckType,
           "result": updateResult
@@ -50,7 +50,7 @@ export const UpdateHistoryModal: FC<Props> = memo((props) => {
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
-      axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
+      instance.get<Array<History>>(`/equipments/${id}/histories`)
         .then((res) => onHistoryUpdate(res.data));
       onClose();
     }

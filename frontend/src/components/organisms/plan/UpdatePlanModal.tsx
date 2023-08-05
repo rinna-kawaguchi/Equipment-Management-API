@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, memo, useCallback, useEffect, useState } from "react";
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import { BaseButton } from "../../atoms/BaseButton";
 import { Plan } from "../../../types/Plan";
 import { useMessage } from "../../../hooks/useMessage";
+import { instance } from "../../../axios/config";
 
 type Props = {
   selectedPlan: Plan | null;
@@ -37,7 +37,7 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定したIDの点検計画を更新し、更新後の点検計画を取得して反映する
   const onClickUpdatePlan = useCallback(async () => {
-    let res = await axios.patch(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`,
+    let res = await instance.patch(`/plans/${selectedPlan?.checkPlanId}`,
       { "checkType": updateCheckType, "period": updatePeriod, "deadline": updateDeadline })
       .catch(() => showMessage({
         title: "点検計画の修正に失敗しました。入力に誤りがあります。", status: "error"
@@ -45,7 +45,7 @@ export const UpdatePlanModal: FC<Props> = memo((props) => {
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
-      axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
+      instance.get<Array<Plan>>(`/equipments/${id}/plans`)
         .then((res) => onPlanUpdate(res.data));
       onClose();
     }

@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, memo, useEffect, useState } from "react";
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import { Equipment } from "../../types/Equipment";
 import { BaseButton } from "../atoms/BaseButton";
 import { useMessage } from "../../hooks/useMessage";
+import { instance } from "../../axios/config";
 
 type Props = {
   updateEquipment: Equipment | null;
@@ -37,7 +37,7 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
 
   // Spring BootのAPIを叩いて、前段で入力した内容で指定した設備IDの設備情報を更新し、更新後の設備情報を取得して反映する
   const onClickUpdate = async () => {
-    let res = await axios.patch(`http://localhost:8080/equipments/${id}`,
+    let res = await instance.patch(`/equipments/${id}`,
       { "name": updateName, "number": updateNumber, "location": updateLocation })
       .catch(() => showMessage({
         title: "設備情報の修正に失敗しました。入力に誤りがあります。", status: "error"
@@ -45,7 +45,7 @@ export const UpdateEquipmentModal: FC<Props> = memo((props) => {
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
-      axios.get<Equipment>(`http://localhost:8080/equipments/${id}`)
+      instance.get<Equipment>(`/equipments/${id}`)
         .then((res) => onEquipmentsUpdate(res.data));
       onClose();
     }

@@ -1,10 +1,10 @@
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { memo, useCallback } from "react";
 
 import { Plan } from "../../../types/Plan";
 import { useMessage } from "../../../hooks/useMessage";
 import { ConfirmModal } from "../../atoms/ConfirmModal";
+import { instance } from "../../../axios/config";
 
 type Props = {
   selectedPlan: Plan | null;
@@ -20,13 +20,13 @@ export const DeletePlanConfirmModal = memo((props: Props) => {
 
   // Spring BootのAPIを叩いて指定したIDの点検計画を削除する
   const onClickDeletePlanExec = useCallback(async () => {
-    let res = await axios.delete(`http://localhost:8080/plans/${selectedPlan?.checkPlanId}`)
+    let res = await instance.delete(`/plans/${selectedPlan?.checkPlanId}`)
       .catch(() => showMessage({ title: "点検計画の削除に失敗しました。", status: "error" }));
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
     }
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
+    instance.get<Array<Plan>>(`/equipments/${id}/plans`)
       .then((res) => onPlanDelete(res.data));
     onClose();
   }, [selectedPlan]);

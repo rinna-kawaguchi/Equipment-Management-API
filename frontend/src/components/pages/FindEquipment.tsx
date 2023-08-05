@@ -5,6 +5,7 @@ import { BaseButton } from "../atoms/BaseButton";
 import { SearchInput } from "../molecules/SearchInput";
 import { SearchResult } from "../organisms/SearchResult";
 import { Equipment } from "../../types/Equipment";
+import { instance } from "../../axios/config";
 
 export const FindEquipment = memo(() => {
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ export const FindEquipment = memo(() => {
 
   // Spring BootのAPIを叩いて、全ての設備情報を取得する。
   useEffect(() => {
-    axios.get<Array<Equipment>>("http://localhost:8080/equipments")
+    instance.get<Array<Equipment>>("/equipments")
       .then((res) => setEquipments(res.data));
   }, []);
 
