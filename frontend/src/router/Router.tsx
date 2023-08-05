@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { FindEquipment } from '../components/pages/FindEquipment';
 import { CreateEquipment } from '../components/pages/CreateEquipment';
 import { EquipmentDetail } from '../components/pages/EquipmentDetail';
@@ -10,6 +10,7 @@ import { HowToUse } from '../components/pages/HowToUse';
 export const Router: FC = () => {
   return (
     <Routes>
+      <Route path='/' element={<Navigate replace to='/find' />} />
       <Route path='/find' element={<HeaderLayout><FindEquipment /></HeaderLayout>} />
       <Route path='/create' element={<HeaderLayout><CreateEquipment /></HeaderLayout>} />
       <Route path='/update/:id' element={<HeaderLayout><EquipmentDetail /></HeaderLayout>} />
