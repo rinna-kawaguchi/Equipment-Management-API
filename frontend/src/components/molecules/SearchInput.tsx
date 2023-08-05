@@ -20,7 +20,7 @@ export const SearchInput = memo((props: Props) => {
   const onChangeDeadline = (e: ChangeEvent<HTMLInputElement>) => setInputDeadline(e.target.value);
 
   // 入力された内容を親コンポーネントに渡す
-  useEffect(() => onEquipmentSearch(inputName, inputNumber, inputLocation, inputDeadline), [inputName, inputName, inputLocation, inputDeadline]);
+  useEffect(() => onEquipmentSearch(inputName, inputNumber, inputLocation, inputDeadline), [inputName, inputNumber, inputLocation, inputDeadline]);
 
   // 検索条件入力欄の表示
   return (
