@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, HStack, Input } from "@chakra-ui/react";
+import { Box, FormControl, FormLabel, Input, Wrap } from "@chakra-ui/react";
 import { memo } from "react";
 import { Equipment } from "../../types/Equipment";
 
@@ -10,7 +10,7 @@ export const EquipmentInformation = memo((props: Props) => {
   const { selectedEquipment } = props;
 
   return (
-    <HStack spacing={10}>
+    <Wrap spacing={10}>
       <Box>
         <FormControl>
           <FormLabel>設備名称</FormLabel>
@@ -29,6 +29,6 @@ export const EquipmentInformation = memo((props: Props) => {
           <Input value={selectedEquipment?.location} width={"400px"} placeholder="設置場所" />
         </FormControl>
       </Box>
-    </HStack>
+    </Wrap>
   );
 });
