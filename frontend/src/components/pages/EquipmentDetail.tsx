@@ -93,7 +93,7 @@ export const EquipmentDetail: FC = memo(() => {
   const navigate = useNavigate();
 
   // 設備検索画面に遷移
-  const onClickBackFindPage = () => navigate("/find");
+  const onClickBackSearchPage = () => navigate("/Search");
 
   return (
     <Box px={10} py={5}>
@@ -130,7 +130,7 @@ export const EquipmentDetail: FC = memo(() => {
         <br />
         <br />
         <HStack>
-          <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
+          <BaseButton onClick={onClickBackSearchPage}>戻る</BaseButton>
           <BaseButton onClick={openDeleteEquipmentModal}>削除</BaseButton>
           <DeleteEquipmentConfirmModal isOpen={deleteEquiipmentModalOpen}
             onClose={closeDeleteEquipmentModal} />

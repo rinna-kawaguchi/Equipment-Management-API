@@ -29,7 +29,7 @@ export const DeleteEquipmentConfirmModal = memo((props: Props) => {
       const response: string = res.data.message;
       showMessage({ title: `${response}。設備検索画面に戻ります。`, status: "success" });
     }
-    navigate("/find");
+    navigate("/search");
 
   };
 

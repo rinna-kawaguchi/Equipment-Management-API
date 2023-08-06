@@ -1,5 +1,5 @@
 import { memo, useCallback, useState } from "react";
-import { Box, Divider, HStack, Heading, Text } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { BaseButton } from "../atoms/BaseButton";
@@ -24,7 +24,7 @@ export const CreateEquipment = memo(() => {
   const navigate = useNavigate();
 
   // 設備検索画面に遷移
-  const onClickBackFindPage = () => navigate("/find");
+  const onClickBackSearchPage = () => navigate("/search");
 
   // Spring BootのAPIを叩いて、前段で入力した内容で設備情報を登録する。その後、登録した設備の詳細画面に遷移する。
   const onClickCreateEquipment = async () => {
@@ -50,7 +50,7 @@ export const CreateEquipment = memo(() => {
         <br />
         <br />
         <HStack>
-          <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
+          <BaseButton onClick={onClickBackSearchPage}>戻る</BaseButton>
           <BaseButton onClick={onClickCreateEquipment}>登録</BaseButton>
         </HStack>
       </Box>

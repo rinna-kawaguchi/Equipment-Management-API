@@ -7,7 +7,7 @@ import { SearchResult } from "../organisms/SearchResult";
 import { Equipment } from "../../types/Equipment";
 import { instance } from "../../axios/config";
 
-export const FindEquipment = memo(() => {
+export const SearchEquipment = memo(() => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [location, setLocation] = useState("");
@@ -29,7 +29,7 @@ export const FindEquipment = memo(() => {
   }, []);
 
   // Spring BootのAPIを叩いて、前段で入力した条件に合致する設備情報を取得する。
-  const onClickFindEquipment = useCallback(() => {
+  const onClickSearch = useCallback(() => {
     axios.get<Array<Equipment>>(`http://localhost:8080/equipments?name=${name}&number=${number}&location=${location}&deadline=${deadline}`)
       .then((res) => setEquipments(res.data));
   }, [name, number, location, deadline]);
@@ -44,7 +44,7 @@ export const FindEquipment = memo(() => {
         <Divider my={3} />
         <SearchInput onEquipmentSearch={handleSearchCondition} />
         <br />
-        <BaseButton onClick={onClickFindEquipment}>検索</BaseButton>
+        <BaseButton onClick={onClickSearch}>検索</BaseButton>
         <br />
         <br />
         <br />
