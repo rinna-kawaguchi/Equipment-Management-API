@@ -42,8 +42,20 @@
 | 設備削除   | 指定した設備の設備情報・点検計画・点検履歴の削除ができる               |
 
 ## 使用イメージ
-- 検索  
-<img src="img/search-image.gif" width="50%"/>
+### 検索・詳細表示  
+<img src="img/search-demo.gif" width="75%"/>
+
+### 設備登録
+<img src="img/equipment-create-demo.gif" width="75%"/>
+
+### 設備情報修正
+<img src="img/equipment-update-demo.gif" width="75%"/>
+
+### 点検計画の追加・修正・削除（点検履歴も同様）
+<img src="img/plan-demo.gif" width="75%"/>
+
+### 設備削除
+<img src="img/equipment-delete-demo.gif" width="75%"/>
 
 ## 設計書
 ### E-R図
