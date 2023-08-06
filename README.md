@@ -57,6 +57,9 @@
 ### 設備削除
 <img src="img/equipment-delete-demo.gif" width="75%"/>
 
+### メール通知
+<img src="img/mail-demo.png" width="50%"/>
+
 ## 設計書
 ### E-R図
 <img src="img/er-diagram.png" width="50%"/>
