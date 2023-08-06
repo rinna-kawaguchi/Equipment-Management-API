@@ -1,5 +1,5 @@
-import { Box, HStack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { memo, useCallback, useState } from "react";
+import { Box, HStack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useBoolean } from "@chakra-ui/react";
+import { memo, useCallback } from "react";
 import { BaseButton } from "../../atoms/BaseButton";
 import { History } from "../../../types/History";
 import { useSelectHistory } from "../../../hooks/useSelectHistory";
@@ -16,25 +16,20 @@ export const Histories = memo((props: Props) => {
   const { histories, onHistoryUpdate, onHistoryDelete } = props;
   const { onSelectHistory, selectedHistory } = useSelectHistory();
 
-  const [updateHistoryModalOpen, setUpdateHistoryModalOpen] = useState(false);
-  const [deleteHistoryModalOpen, setDeleteHistoryModalOpen] = useState(false);
-
-  const openUpdateHistoryModal = () => setUpdateHistoryModalOpen(true);
-  const closeUpdateHistoryModal = () => setUpdateHistoryModalOpen(false);
-  const openDeleteHistoryModal = () => setDeleteHistoryModalOpen(true);
-  const closeDeleteHistoryModal = () => setDeleteHistoryModalOpen(false);
+  const [updateHistoryFlag, setUpdateHistoryFlag] = useBoolean();
+  const [deleteHistoryFlag, setDeleteHistoryFlag] = useBoolean();
 
   // useSelectHistoryのカスタムフック内のonSelectHistory関数で点検履歴を特定しUpdateHistoryModalを表示する
   const onClickUpdateHistoryModal = useCallback((checkHistoryId: number) => {
     onSelectHistory({ checkHistoryId: checkHistoryId, histories: histories });
-    openUpdateHistoryModal();
-  }, [histories, onSelectHistory, openUpdateHistoryModal]);
+    setUpdateHistoryFlag.on();
+  }, [histories, onSelectHistory]);
 
   // useSelectHistoryのカスタムフック内のonSelectHistory関数で点検履歴を特定しDeleteHistoryConfirmModalを表示する
   const onClickDeleteHistory = useCallback((checkHistoryId: number) => {
     onSelectHistory({ checkHistoryId: checkHistoryId, histories: histories });
-    openDeleteHistoryModal();
-  }, [histories, onSelectHistory, openDeleteHistoryModal]);
+    setDeleteHistoryFlag.on();
+  }, [histories, onSelectHistory]);
 
   return (
     <Box>
@@ -69,9 +64,9 @@ export const Histories = memo((props: Props) => {
           </Tbody>
         </Table>
       </TableContainer>
-      <UpdateHistoryModal selectedHistory={selectedHistory} isOpen={updateHistoryModalOpen}
-        onClose={closeUpdateHistoryModal} onHistoryUpdate={onHistoryUpdate} />
-      <DeleteHistoryConfirmModal selectedHistory={selectedHistory} isOpen={deleteHistoryModalOpen} onClose={closeDeleteHistoryModal} onHistoryDelete={onHistoryDelete} />
+      <UpdateHistoryModal selectedHistory={selectedHistory} isOpen={updateHistoryFlag}
+        onClose={setUpdateHistoryFlag.off} onHistoryUpdate={onHistoryUpdate} />
+      <DeleteHistoryConfirmModal selectedHistory={selectedHistory} isOpen={deleteHistoryFlag} onClose={setDeleteHistoryFlag.off} onHistoryDelete={onHistoryDelete} />
     </Box>
   );
 });

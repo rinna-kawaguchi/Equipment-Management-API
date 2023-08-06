@@ -1,5 +1,5 @@
 import { FC, memo, useCallback, useEffect, useState } from "react";
-import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading, useBoolean } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BaseButton } from "../atoms/BaseButton";
@@ -22,21 +22,10 @@ export const EquipmentDetail: FC = memo(() => {
   const [plans, setPlans] = useState<Array<Plan>>([]);
   const [histories, setHistories] = useState<Array<History>>([]);
 
-  const [updateEquiipmentModalOpen, setUpdateEquipmentModalOpen] = useState(false);
-  const [deleteEquiipmentModalOpen, setDeleteEquipmentModalOpen] = useState(false);
-  const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
-  const [createHistoryModalOpen, setCreateHistoryModalOpen] = useState(false);
-
-  const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
-  const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
-  const openDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(true);
-  const closeDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(false);
-
-  const openCreatePlanModal = () => setCreatePlanModalOpen(true);
-  const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
-
-  const openCreateHistoryModal = () => setCreateHistoryModalOpen(true);
-  const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
+  const [updateEquipmentFlag, setUpdateEquipmentFlag] = useBoolean();
+  const [createPlanFlag, setCreatePlanFlag] = useBoolean();
+  const [createHistoryFlag, setCreateHistoryFlag] = useBoolean();
+  const [deleteEquipmentFlag, setDeleteEquipmentFlag] = useBoolean();
 
   // Spring BootのAPIを叩いて指定した設備IDの設備情報を取得する
   useEffect(() => {
@@ -102,18 +91,18 @@ export const EquipmentDetail: FC = memo(() => {
       <Box px={3}>
         <HStack spacing={10}>
           <Heading size="md">設備情報</Heading>
-          <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
+          <BaseButton onClick={setUpdateEquipmentFlag.on}>設備情報修正</BaseButton>
         </HStack>
-        <UpdateEquipmentModal updateEquipment={selectedEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} onEquipmentsUpdate={handleEquipmentUpdate} />
+        <UpdateEquipmentModal updateEquipment={selectedEquipment} isOpen={updateEquipmentFlag} onClose={setUpdateEquipmentFlag.off} onEquipmentsUpdate={handleEquipmentUpdate} />
         <Divider my={3} />
         <EquipmentInformation selectedEquipment={selectedEquipment} />
         <br />
         <br />
         <HStack spacing={10}>
           <Heading size="md">点検計画</Heading>
-          <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
+          <BaseButton onClick={setCreatePlanFlag.on}>点検計画追加</BaseButton>
         </HStack>
-        <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal}
+        <CreatePlanModal isOpen={createPlanFlag} onClose={setCreatePlanFlag.off}
           onPlanCreate={handlePlanCreate} />
         <Divider my={3} />
         <Plans plans={plans} onPlanUpdate={handlePlanUpdate} onPlanDelete={handlePlanDelete} />
@@ -121,9 +110,9 @@ export const EquipmentDetail: FC = memo(() => {
         <br />
         <HStack spacing={10}>
           <Heading size="md">点検履歴</Heading>
-          <BaseButton onClick={openCreateHistoryModal}>点検履歴追加</BaseButton>
+          <BaseButton onClick={setCreateHistoryFlag.on}>点検履歴追加</BaseButton>
         </HStack>
-        <CreateHistoryModal isOpen={createHistoryModalOpen} onClose={closeCreateHistoryModal}
+        <CreateHistoryModal isOpen={createHistoryFlag} onClose={setCreateHistoryFlag.off}
           onHistoryCreate={handleHistoryCreate} />
         <Divider my={3} />
         <Histories histories={histories} onHistoryUpdate={handleHistoryUpdate} onHistoryDelete={handleHistoryDelete} />
@@ -131,9 +120,9 @@ export const EquipmentDetail: FC = memo(() => {
         <br />
         <HStack>
           <BaseButton onClick={onClickBackSearchPage}>戻る</BaseButton>
-          <BaseButton onClick={openDeleteEquipmentModal}>削除</BaseButton>
-          <DeleteEquipmentConfirmModal isOpen={deleteEquiipmentModalOpen}
-            onClose={closeDeleteEquipmentModal} />
+          <BaseButton onClick={setDeleteEquipmentFlag.on}>削除</BaseButton>
+          <DeleteEquipmentConfirmModal isOpen={deleteEquipmentFlag}
+            onClose={setDeleteEquipmentFlag.off} />
         </HStack>
       </Box>
     </Box>
