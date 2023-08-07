@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, HStack, Input, Text } from "@chakra-ui/react";
+import { Box, FormControl, FormLabel, Input, Text, Wrap } from "@chakra-ui/react";
 import { ChangeEvent, memo, useEffect, useState } from "react";
 
 type Props = {
@@ -25,7 +25,7 @@ export const CreateEquipmentInput = memo((props: Props) => {
     <Box>
       <Text fontSize="lg">新規登録する設備の情報を入力してください</Text>
       <br />
-      <HStack spacing={10}>
+      <Wrap spacing={10}>
         <Box>
           <FormControl>
             <FormLabel>設備名称</FormLabel>
@@ -47,7 +47,7 @@ export const CreateEquipmentInput = memo((props: Props) => {
             <Text fontSize={"xs"} color={"red.400"}>※ 入力必須　※ 20文字以内で入力してください</Text>
           </FormControl>
         </Box>
-      </HStack>
+      </Wrap>
     </Box>
   );
 });

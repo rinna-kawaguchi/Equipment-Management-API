@@ -1,5 +1,5 @@
-import { Box, HStack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { memo, useCallback, useState } from "react";
+import { Box, HStack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useBoolean } from "@chakra-ui/react";
+import { memo, useCallback } from "react";
 import { BaseButton } from "../../atoms/BaseButton";
 import { Plan } from "../../../types/Plan";
 import { useSelectPlan } from "../../../hooks/useSelectPlan";
@@ -16,25 +16,20 @@ export const Plans = memo((props: Props) => {
   const { plans, onPlanUpdate, onPlanDelete } = props;
   const { onSelectPlan, selectedPlan } = useSelectPlan();
 
-  const [updatePlanModalOpen, setUpdatePlanModalOpen] = useState(false);
-  const [deletePlanModalOpen, setDeletePlanModalOpen] = useState(false);
-
-  const openUpdatePlanModal = () => setUpdatePlanModalOpen(true);
-  const closeUpdatePlanModal = () => setUpdatePlanModalOpen(false);
-  const openDeletePlanModal = () => setDeletePlanModalOpen(true);
-  const closeDeletePlanModal = () => setDeletePlanModalOpen(false);
+  const [updatePlanFlag, setUpdatePlanFlag] = useBoolean();
+  const [deletePlanFlag, setDeletePlanFlag] = useBoolean();
 
   // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しUpdatePlanModalを表示する
   const onClickUpdatePlanModal = useCallback((checkPlanId: number) => {
     onSelectPlan({ checkPlanId: checkPlanId, plans: plans });
-    openUpdatePlanModal();
-  }, [plans, onSelectPlan, openUpdatePlanModal]);
+    setUpdatePlanFlag.on();
+  }, [plans, onSelectPlan]);
 
   // useSelectPlanのカスタムフック内のonSelectPlan関数で点検計画を特定しDeletePlanConfirmModalを表示する
   const onClickDeletePlan = useCallback((checkPlanId: number) => {
     onSelectPlan({ checkPlanId: checkPlanId, plans: plans });
-    openDeletePlanModal();
-  }, [plans, onSelectPlan, openDeletePlanModal]);
+    setDeletePlanFlag.on();
+  }, [plans, onSelectPlan]);
 
   return (
     <Box>
@@ -69,10 +64,10 @@ export const Plans = memo((props: Props) => {
           </Tbody>
         </Table>
       </TableContainer>
-      <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanModalOpen}
-        onClose={closeUpdatePlanModal} onPlanUpdate={onPlanUpdate} />
-      <DeletePlanConfirmModal selectedPlan={selectedPlan} isOpen={deletePlanModalOpen}
-        onClose={closeDeletePlanModal} onPlanDelete={onPlanDelete} />
+      <UpdatePlanModal selectedPlan={selectedPlan} isOpen={updatePlanFlag}
+        onClose={setUpdatePlanFlag.off} onPlanUpdate={onPlanUpdate} />
+      <DeletePlanConfirmModal selectedPlan={selectedPlan} isOpen={deletePlanFlag}
+        onClose={setDeletePlanFlag.off} onPlanDelete={onPlanDelete} />
     </Box>
   );
 });

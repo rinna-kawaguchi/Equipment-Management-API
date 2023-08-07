@@ -1,7 +1,6 @@
 import { FC, memo, useCallback, useEffect, useState } from "react";
-import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
+import { Box, Divider, HStack, Heading, useBoolean } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 
 import { BaseButton } from "../atoms/BaseButton";
 import { EquipmentInformation } from "../molecules/EquipmentInformation";
@@ -14,6 +13,7 @@ import { Histories } from "../organisms/History/Histories";
 import { Equipment } from "../../types/Equipment";
 import { Plan } from "../../types/Plan";
 import { History } from "../../types/History";
+import { instance } from "../../axios/config";
 
 export const EquipmentDetail: FC = memo(() => {
   const { id } = useParams();
@@ -22,25 +22,14 @@ export const EquipmentDetail: FC = memo(() => {
   const [plans, setPlans] = useState<Array<Plan>>([]);
   const [histories, setHistories] = useState<Array<History>>([]);
 
-  const [updateEquiipmentModalOpen, setUpdateEquipmentModalOpen] = useState(false);
-  const [deleteEquiipmentModalOpen, setDeleteEquipmentModalOpen] = useState(false);
-  const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
-  const [createHistoryModalOpen, setCreateHistoryModalOpen] = useState(false);
-
-  const openUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(true);
-  const closeUpdateEquipmentModal = () => setUpdateEquipmentModalOpen(false);
-  const openDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(true);
-  const closeDeleteEquipmentModal = () => setDeleteEquipmentModalOpen(false);
-
-  const openCreatePlanModal = () => setCreatePlanModalOpen(true);
-  const closeCreatePlanModal = () => setCreatePlanModalOpen(false);
-
-  const openCreateHistoryModal = () => setCreateHistoryModalOpen(true);
-  const closeCreateHistoryModal = () => setCreateHistoryModalOpen(false);
+  const [updateEquipmentFlag, setUpdateEquipmentFlag] = useBoolean();
+  const [createPlanFlag, setCreatePlanFlag] = useBoolean();
+  const [createHistoryFlag, setCreateHistoryFlag] = useBoolean();
+  const [deleteEquipmentFlag, setDeleteEquipmentFlag] = useBoolean();
 
   // Spring BootのAPIを叩いて指定した設備IDの設備情報を取得する
   useEffect(() => {
-    axios.get<Equipment>(`http://localhost:8080/equipments/${id}`).then((res) => setSelectedEquipment(res.data));
+    instance.get<Equipment>(`/equipments/${id}`).then((res) => setSelectedEquipment(res.data));
   }, [id]);
 
   // UpdateEquipmentModalで更新処理が実行されたら、更新後の設備情報を反映する。
@@ -50,7 +39,7 @@ export const EquipmentDetail: FC = memo(() => {
 
   // Spring BootのAPIを叩いて指定した設備IDと紐づく点検計画を取得する
   useEffect(() => {
-    axios.get<Array<Plan>>(`http://localhost:8080/equipments/${id}/plans`)
+    instance.get<Array<Plan>>(`/equipments/${id}/plans`)
       .then((res) => setPlans(res.data));
   }, [id]);
 
@@ -71,7 +60,7 @@ export const EquipmentDetail: FC = memo(() => {
 
   // Spring BootのAPIを叩いて指定した設備IDと紐づく点検履歴を取得する
   useEffect(() => {
-    axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
+    instance.get<Array<History>>(`/equipments/${id}/histories`)
       .then((res) => setHistories(res.data));
   }, [id]);
 
@@ -93,48 +82,48 @@ export const EquipmentDetail: FC = memo(() => {
   const navigate = useNavigate();
 
   // 設備検索画面に遷移
-  const onClickBackFindPage = () => navigate("/find");
+  const onClickBackSearchPage = () => navigate("/Search");
 
   return (
     <Box px={10} py={5}>
       <Heading size="lg">設備詳細</Heading>
       <Divider my={3} />
       <Box px={3}>
-      <HStack spacing={10}>
-        <Heading size="md">設備情報</Heading>
-        <BaseButton onClick={openUpdateEquipmentModal}>設備情報修正</BaseButton>
-      </HStack>
-      <UpdateEquipmentModal updateEquipment={selectedEquipment} isOpen={updateEquiipmentModalOpen} onClose={closeUpdateEquipmentModal} onEquipmentsUpdate={handleEquipmentUpdate} />
-      <Divider my={3} />
-      <EquipmentInformation selectedEquipment={selectedEquipment} />
-      <br />
-      <br />
-      <HStack spacing={10}>
-        <Heading size="md">点検計画</Heading>
-        <BaseButton onClick={openCreatePlanModal}>点検計画追加</BaseButton>
-      </HStack>
-      <CreatePlanModal isOpen={createPlanModalOpen} onClose={closeCreatePlanModal}
-        onPlanCreate={handlePlanCreate} />
-      <Divider my={3} />
-      <Plans plans={plans} onPlanUpdate={handlePlanUpdate} onPlanDelete={handlePlanDelete} />
-      <br />
-      <br />
-      <HStack spacing={10}>
-        <Heading size="md">点検履歴</Heading>
-        <BaseButton onClick={openCreateHistoryModal}>点検履歴追加</BaseButton>
-      </HStack>
-      <CreateHistoryModal isOpen={createHistoryModalOpen} onClose={closeCreateHistoryModal}
-        onHistoryCreate={handleHistoryCreate} />
-      <Divider my={3} />
-      <Histories histories={histories} onHistoryUpdate={handleHistoryUpdate} onHistoryDelete={handleHistoryDelete} />
-      <br />
-      <br />
-      <HStack>
-        <BaseButton onClick={onClickBackFindPage}>戻る</BaseButton>
-        <BaseButton onClick={openDeleteEquipmentModal}>削除</BaseButton>
-        <DeleteEquipmentConfirmModal isOpen={deleteEquiipmentModalOpen}
-          onClose={closeDeleteEquipmentModal} />
-      </HStack>
+        <HStack spacing={10}>
+          <Heading size="md">設備情報</Heading>
+          <BaseButton onClick={setUpdateEquipmentFlag.on}>設備情報修正</BaseButton>
+        </HStack>
+        <UpdateEquipmentModal updateEquipment={selectedEquipment} isOpen={updateEquipmentFlag} onClose={setUpdateEquipmentFlag.off} onEquipmentsUpdate={handleEquipmentUpdate} />
+        <Divider my={3} />
+        <EquipmentInformation selectedEquipment={selectedEquipment} />
+        <br />
+        <br />
+        <HStack spacing={10}>
+          <Heading size="md">点検計画</Heading>
+          <BaseButton onClick={setCreatePlanFlag.on}>点検計画追加</BaseButton>
+        </HStack>
+        <CreatePlanModal isOpen={createPlanFlag} onClose={setCreatePlanFlag.off}
+          onPlanCreate={handlePlanCreate} />
+        <Divider my={3} />
+        <Plans plans={plans} onPlanUpdate={handlePlanUpdate} onPlanDelete={handlePlanDelete} />
+        <br />
+        <br />
+        <HStack spacing={10}>
+          <Heading size="md">点検履歴</Heading>
+          <BaseButton onClick={setCreateHistoryFlag.on}>点検履歴追加</BaseButton>
+        </HStack>
+        <CreateHistoryModal isOpen={createHistoryFlag} onClose={setCreateHistoryFlag.off}
+          onHistoryCreate={handleHistoryCreate} />
+        <Divider my={3} />
+        <Histories histories={histories} onHistoryUpdate={handleHistoryUpdate} onHistoryDelete={handleHistoryDelete} />
+        <br />
+        <br />
+        <HStack>
+          <BaseButton onClick={onClickBackSearchPage}>戻る</BaseButton>
+          <BaseButton onClick={setDeleteEquipmentFlag.on}>削除</BaseButton>
+          <DeleteEquipmentConfirmModal isOpen={deleteEquipmentFlag}
+            onClose={setDeleteEquipmentFlag.off} />
+        </HStack>
       </Box>
     </Box>
   );

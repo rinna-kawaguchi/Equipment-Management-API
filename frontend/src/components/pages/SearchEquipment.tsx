@@ -1,23 +1,24 @@
-import { Box, Divider, HStack, Heading } from "@chakra-ui/react";
+import { Box, Divider, Heading } from "@chakra-ui/react";
 import axios from "axios";
-import { memo, useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { memo, useCallback, useEffect, useState } from "react";
 import { BaseButton } from "../atoms/BaseButton";
 import { SearchInput } from "../molecules/SearchInput";
 import { SearchResult } from "../organisms/SearchResult";
 import { Equipment } from "../../types/Equipment";
+import { instance } from "../../axios/config";
 
-export const FindEquipment = memo(() => {
+export const SearchEquipment = memo(() => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [location, setLocation] = useState("");
   const [deadline, setDeadline] = useState("");
   const [equipments, setEquipments] = useState<Array<Equipment>>([]);
 
-  const navigate = useNavigate();
-
-  // 設備登録画面に遷移する
-  const onClickCreatePage = () => navigate("/create");
+  // Spring BootのAPIを叩いて、全ての設備情報を取得する。
+  useEffect(() => {
+    instance.get<Array<Equipment>>("/equipments")
+      .then((res) => setEquipments(res.data));
+  }, []);
 
   // SearchInputで入力された内容を設備情報の各項目に渡す
   const handleSearchCondition = useCallback((inputName: string, inputNumber: string, inputLocation: string, inputDeadline: string) => {
@@ -28,7 +29,7 @@ export const FindEquipment = memo(() => {
   }, []);
 
   // Spring BootのAPIを叩いて、前段で入力した条件に合致する設備情報を取得する。
-  const onClickFindEquipment = useCallback(() => {
+  const onClickSearch = useCallback(() => {
     axios.get<Array<Equipment>>(`http://localhost:8080/equipments?name=${name}&number=${number}&location=${location}&deadline=${deadline}`)
       .then((res) => setEquipments(res.data));
   }, [name, number, location, deadline]);
@@ -43,7 +44,7 @@ export const FindEquipment = memo(() => {
         <Divider my={3} />
         <SearchInput onEquipmentSearch={handleSearchCondition} />
         <br />
-        <BaseButton onClick={onClickFindEquipment}>検索</BaseButton>
+        <BaseButton onClick={onClickSearch}>検索</BaseButton>
         <br />
         <br />
         <br />

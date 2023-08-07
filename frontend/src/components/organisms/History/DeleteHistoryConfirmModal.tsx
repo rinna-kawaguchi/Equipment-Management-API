@@ -1,10 +1,10 @@
 import { memo, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 
 import { ConfirmModal } from "../../atoms/ConfirmModal";
 import { useMessage } from "../../../hooks/useMessage";
 import { History } from "../../../types/History";
+import { instance } from "../../../axios/config";
 
 type Props = {
   selectedHistory: History | null;
@@ -20,13 +20,13 @@ export const DeleteHistoryConfirmModal = memo((props: Props) => {
 
   // Spring BootのAPIを叩いて指定したIDの点検履歴を削除する
   const deleteHistoryExec = useCallback(async () => {
-    let res = await axios.delete(`http://localhost:8080/histories/${selectedHistory?.checkHistoryId}`)
+    let res = await instance.delete(`/histories/${selectedHistory?.checkHistoryId}`)
       .catch(() => showMessage({ title: "点検履歴の削除に失敗しました。", status: "error" }));
     if (res) {
       const response: string = res.data.message;
       showMessage({ title: response, status: "success" });
     }
-    axios.get<Array<History>>(`http://localhost:8080/equipments/${id}/histories`)
+    instance.get<Array<History>>(`/equipments/${id}/histories`)
       .then((res) => onHistoryDelete(res.data));
     onClose();
   }, [selectedHistory]);

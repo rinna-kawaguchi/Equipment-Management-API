@@ -1,4 +1,4 @@
-import { Box, Divider, HStack, Heading, Input } from "@chakra-ui/react";
+import { Box, Input, Wrap } from "@chakra-ui/react";
 import { ChangeEvent, memo, useEffect, useState } from "react";
 
 type Props = {
@@ -20,12 +20,12 @@ export const SearchInput = memo((props: Props) => {
   const onChangeDeadline = (e: ChangeEvent<HTMLInputElement>) => setInputDeadline(e.target.value);
 
   // 入力された内容を親コンポーネントに渡す
-  useEffect(() => onEquipmentSearch(inputName, inputNumber, inputLocation, inputDeadline), [inputName, inputName, inputLocation, inputDeadline]);
+  useEffect(() => onEquipmentSearch(inputName, inputNumber, inputLocation, inputDeadline), [inputName, inputNumber, inputLocation, inputDeadline]);
 
   // 検索条件入力欄の表示
   return (
     <>
-      <HStack spacing={4} >
+      <Wrap spacing={4}>
         <Box>
           <p>設備名称</p>
           <Input width={"400px"} placeholder="ポンプ" onChange={onChangeName} />
@@ -44,7 +44,7 @@ export const SearchInput = memo((props: Props) => {
           <Input width={"400px"} placeholder="2023-12-31（yyyy-mm-ddで入力してください）"
             onChange={onChangeDeadline} />
         </Box>
-      </HStack>
+      </Wrap>
     </>
   );
 });
