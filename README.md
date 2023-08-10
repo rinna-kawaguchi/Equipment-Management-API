@@ -89,7 +89,7 @@ http://52.197.254.51
 - frontendディレクトリに移動する。  
   `cd frontend/`  
 - 依存関係をインストールし、Reactのアプリケーションを起動する。  
-  `npm install`
+  `npm install`  
   `npm start`  
   （yarnがインストールされている場合は下記コマンドでも可）   
   `yarn`  
