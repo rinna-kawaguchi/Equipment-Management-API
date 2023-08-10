@@ -30,7 +30,7 @@ export const SearchEquipment = memo(() => {
 
   // Spring BootのAPIを叩いて、前段で入力した条件に合致する設備情報を取得する。
   const onClickSearch = useCallback(() => {
-    axios.get<Array<Equipment>>(`http://localhost:8080/equipments?name=${name}&number=${number}&location=${location}&deadline=${deadline}`)
+    instance.get<Array<Equipment>>(`/equipments?name=${name}&number=${number}&location=${location}&deadline=${deadline}`)
       .then((res) => setEquipments(res.data));
   }, [name, number, location, deadline]);
 
