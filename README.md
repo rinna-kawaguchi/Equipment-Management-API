@@ -1,5 +1,8 @@
 # 設備点検管理アプリ
 
+## アプリURL
+http://52.197.254.51
+
 ## アプリ概要
 - 工場やプラントで使用されている設備（例：ポンプ、弁、電源盤、etc）の点検履歴や点検期限を管理できるアプリ。
 - 以下の情報を持ち、それぞれ登録、修正、削除ができる。  
@@ -70,6 +73,9 @@
 ### API仕様書
 [SwaggerによるAPI仕様書](https://rinna-kawaguchi.github.io/Equipment-Management-API/dist/index.html)
 
+### インフラ構成図
+<img src="img/infrastructure-diagram.png" width="75%"/>
+
 ## ローカルでのアプリケーション起動方法
 - Git, Java, Node.Js, Dockerをインストールする。
 - リポジトリをgit cloneする。  
@@ -105,8 +111,8 @@
 #### 当初の計画  
 <img src="img/schedule-initial.png"  width="70%"/>  
 
-#### 実績（8月4日時点）  
-<img src="img/schedule-20230804.png"/>  
+#### 実績  
+<img src="img/schedule-actual.png"/>  
 
 #### 進捗状況の振り返り 
 当初２週間程度で作成する予定でしたが、結果的には１ヶ月程度かかってしまいました。  
