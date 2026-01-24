@@ -90,6 +90,6 @@ public class PlanController {
         "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
         "message", "checkType,periodは必須項目です。10文字以内で入力してください",
         "path", request.getRequestURI());
-    return new ResponseEntity(body, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
 }

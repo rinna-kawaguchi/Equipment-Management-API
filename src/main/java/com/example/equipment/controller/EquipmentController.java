@@ -93,6 +93,6 @@ public class EquipmentController {
         "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
         "message", "name,number,locationは必須項目です。20文字以内で入力してください",
         "path", request.getRequestURI());
-    return new ResponseEntity(body, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
 }

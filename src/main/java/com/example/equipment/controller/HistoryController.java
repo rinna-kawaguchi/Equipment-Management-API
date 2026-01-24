@@ -99,6 +99,6 @@ public class HistoryController {
         "message", "implementationDate,checkType,"
             + "resultは必須項目です。checkTypeは10文字以内、resultは50文字以内で入力してください",
         "path", request.getRequestURI());
-    return new ResponseEntity(body, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
 }
