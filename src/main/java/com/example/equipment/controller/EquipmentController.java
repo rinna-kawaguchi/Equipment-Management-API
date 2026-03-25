@@ -1,6 +1,7 @@
 package com.example.equipment.controller;
 
 import com.example.equipment.entity.Equipment;
+import com.example.equipment.exception.DuplicateEquipmentException;
 import com.example.equipment.exception.ResourceNotFoundException;
 import com.example.equipment.form.EquipmentForm;
 import com.example.equipment.service.EquipmentService;
@@ -82,6 +83,18 @@ public class EquipmentController {
         "message", e.getMessage(),
         "path", request.getRequestURI());
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(value = DuplicateEquipmentException.class)
+  public ResponseEntity<Map<String, String>> handleDuplicateEquipment(
+      DuplicateEquipmentException e, HttpServletRequest request) {
+    Map<String, String> body = Map.of(
+        "timestamp", ZonedDateTime.now().toString(),
+        "status", String.valueOf(HttpStatus.CONFLICT.value()),
+        "error", HttpStatus.CONFLICT.getReasonPhrase(),
+        "message", e.getMessage(),
+        "path", request.getRequestURI());
+    return new ResponseEntity<>(body, HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(value = MethodArgumentNotValidException.class)

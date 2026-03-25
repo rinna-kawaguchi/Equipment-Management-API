@@ -35,6 +35,16 @@ public interface EquipmentMapper {
   @Select("SELECT * FROM equipments WHERE equipment_id = #{equipmentId}")
   Optional<Equipment> findEquipmentById(int equipmentId);
 
+  @Select("SELECT EXISTS(SELECT 1 FROM equipments"
+      + " WHERE name = #{name} AND number = #{number} AND location = #{location})")
+  boolean existsDuplicateEquipment(String name, String number, String location);
+
+  @Select("SELECT EXISTS(SELECT 1 FROM equipments"
+      + " WHERE name = #{name} AND number = #{number} AND location = #{location}"
+      + " AND equipment_id != #{equipmentId})")
+  boolean existsDuplicateEquipmentWithOtherId(
+      int equipmentId, String name, String number, String location);
+
   @Insert("INSERT INTO equipments (name, number, location)"
       + " VALUES (#{name}, #{number}, #{location})")
   @Options(useGeneratedKeys = true, keyProperty = "equipmentId")

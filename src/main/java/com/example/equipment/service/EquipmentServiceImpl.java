@@ -2,6 +2,7 @@ package com.example.equipment.service;
 
 import com.example.equipment.controller.FindEquipmentResponse;
 import com.example.equipment.entity.Equipment;
+import com.example.equipment.exception.DuplicateEquipmentException;
 import com.example.equipment.exception.ResourceNotFoundException;
 import com.example.equipment.form.EquipmentForm;
 import com.example.equipment.mapper.EquipmentMapper;
@@ -39,6 +40,10 @@ public class EquipmentServiceImpl implements EquipmentService {
   // 設備の登録処理
   @Override
   public Equipment createEquipment(EquipmentForm form) {
+    if (equipmentMapper.existsDuplicateEquipment(
+        form.getName(), form.getNumber(), form.getLocation())) {
+      throw new DuplicateEquipmentException("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+    }
     Equipment equipment = new Equipment(form.getName(), form.getNumber(), form.getLocation());
     equipmentMapper.insertEquipment(equipment);
     return equipment;
@@ -49,6 +54,9 @@ public class EquipmentServiceImpl implements EquipmentService {
   public void updateEquipment(int equipmentId, String name, String number, String location) {
     equipmentMapper.findEquipmentById(equipmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    if (equipmentMapper.existsDuplicateEquipmentWithOtherId(equipmentId, name, number, location)) {
+      throw new DuplicateEquipmentException("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+    }
     equipmentMapper.updateEquipment(equipmentId, name, number, location);
   }
 

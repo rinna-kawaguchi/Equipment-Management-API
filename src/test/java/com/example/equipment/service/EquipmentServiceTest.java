@@ -2,6 +2,7 @@ package com.example.equipment.service;
 
 import com.example.equipment.controller.FindEquipmentResponse;
 import com.example.equipment.entity.Equipment;
+import com.example.equipment.exception.DuplicateEquipmentException;
 import com.example.equipment.exception.ResourceNotFoundException;
 import com.example.equipment.form.EquipmentForm;
 import com.example.equipment.mapper.EquipmentMapper;
@@ -72,10 +73,23 @@ class EquipmentServiceTest {
   public void formからgetした内容で設備が登録できること() {
     EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1");
     Equipment expectedEquipment = new Equipment("ポンプA", "C001A", "Area1");
+    doReturn(false).when(equipmentMapper).existsDuplicateEquipment("ポンプA", "C001A", "Area1");
     doNothing().when(equipmentMapper).insertEquipment(expectedEquipment);
 
     assertThat(equipmentServiceImpl.createEquipment(form)).isEqualTo(expectedEquipment);
     verify(equipmentMapper, times(1)).insertEquipment(expectedEquipment);
+  }
+
+  @Test
+  public void 重複する設備を登録しようとした時に例外がスローされること() {
+    EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1");
+    doReturn(true).when(equipmentMapper).existsDuplicateEquipment("ポンプA", "C001A", "Area1");
+
+    assertThatThrownBy(() -> equipmentServiceImpl.createEquipment(form))
+        .isInstanceOfSatisfying(DuplicateEquipmentException.class, e -> {
+          assertThat(e.getMessage()).isEqualTo("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+        });
+    verify(equipmentMapper, never()).insertEquipment(new Equipment("ポンプA", "C001A", "Area1"));
   }
 
   @Test
@@ -88,6 +102,20 @@ class EquipmentServiceTest {
         });
     verify(equipmentMapper, times(1)).findEquipmentById(99);
     verify(equipmentMapper, never()).updateEquipment(99, "真空ポンプA", "A1-C001A", "Area1");
+  }
+
+  @Test
+  public void 他のIDで重複する設備に更新しようとした時に例外がスローされること() {
+    doReturn(Optional.of(new Equipment(1, "真空ポンプA", "A1-C001A", "Area1")))
+        .when(equipmentMapper).findEquipmentById(1);
+    doReturn(true).when(equipmentMapper)
+        .existsDuplicateEquipmentWithOtherId(1, "吸込ポンプB", "A2-C002B", "Area2");
+
+    assertThatThrownBy(() -> equipmentServiceImpl.updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2"))
+        .isInstanceOfSatisfying(DuplicateEquipmentException.class, e -> {
+          assertThat(e.getMessage()).isEqualTo("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+        });
+    verify(equipmentMapper, never()).updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2");
   }
 
   @Test
