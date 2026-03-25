@@ -105,6 +105,20 @@ class EquipmentServiceTest {
   }
 
   @Test
+  public void 他のIDで重複する設備に更新しようとした時に例外がスローされること() {
+    doReturn(Optional.of(new Equipment(1, "真空ポンプA", "A1-C001A", "Area1")))
+        .when(equipmentMapper).findEquipmentById(1);
+    doReturn(true).when(equipmentMapper)
+        .existsDuplicateEquipmentWithOtherId(1, "吸込ポンプB", "A2-C002B", "Area2");
+
+    assertThatThrownBy(() -> equipmentServiceImpl.updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2"))
+        .isInstanceOfSatisfying(DuplicateEquipmentException.class, e -> {
+          assertThat(e.getMessage()).isEqualTo("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+        });
+    verify(equipmentMapper, never()).updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2");
+  }
+
+  @Test
   public void 設備削除で存在しないIDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
 

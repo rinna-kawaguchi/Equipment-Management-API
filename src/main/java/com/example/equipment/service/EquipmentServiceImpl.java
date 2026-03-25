@@ -54,6 +54,9 @@ public class EquipmentServiceImpl implements EquipmentService {
   public void updateEquipment(int equipmentId, String name, String number, String location) {
     equipmentMapper.findEquipmentById(equipmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    if (equipmentMapper.existsDuplicateEquipmentWithOtherId(equipmentId, name, number, location)) {
+      throw new DuplicateEquipmentException("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+    }
     equipmentMapper.updateEquipment(equipmentId, name, number, location);
   }
 

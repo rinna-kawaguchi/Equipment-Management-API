@@ -109,6 +109,22 @@ class EquipmentMapperTest {
 
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
+  @Transactional
+  void 他のIDで重複する設備が存在する時にtrueが返されること() {
+    assertThat(equipmentMapper
+        .existsDuplicateEquipmentWithOtherId(2, "真空ポンプA", "A1-C001A", "Area1")).isTrue();
+  }
+
+  @Test
+  @DataSet(value = "datasets/equipment/equipments.yml")
+  @Transactional
+  void 同じIDで重複する設備の場合にfalseが返されること() {
+    assertThat(equipmentMapper
+        .existsDuplicateEquipmentWithOtherId(1, "真空ポンプA", "A1-C001A", "Area1")).isFalse();
+  }
+
+  @Test
+  @DataSet(value = "datasets/equipment/equipments.yml")
   @ExpectedDataSet(value = "datasets/equipment/insert_equipment.yml", ignoreCols = "equipment_id")
   @Transactional
   void 設備登録ができ既存のIDより大きい数字のIDが採番されること() {

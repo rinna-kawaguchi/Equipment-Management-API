@@ -390,6 +390,37 @@ public class EquipmentIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
+  // PATCHメソッドで他のequipmentIdと同じname,number,locationに更新しようとした時に、
+  // ステータスコード409とエラーメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/equipment/equipments.yml")
+  @Transactional
+  void 他のIDで重複する設備に更新しようとした時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.patch("/equipments/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                {
+                  "name": "吸込ポンプB",
+                  "number": "A2-C002B",
+                  "location": "Area2"
+                }
+                """))
+            .andExpect(MockMvcResultMatchers.status().isConflict())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "409",
+          "error": "Conflict",
+          "message": "同じ設備名称・設備番号・設置場所の設備が既に登録されています",
+          "path": "/equipments/1"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
   // PATCHメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
