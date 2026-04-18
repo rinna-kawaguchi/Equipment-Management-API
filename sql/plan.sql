@@ -1,22 +1,21 @@
 CREATE TABLE plans (
   check_plan_id int unsigned AUTO_INCREMENT,
-  equipment_id int NOT NULL,
-  check_type VARCHAR(10) NOT NULL,
-  period VARCHAR(10) NOT NULL,
+  equipment_id INT UNSIGNED NOT NULL,
+  check_type_id INT UNSIGNED NOT NULL,
   deadline DATE,
-  PRIMARY KEY(check_plan_id)
+  is_manual_override TINYINT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY(check_plan_id),
+  UNIQUE KEY uq_plans_equipment_checktype (equipment_id, check_type_id),
+  CONSTRAINT fk_plans_equipment FOREIGN KEY (equipment_id) REFERENCES equipments (equipment_id) ON DELETE CASCADE,
+  CONSTRAINT fk_plans_check_type FOREIGN KEY (check_type_id) REFERENCES check_types (check_type_id) ON DELETE RESTRICT
 );
 
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (1, 1, "簡易点検", "1年", "2023-09-03");
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (2, 1, "本格点検", "5年", "2026-09-03");
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (3, 2, "簡易点検", "1年", "2023-10-23");
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (4, 2, "本格点検", "5年", "2027-10-23");
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (5, 4, "漏洩確認", "1年", "2023-12-09")
-;
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (6, 4, "分解点検", "10年", "2032-12-09")
-;
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (7, 5, "漏洩確認", "1年", "2024-03-09")
-;
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (8, 5, "分解点検", "10年", "2025-03-09")
-;
-INSERT INTO plans (check_plan_id, equipment_id, check_type, period, deadline) VALUES (9, 6, "取替", "20年", "2030-01-30");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (1, 1, 1, "2023-09-03");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (2, 1, 2, "2026-09-03");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (3, 2, 1, "2023-10-23");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (4, 2, 2, "2027-10-23");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (5, 4, 3, "2023-12-09");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (6, 4, 4, "2032-12-09");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (7, 5, 3, "2024-03-09");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (8, 5, 4, "2025-03-09");
+INSERT INTO plans (check_plan_id, equipment_id, check_type_id, deadline) VALUES (9, 6, 5, "2030-01-30");
