@@ -25,19 +25,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 public class PlanController {
+
   private final PlanService planService;
 
   public PlanController(PlanService planService) {
     this.planService = planService;
   }
 
-  // 指定した設備の点検計画を取得する
   @GetMapping("/equipments/{equipmentId}/plans")
   public List<Plan> getPlanByEquipmentId(@PathVariable("equipmentId") int equipmentId) {
     return planService.findPlanByEquipmentId(equipmentId);
   }
 
-  // 指定した設備の点検計画を登録する
   @PostMapping("/equipments/{equipmentId}/plans")
   public ResponseEntity<Map<String, String>> createPlan(
       @PathVariable("equipmentId") int equipmentId,
@@ -51,7 +50,8 @@ public class PlanController {
   @PatchMapping("/plans/{checkPlanId}")
   public ResponseEntity<Map<String, String>> updatePlan(
       @PathVariable("checkPlanId") int checkPlanId, @RequestBody @Validated PlanForm form) {
-    planService.updatePlan(checkPlanId, form.getCheckType(), form.getPeriod(), form.getDeadline());
+    planService.updatePlan(checkPlanId, form.getCheckTypeId(), form.getPeriodValue(),
+        form.getPeriodUnit(), form.getDeadline());
     return ResponseEntity.ok(Map.of("message", "点検計画が正常に更新されました"));
   }
 
@@ -88,7 +88,7 @@ public class PlanController {
         "timestamp", ZonedDateTime.now().toString(),
         "status", String.valueOf(HttpStatus.BAD_REQUEST.value()),
         "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
-        "message", "checkType,periodは必須項目です。10文字以内で入力してください",
+        "message", "checkTypeId,periodValue,periodUnitは必須項目です",
         "path", request.getRequestURI());
     return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }

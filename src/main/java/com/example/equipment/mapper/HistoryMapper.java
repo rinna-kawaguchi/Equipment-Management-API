@@ -19,18 +19,18 @@ public interface HistoryMapper {
   @Select("SELECT * FROM histories WHERE check_history_id = #{checkHistoryId}")
   Optional<History> findHistoryByCheckHistoryId(int checkHistoryId);
 
-  @Insert("INSERT INTO histories (equipment_id, implementation_date, check_type, result)"
-      + " VALUES (#{equipmentId}, #{implementationDate}, #{checkType}, #{result})")
+  @Insert("INSERT INTO histories (equipment_id, implementation_date, check_type_id, result)"
+      + " VALUES (#{equipmentId}, #{implementationDate}, #{checkTypeId}, #{result})")
   @Options(useGeneratedKeys = true, keyProperty = "checkHistoryId")
   void insertHistory(History history);
 
-  @Update("UPDATE histories SET implementation_date = #{implementationDate}, check_type = "
-      + "#{checkType}, result = #{result} WHERE check_history_id = #{checkHistoryId}")
-  void updateHistory(int checkHistoryId, String implementationDate, String checkType,
-                     String result);
+  @Update("UPDATE histories SET implementation_date = #{implementationDate},"
+      + " check_type_id = #{checkTypeId}, result = #{result}"
+      + " WHERE check_history_id = #{checkHistoryId}")
+  void updateHistory(int checkHistoryId, String implementationDate, int checkTypeId, String result);
 
   @Delete("DELETE FROM histories WHERE check_history_id = #{checkHistoryId}")
-  void deleteHistoryByCheckHistoryId(int checkPlanId);
+  void deleteHistoryByCheckHistoryId(int checkHistoryId);
 
   @Delete("DELETE FROM histories WHERE equipment_id = #{equipmentId}")
   void deleteHistoryByEquipmentId(int equipmentId);

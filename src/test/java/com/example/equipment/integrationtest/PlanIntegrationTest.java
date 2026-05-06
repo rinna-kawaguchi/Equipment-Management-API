@@ -29,7 +29,6 @@ public class PlanIntegrationTest {
   @Autowired
   MockMvc mockMvc;
 
-  // GETメソッドで設備IDを指定した時に、指定した設備IDの点検計画が取得できステータスコード200が返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @Transactional
@@ -44,22 +43,25 @@ public class PlanIntegrationTest {
                {
                  "checkPlanId": 1,
                  "equipmentId": 1,
-                 "checkType": "簡易点検",
-                 "period": "1年",
-                 "deadline": "2023-09-30"
+                 "checkTypeId": 1,
+                 "periodValue": 1,
+                 "periodUnit": "year",
+                 "deadline": "2023-09-30",
+                 "manualOverride": false
                },
                {
                  "checkPlanId": 2,
                  "equipmentId": 1,
-                 "checkType": "本格点検",
-                 "period": "5年",
-                 "deadline": "2026-09-30"
+                 "checkTypeId": 2,
+                 "periodValue": 5,
+                 "periodUnit": "year",
+                 "deadline": "2026-09-30",
+                 "manualOverride": true
                }
          ]
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドで点検計画が存在しない時に、空のListが返されステータスコード200が返されること
   @Test
   @DataSet(value = "datasets/plan/empty.yml")
   @Transactional
@@ -74,10 +76,8 @@ public class PlanIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // POSTメソッドで正しくリクエスト（checkType,periodをいずれも10文字以内で入力）した時に、
-  // 指定した設備IDの点検計画が登録できステータスコード201とメッセージが返されること
   @Test
-  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @ExpectedDataSet(value = "datasets/plan/insert_plan.yml", ignoreCols = "check_plan_id")
   @Transactional
   void 指定した設備の点検計画が登録できること() throws Exception {
@@ -85,12 +85,13 @@ public class PlanIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "checkType": "取替",
-                  "period": "10年",
-                  "deadline": "2030-09-30"
-                }
-                """))
+                    {
+                      "checkTypeId": 3,
+                      "periodValue": 10,
+                      "periodUnit": "year",
+                      "deadline": "2030-09-30"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -101,9 +102,8 @@ public class PlanIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // POSTメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
   @Test
-  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional
   void 登録の際に指定した設備IDが存在しない時に例外がスローされること() throws Exception {
     String response =
@@ -111,8 +111,9 @@ public class PlanIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                     {
-                      "checkType": "取替",
-                      "period": "10年",
+                      "checkTypeId": 3,
+                      "periodValue": 10,
+                      "periodUnit": "year",
                       "deadline": "2030-09-30"
                     }
                     """))
@@ -131,23 +132,21 @@ public class PlanIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのcheckType,periodのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
-  // （NotBlankのバリデーション確認、checkType,periodは同じアノテーションを付与しており同じString型のため、
-  // 代表してcheckTypeで確認。以下同様）
   @Test
-  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional
-  void 登録時のリクエストでnullの項目がある時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストでcheckTypeIdが0の時にエラーメッセージが返されること() throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "checkType": null,
-                  "period": "10年",
-                  "deadline": "2030-09-30"
-                }
-                """))
+                    {
+                      "checkTypeId": 0,
+                      "periodValue": 10,
+                      "periodUnit": "year",
+                      "deadline": "2030-09-30"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -156,29 +155,29 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkType,periodは必須項目です。10文字以内で入力してください",
+          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
           "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのcheckType,periodのいずれかが空文字の時に、
-  // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認）
   @Test
-  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional
-  void 登録時のリクエストで空文字の項目がある時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストでperiodUnitが空文字の時にエラーメッセージが返されること()
+      throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "checkType": "",
-                  "period": "10年",
-                  "deadline": "2030-09-30"
-                }
-                """))
+                    {
+                      "checkTypeId": 1,
+                      "periodValue": 10,
+                      "periodUnit": "",
+                      "deadline": "2030-09-30"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -187,29 +186,29 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkType,periodは必須項目です。10文字以内で入力してください",
+          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
           "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのcheckType,periodのいずれかが10文字を超えている時に、
-  // ステータスコード400とエラーメッセージが返されること（@Size(max = 10)のバリデーション確認）
   @Test
-  @DataSet(value = "datasets/plan/plans.yml, datasets/equipment/equipments.yml")
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional
-  void 登録時のリクエストで10文字を超える項目がある時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストでperiodUnitが不正な値の時にエラーメッセージが返されること()
+      throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "checkType": "aaaaaaaaaaa",
-                  "period": "10年",
-                  "deadline": "2030-09-30"
-                }
-                """))
+                    {
+                      "checkTypeId": 1,
+                      "periodValue": 10,
+                      "periodUnit": "invalid",
+                      "deadline": "2030-09-30"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -218,15 +217,43 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkType,periodは必須項目です。10文字以内で入力してください",
+          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
           "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // PATCHメソッドで存在する点検計画IDを指定し正しくリクエスト（checkType,periodをいずれも10文字以内で入力）した時に、
-  // 点検計画が更新できステータスコード200とメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
+  @Transactional
+  void 登録時のリクエストでcheckTypeIdがnullの時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                    {
+                      "checkTypeId": null,
+                      "periodValue": 10,
+                      "periodUnit": "year",
+                      "deadline": "2030-09-30"
+                    }
+                    """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
+          "path": "/equipments/1/plans"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @ExpectedDataSet(value = "datasets/plan/update_plan.yml")
@@ -236,12 +263,13 @@ public class PlanIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/plans/2")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "checkType": "取替",
-                  "period": "10年",
-                  "deadline": "2030-09-30"
-                }
-                """))
+                    {
+                      "checkTypeId": 3,
+                      "periodValue": 10,
+                      "periodUnit": "year",
+                      "deadline": "2030-09-30"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -252,7 +280,6 @@ public class PlanIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // PATCHメソッドで存在しない点検計画IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @Transactional
@@ -261,12 +288,13 @@ public class PlanIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/plans/5")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "checkType": "取替",
-                  "period": "10年",
-                  "deadline": "2030-09-30"
-                }
-                """))
+                    {
+                      "checkTypeId": 3,
+                      "periodValue": 10,
+                      "periodUnit": "year",
+                      "deadline": "2030-09-30"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isNotFound())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -282,8 +310,6 @@ public class PlanIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // PATCHメソッドでリクエストのcheckType,periodのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
-  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているため空文字と20文字を超える場合は割愛）
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @Transactional
@@ -293,8 +319,9 @@ public class PlanIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
                     {
-                      "checkType": null,
-                      "period": "10年",
+                      "checkTypeId": 1,
+                      "periodValue": 10,
+                      "periodUnit": null,
                       "deadline": "2030-09-30"
                     }
                     """))
@@ -306,14 +333,13 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkType,periodは必須項目です。10文字以内で入力してください",
+          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
           "path": "/plans/2"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで存在する点検計画IDを指定した時に、点検計画が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @ExpectedDataSet(value = "datasets/plan/delete_plan.yml")
@@ -331,7 +357,6 @@ public class PlanIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // DELETEメソッドで存在しない点検計画IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @Transactional
@@ -353,7 +378,6 @@ public class PlanIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで設備IDを指定した時に、指定した設備IDの点検計画が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @ExpectedDataSet(value = "datasets/plan/delete_by_equipment_id.yml")

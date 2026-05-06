@@ -1,11 +1,15 @@
 plans:
   - check_plan_id: 1
     equipment_id: 1
-    check_type: "簡易点検"
-    period: "1年"
+    check_type_id: 1
+    period_value: 1
+    period_unit: "year"
     deadline: "2023-09-30"
+    is_manual_override: 0
   - check_plan_id: 2
     equipment_id: 1
-    check_type: "本格点検"
-    period: "5年"
+    check_type_id: 2
+    period_value: 5
+    period_unit: "year"
     deadline: "2026-09-30"
+    is_manual_override: 1

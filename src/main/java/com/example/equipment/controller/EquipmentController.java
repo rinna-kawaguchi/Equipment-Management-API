@@ -27,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 public class EquipmentController {
+
   private final EquipmentService equipmentService;
 
   public EquipmentController(EquipmentService equipmentService) {
@@ -54,15 +55,15 @@ public class EquipmentController {
     Equipment equipment = equipmentService.createEquipment(form);
     URI url = uriBuilder.path("/equipment/" + equipment.getEquipmentId()).build().toUri();
     String newId = String.valueOf(equipment.getEquipmentId());
-    return ResponseEntity.created(url).body(Map.of("message", "設備が正常に登録されました", "newId", newId));
+    return ResponseEntity.created(url).body(
+        Map.of("message", "設備が正常に登録されました", "newId", newId));
   }
 
   @PatchMapping("/equipments/{equipmentId}")
   public ResponseEntity<Map<String, String>> updateEquipment(
-      @PathVariable("equipmentId") int equipmentId,
-      @RequestBody @Validated EquipmentForm form) {
-    equipmentService.updateEquipment(
-        equipmentId, form.getName(), form.getNumber(), form.getLocation());
+      @PathVariable("equipmentId") int equipmentId, @RequestBody @Validated EquipmentForm form) {
+    equipmentService.updateEquipment(equipmentId, form.getName(), form.getNumber(),
+        form.getLocation(), form.isAutoCalculationFlag());
     return ResponseEntity.ok(Map.of("message", "設備が正常に更新されました"));
   }
 

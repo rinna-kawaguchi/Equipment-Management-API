@@ -44,15 +44,15 @@ public class HistoryIntegrationTest {
                  {
                     "checkHistoryId": 1,
                     "equipmentId": 1,
+                    "checkTypeId": 1,
                     "implementationDate": "2022-09-30",
-                    "checkType": "簡易点検",
                     "result": "良"
                  },
                  {
                    "checkHistoryId": 2,
                    "equipmentId": 1,
+                   "checkTypeId": 2,
                    "implementationDate": "2021-09-30",
-                   "checkType": "本格点検",
                    "result": "良"
                  }
                ]
@@ -86,12 +86,12 @@ public class HistoryIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "implementationDate": "2015-09-30",
-                  "checkType": "取替",
-                  "result": "良"
-                }
-                """))
+                    {
+                      "implementationDate": "2015-09-30",
+                      "checkTypeId": 3,
+                      "result": "良"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -113,7 +113,7 @@ public class HistoryIntegrationTest {
                 .content("""
                     {
                       "implementationDate": "2015-09-30",
-                      "checkType": "取替",
+                      "checkTypeId": 3,
                       "result": "良"
                     }
                     """))
@@ -132,9 +132,9 @@ public class HistoryIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのimplementationDate,checkType,resultのいずれかがnullの時に、
+  // POSTメソッドでリクエストのimplementationDate,resultのいずれかがnullの時に、
   // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認、
-  // implementationDate,checkType,resultは同じString型のため、代表してimplementationDateで確認。以下同様）
+  // implementationDate,resultは同じString型のため、代表してimplementationDateで確認。以下同様）
   @Test
   @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
   @Transactional
@@ -143,12 +143,12 @@ public class HistoryIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "implementationDate": null,
-                  "checkType": "取替",
-                  "result": "良"
-                }
-                """))
+                    {
+                      "implementationDate": null,
+                      "checkTypeId": 3,
+                      "result": "良"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -157,14 +157,14 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkType,resultは必須項目です。checkTypeは10文字以内、resultは50文字以内で入力してください",
+          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのimplementationDate,checkType,resultのいずれかが空文字の時に、
+  // POSTメソッドでリクエストのimplementationDate,resultのいずれかが空文字の時に、
   // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認）
   @Test
   @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
@@ -174,12 +174,12 @@ public class HistoryIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "implementationDate": null,
-                  "checkType": "取替",
-                  "result": "良"
-                }
-                """))
+                    {
+                      "implementationDate": "",
+                      "checkTypeId": 3,
+                      "result": "良"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -188,29 +188,29 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkType,resultは必須項目です。checkTypeは10文字以内、resultは50文字以内で入力してください",
+          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのcheckTypeが10文字を超えている時に、
-  // ステータスコード400とエラーメッセージが返されること（@Size(max = 10)のバリデーション確認、resultは割愛）
+  // POSTメソッドでリクエストのcheckTypeIdが0の時に、
+  // ステータスコード400とエラーメッセージが返されること（@Min(1)のバリデーション確認）
   @Test
   @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
   @Transactional
-  void 登録時のリクエストで10文字を超える項目がある時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストでcheckTypeIdが0の時にエラーメッセージが返されること() throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "implementationDate": "2015-09-30",
-                  "checkType": "aaaaaaaaaaa",
-                  "result": "良"
-                }
-                """))
+                    {
+                      "implementationDate": "2015-09-30",
+                      "checkTypeId": 0,
+                      "result": "良"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -219,16 +219,45 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkType,resultは必須項目です。checkTypeは10文字以内、resultは50文字以内で入力してください",
+          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // PATCHメソッドで存在する点検履歴IDを指定し正しくリクエスト（implementationDate,checkType,resultが
-  // 全て入力されており、checkTypeは10文字以内で入力、resultは50文字以内で入力）した時に、
-  // 点検計画が更新できステータスコード200とメッセージが返されること
+  @Test
+  @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
+  @Transactional
+  void 登録時のリクエストでcheckTypeIdがnullの時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                    {
+                      "implementationDate": "2015-09-30",
+                      "checkTypeId": null,
+                      "result": "良"
+                    }
+                    """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "path": "/equipments/1/histories"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  // PATCHメソッドで存在する点検履歴IDを指定し正しくリクエスト（implementationDate,checkTypeId,resultが
+  // 全て入力されており、checkTypeIdは1以上の値を入力、resultは50文字以内で入力）した時に、
+  // 点検履歴が更新できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/history/histories.yml")
   @ExpectedDataSet(value = "datasets/history/update_history.yml")
@@ -238,12 +267,12 @@ public class HistoryIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/histories/2")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "implementationDate": "2015-09-30",
-                  "checkType": "取替",
-                  "result": "良"
-                }
-                """))
+                    {
+                      "implementationDate": "2015-09-30",
+                      "checkTypeId": 3,
+                      "result": "良"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -263,12 +292,12 @@ public class HistoryIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/histories/5")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "implementationDate": "2015-09-30",
-                  "checkType": "取替",
-                  "result": "良"
-                }
-                """))
+                    {
+                      "implementationDate": "2015-09-30",
+                      "checkTypeId": 3,
+                      "result": "良"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isNotFound())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -284,9 +313,9 @@ public class HistoryIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // PATCHメソッドでリクエストのimplementationDate,checkType,resultのいずれかがnullの時に、
+  // PATCHメソッドでリクエストのimplementationDate,resultのいずれかがnullの時に、
   // ステータスコード400とエラーメッセージが返されること
-  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているため空文字と文字数制限を超える場合は割愛）
+  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているため空文字とcheckTypeIdが0の場合は割愛）
   @Test
   @DataSet(value = "datasets/history/histories.yml")
   @Transactional
@@ -297,7 +326,7 @@ public class HistoryIntegrationTest {
                 .content("""
                     {
                       "implementationDate": null,
-                      "checkType": "取替",
+                      "checkTypeId": 3,
                       "result": "良"
                     }
                     """))
@@ -309,7 +338,7 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkType,resultは必須項目です。checkTypeは10文字以内、resultは50文字以内で入力してください",
+          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
           "path": "/histories/2"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,

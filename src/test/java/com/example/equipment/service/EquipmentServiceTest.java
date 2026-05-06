@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 // Mapperを呼び出しているだけの部分については、単体テストを割愛しMapper単体テスト及び結合テストで確認する。
 @ExtendWith(MockitoExtension.class)
 class EquipmentServiceTest {
+
   @InjectMocks
   EquipmentServiceImpl equipmentServiceImpl;
 
@@ -35,27 +36,30 @@ class EquipmentServiceTest {
   @Test
   public void 設備検索で点検期限の指定がある時にMapperのfindEquipmentByDateメソッドが呼び出されること() {
     List<FindEquipmentResponse> equipments = List.of(
-        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", 1, "簡易点検", "2023-09-30"));
-    doReturn(equipments).when(equipmentMapper).findEquipmentByDate("真空", "C001", "Area1", "2023-11-30");
+        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", true, 1, "簡易点検",
+            "2023-09-30"));
+    doReturn(equipments).when(equipmentMapper)
+        .findEquipmentByDate("真空", "C001", "Area1", "2023-11-30");
 
     List<FindEquipmentResponse> actual =
         equipmentServiceImpl.findEquipment("真空", "C001", "Area1", "2023-11-30");
     assertThat(actual).isEqualTo(equipments);
     verify(equipmentMapper, never()).findEquipment("真空", "C001", "Area1");
-    verify(equipmentMapper,times(1)).findEquipmentByDate("真空", "C001", "Area1", "2023-11-30");
+    verify(equipmentMapper, times(1)).findEquipmentByDate("真空", "C001", "Area1", "2023-11-30");
   }
 
   @Test
   public void 設備検索で点検期限の指定がない時にMapperのfindEquipmentメソッドが呼び出されること() {
     List<FindEquipmentResponse> equipments = List.of(
-        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", 1, "簡易点検", "2023-09-30"));
+        new FindEquipmentResponse(1, "真空ポンプA", "A1-C001A", "Area1", true, 1, "簡易点検",
+            "2023-09-30"));
     doReturn(equipments).when(equipmentMapper).findEquipment("真空", "C001", "Area1");
 
     List<FindEquipmentResponse> actual =
         equipmentServiceImpl.findEquipment("真空", "C001", "Area1", null);
     assertThat(actual).isEqualTo(equipments);
     verify(equipmentMapper, never()).findEquipmentByDate("真空", "C001", "Area1", null);
-    verify(equipmentMapper,times(1)).findEquipment("真空", "C001", "Area1");
+    verify(equipmentMapper, times(1)).findEquipment("真空", "C001", "Area1");
   }
 
   @Test
@@ -65,14 +69,14 @@ class EquipmentServiceTest {
     assertThatThrownBy(() -> equipmentServiceImpl.findEquipmentById(99))
         .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
           assertThat(e.getMessage()).isEqualTo("Not Found");
-    });
+        });
     verify(equipmentMapper, times(1)).findEquipmentById(99);
   }
 
   @Test
   public void formからgetした内容で設備が登録できること() {
-    EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1");
-    Equipment expectedEquipment = new Equipment("ポンプA", "C001A", "Area1");
+    EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1", false);
+    Equipment expectedEquipment = new Equipment("ポンプA", "C001A", "Area1", false);
     doReturn(false).when(equipmentMapper).existsDuplicateEquipment("ポンプA", "C001A", "Area1");
     doNothing().when(equipmentMapper).insertEquipment(expectedEquipment);
 
@@ -82,40 +86,47 @@ class EquipmentServiceTest {
 
   @Test
   public void 重複する設備を登録しようとした時に例外がスローされること() {
-    EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1");
+    EquipmentForm form = new EquipmentForm("ポンプA", "C001A", "Area1", false);
     doReturn(true).when(equipmentMapper).existsDuplicateEquipment("ポンプA", "C001A", "Area1");
 
     assertThatThrownBy(() -> equipmentServiceImpl.createEquipment(form))
         .isInstanceOfSatisfying(DuplicateEquipmentException.class, e -> {
-          assertThat(e.getMessage()).isEqualTo("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+          assertThat(e.getMessage()).isEqualTo(
+              "同じ設備名称・設備番号・設置場所の設備が既に登録されています");
         });
-    verify(equipmentMapper, never()).insertEquipment(new Equipment("ポンプA", "C001A", "Area1"));
+    verify(equipmentMapper, never()).insertEquipment(
+        new Equipment("ポンプA", "C001A", "Area1", false));
   }
 
   @Test
   public void 設備更新で存在しないIDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
 
-    assertThatThrownBy(() -> equipmentServiceImpl.updateEquipment(99, "真空ポンプA", "A1-C001A", "Area1"))
+    assertThatThrownBy(
+        () -> equipmentServiceImpl.updateEquipment(99, "真空ポンプA", "A1-C001A", "Area1", false))
         .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
           assertThat(e.getMessage()).isEqualTo("Not Found");
         });
     verify(equipmentMapper, times(1)).findEquipmentById(99);
-    verify(equipmentMapper, never()).updateEquipment(99, "真空ポンプA", "A1-C001A", "Area1");
+    verify(equipmentMapper, never())
+        .updateEquipment(99, "真空ポンプA", "A1-C001A", "Area1", false);
   }
 
   @Test
   public void 他のIDで重複する設備に更新しようとした時に例外がスローされること() {
-    doReturn(Optional.of(new Equipment(1, "真空ポンプA", "A1-C001A", "Area1")))
+    doReturn(Optional.of(new Equipment(1, "真空ポンプA", "A1-C001A", "Area1", true)))
         .when(equipmentMapper).findEquipmentById(1);
     doReturn(true).when(equipmentMapper)
         .existsDuplicateEquipmentWithOtherId(1, "吸込ポンプB", "A2-C002B", "Area2");
 
-    assertThatThrownBy(() -> equipmentServiceImpl.updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2"))
+    assertThatThrownBy(
+        () -> equipmentServiceImpl.updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2", false))
         .isInstanceOfSatisfying(DuplicateEquipmentException.class, e -> {
-          assertThat(e.getMessage()).isEqualTo("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+          assertThat(e.getMessage()).isEqualTo(
+              "同じ設備名称・設備番号・設置場所の設備が既に登録されています");
         });
-    verify(equipmentMapper, never()).updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2");
+    verify(equipmentMapper, never())
+        .updateEquipment(1, "吸込ポンプB", "A2-C002B", "Area2", false);
   }
 
   @Test

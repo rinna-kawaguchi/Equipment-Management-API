@@ -20,4 +20,7 @@ public class EquipmentForm {
   @Size(max = 20, message = "20文字以内で入力してください")
   @NotBlank(message = "必須項目です")
   private String location;
+
+  // リクエストボディに含めない場合は false になる
+  private boolean autoCalculationFlag;
 }
