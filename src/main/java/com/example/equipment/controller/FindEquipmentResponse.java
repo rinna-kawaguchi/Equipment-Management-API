@@ -12,8 +12,9 @@ public class FindEquipmentResponse {
   private String name;
   private String number;
   private String location;
+  private boolean autoCalculationFlag;
   private Integer checkPlanId;
-  private String checkType;
+  private String checkTypeName;
   private String deadline;
 
   @Override
@@ -29,12 +30,14 @@ public class FindEquipmentResponse {
         && Objects.equals(name, that.name)
         && Objects.equals(number, that.number)
         && Objects.equals(location, that.location)
-        && Objects.equals(checkType, that.checkType)
+        && autoCalculationFlag == that.autoCalculationFlag
+        && Objects.equals(checkTypeName, that.checkTypeName)
         && Objects.equals(deadline, that.deadline);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(equipmentId, name, number, location, checkType, deadline);
+    return Objects.hash(equipmentId, name, number, location, autoCalculationFlag, checkTypeName,
+        deadline);
   }
 }

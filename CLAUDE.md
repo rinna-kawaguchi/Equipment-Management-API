@@ -6,6 +6,8 @@
 
 設備点検管理アプリ — 工場の設備点検履歴・期限を管理する Spring Boot REST API。`frontend/` に React/TypeScript フロントエンドが含まれています。
 
+点検計画や期限については、check_plan_and_history.mdを参照。
+
 ## アーキテクチャ
 
 **レイヤー構成**: Controller → Service (インターフェース + Impl) → Mapper (MyBatis) → MySQL

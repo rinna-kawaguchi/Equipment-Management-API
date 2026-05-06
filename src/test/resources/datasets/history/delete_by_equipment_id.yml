@@ -2,10 +2,10 @@ histories:
   - check_history_id: 1
     equipment_id: 1
     implementation_date: "2022-09-30"
-    check_type: "簡易点検"
+    check_type_id: 1
     result: "良"
   - check_history_id: 2
     equipment_id: 1
     implementation_date: "2021-09-30"
-    check_type: "本格点検"
+    check_type_id: 2
     result: "良"

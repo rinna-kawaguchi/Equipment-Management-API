@@ -13,14 +13,14 @@ public class History {
 
   private int checkHistoryId;
   private int equipmentId;
+  private int checkTypeId;
   private String implementationDate;
-  private String checkType;
   private String result;
 
-  public History(int equipmentId, String implementationDate, String checkType, String result) {
+  public History(int equipmentId, int checkTypeId, String implementationDate, String result) {
     this.equipmentId = equipmentId;
+    this.checkTypeId = checkTypeId;
     this.implementationDate = implementationDate;
-    this.checkType = checkType;
     this.result = result;
   }
 
@@ -35,13 +35,13 @@ public class History {
     History history = (History) o;
     return checkHistoryId == history.checkHistoryId
         && equipmentId == history.equipmentId
+        && checkTypeId == history.checkTypeId
         && Objects.equals(implementationDate, history.implementationDate)
-        && Objects.equals(checkType, history.checkType)
         && Objects.equals(result, history.result);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(checkHistoryId, equipmentId, implementationDate, checkType, result);
+    return Objects.hash(checkHistoryId, equipmentId, checkTypeId, implementationDate, result);
   }
 }

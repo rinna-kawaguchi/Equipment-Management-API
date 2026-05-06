@@ -3,6 +3,7 @@ CREATE TABLE equipments (
   name VARCHAR(20) NOT NULL,
   number VARCHAR(20) NOT NULL,
   location VARCHAR(20) NOT NULL,
+  auto_calculation_flag TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY(equipment_id)
 );
 

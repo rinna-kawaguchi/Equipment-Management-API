@@ -1,0 +1,5 @@
+check_types:
+  - check_type_id: 1
+    name: "簡易点検"
+  - check_type_id: 2
+    name: "本格点検"

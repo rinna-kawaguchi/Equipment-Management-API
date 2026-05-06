@@ -37,9 +37,9 @@ class PlanServiceImplTest {
 
   @Test
   public void formからgetした内容で点検計画を登録できること() {
-    PlanForm form = new PlanForm( "簡易点検", "1年", "2023-09-30");
-    Plan expectedPlan = new Plan(1,  "簡易点検", "1年", "2023-09-30");
-    doReturn(Optional.of(new Equipment("真空ポンプA", "A1-C001A", "Area1")))
+    PlanForm form = new PlanForm(1, 1, "year", "2023-09-30");
+    Plan expectedPlan = new Plan(1, 1, 1, "year", "2023-09-30", true);
+    doReturn(Optional.of(new Equipment("真空ポンプA", "A1-C001A", "Area1", false)))
         .when(equipmentMapper).findEquipmentById(1);
     doNothing().when(planMapper).insertPlan(expectedPlan);
 
@@ -52,8 +52,9 @@ class PlanServiceImplTest {
   public void 点検計画登録の際に存在しない設備IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
 
-    PlanForm form = new PlanForm("簡易点検", "1年", "2023-09-30");
-    Plan plan = new Plan(99, form.getCheckType(), form.getPeriod(), form.getDeadline());
+    PlanForm form = new PlanForm(1, 1, "year", "2023-09-30");
+    Plan plan = new Plan(99, form.getCheckTypeId(), form.getPeriodValue(), form.getPeriodUnit(),
+        form.getDeadline(), true);
     assertThatThrownBy(() -> planServiceImpl.createPlan(99, form))
         .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
           assertThat(e.getMessage()).isEqualTo("Not Found");
@@ -66,12 +67,12 @@ class PlanServiceImplTest {
   public void 点検計画更新の際に存在しない点検計画IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(planMapper).findPlanByCheckPlanId(99);
 
-    assertThatThrownBy(() -> planServiceImpl.updatePlan(99, "簡易点検", "1年", "2023-09-30"))
+    assertThatThrownBy(() -> planServiceImpl.updatePlan(99, 1, 1, "year", "2023-09-30"))
         .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
           assertThat(e.getMessage()).isEqualTo("Not Found");
         });
     verify(planMapper, times(1)).findPlanByCheckPlanId(99);
-    verify(planMapper, never()).updatePlan(99, "簡易点検", "1年", "2023-09-30");
+    verify(planMapper, never()).updatePlan(99, 1, 1, "year", "2023-09-30", true);
   }
 
   @Test

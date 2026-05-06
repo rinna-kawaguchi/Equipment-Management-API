@@ -37,9 +37,9 @@ class HistoryServiceImplTest {
 
   @Test
   public void formからgetした内容で点検履歴を登録できること() {
-    HistoryForm form = new HistoryForm("2022-08-31", "取替", "良");
-    History expectedHistory = new History(1, "2022-08-31", "取替", "良");
-    doReturn(Optional.of(new Equipment("真空ポンプA", "A1-C001A", "Area1")))
+    HistoryForm form = new HistoryForm("2022-08-31", 3, "良");
+    History expectedHistory = new History(1, 3, "2022-08-31", "良");
+    doReturn(Optional.of(new Equipment("真空ポンプA", "A1-C001A", "Area1", false)))
         .when(equipmentMapper).findEquipmentById(1);
     doNothing().when(historyMapper).insertHistory(expectedHistory);
 
@@ -52,8 +52,9 @@ class HistoryServiceImplTest {
   public void 点検履歴登録の際に存在しない設備IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(equipmentMapper).findEquipmentById(99);
 
-    HistoryForm form = new HistoryForm("2022-08-31", "取替", "良");
-    History history = new History(99, form.getImplementationDate(), form.getCheckType(), form.getResult());
+    HistoryForm form = new HistoryForm("2022-08-31", 3, "良");
+    History history = new History(99, form.getCheckTypeId(), form.getImplementationDate(),
+        form.getResult());
     assertThatThrownBy(() -> historyServiceImpl.createHistory(99, form))
         .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
           assertThat(e.getMessage()).isEqualTo("Not Found");
@@ -66,12 +67,12 @@ class HistoryServiceImplTest {
   public void 点検履歴更新の際に存在しない点検履歴IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(historyMapper).findHistoryByCheckHistoryId(99);
 
-    assertThatThrownBy(() -> historyServiceImpl.updateHistory(99, "2022-08-31", "取替", "良"))
+    assertThatThrownBy(() -> historyServiceImpl.updateHistory(99, "2022-08-31", 3, "良"))
         .isInstanceOfSatisfying(ResourceNotFoundException.class, e -> {
           assertThat(e.getMessage()).isEqualTo("Not Found");
         });
     verify(historyMapper, times(1)).findHistoryByCheckHistoryId(99);
-    verify(historyMapper, never()).updateHistory(99, "2022-08-31", "取替", "良");
+    verify(historyMapper, never()).updateHistory(99, "2022-08-31", 3, "良");
   }
 
   @Test

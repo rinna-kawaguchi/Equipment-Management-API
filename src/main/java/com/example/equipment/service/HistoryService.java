@@ -10,8 +10,7 @@ public interface HistoryService {
 
   History createHistory(int equipmentId, HistoryForm form);
 
-  void updateHistory(int checkHistoryId, String implementationDate, String checkType,
-                     String result);
+  void updateHistory(int checkHistoryId, String implementationDate, int checkTypeId, String result);
 
   void deleteHistoryByCheckHistoryId(int checkHistoryId);
 

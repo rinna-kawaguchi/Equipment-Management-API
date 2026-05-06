@@ -10,7 +10,8 @@ public interface PlanService {
 
   Plan createPlan(int equipmentId, PlanForm form);
 
-  void updatePlan(int checkPlanId, String checkType, String period, String deadline);
+  void updatePlan(int checkPlanId, int checkTypeId, int periodValue, String periodUnit,
+      String deadline);
 
   void deletePlanByCheckPlanId(int checkPlanId);
 

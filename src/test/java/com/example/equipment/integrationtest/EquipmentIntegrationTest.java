@@ -29,10 +29,9 @@ public class EquipmentIntegrationTest {
   @Autowired
   MockMvc mockMvc;
 
-  // GETメソッドでname,number,location,deadlineのクエリパラメータを指定しない時に、
-  // 設備と点検期限が全数取得できステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
+  @DataSet(value = "datasets/check_type/check_types.yml, datasets/equipment/equipments.yml,"
+      + " datasets/plan/plans.yml")
   @Transactional
   void クエリパラメータを指定しない時に設備と点検期限が全数取得できること() throws Exception {
     String response =
@@ -47,8 +46,9 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "autoCalculationFlag": true,
             "checkPlanId": 1,
-            "checkType": "簡易点検",
+            "checkTypeName": "簡易点検",
             "deadline": "2023-09-30"
           },
           {
@@ -56,8 +56,9 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "autoCalculationFlag": true,
             "checkPlanId": 2,
-            "checkType": "本格点検",
+            "checkTypeName": "本格点検",
             "deadline": "2026-09-30"
           },
           {
@@ -65,8 +66,9 @@ public class EquipmentIntegrationTest {
             "name": "吸込ポンプB",
             "number": "A2-C002B",
             "location": "Area2",
+            "autoCalculationFlag": false,
             "checkPlanId": 3,
-            "checkType": "簡易点検",
+            "checkTypeName": "簡易点検",
             "deadline": "2023-10-30"
           },
           {
@@ -74,8 +76,9 @@ public class EquipmentIntegrationTest {
             "name": "吸込ポンプB",
             "number": "A2-C002B",
             "location": "Area2",
+            "autoCalculationFlag": false,
             "checkPlanId": 4,
-            "checkType": "本格点検",
+            "checkTypeName": "本格点検",
             "deadline": "2025-11-30"
           },
           {
@@ -83,18 +86,18 @@ public class EquipmentIntegrationTest {
             "name": "吐出ポンプC",
             "number": "A3-C003C",
             "location": "Area3",
+            "autoCalculationFlag": false,
             "checkPlanId": null,
-            "checkType": null,
+            "checkTypeName": null,
             "deadline": null
           }
         ]
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドでname,number,locationのクエリパラメータを指定しdeadlineを指定しない時に、
-  // 各内容に部分一致する設備と点検期限が取得できステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
+  @DataSet(value = "datasets/check_type/check_types.yml, datasets/equipment/equipments.yml,"
+      + " datasets/plan/plans.yml")
   @Transactional
   void name_number_locationに指定した内容と部分一致する設備と点検期限が取得できること() throws Exception {
     String response =
@@ -109,8 +112,9 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "autoCalculationFlag": true,
             "checkPlanId": 1,
-            "checkType": "簡易点検",
+            "checkTypeName": "簡易点検",
             "deadline": "2023-09-30"
           },
           {
@@ -118,18 +122,18 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "autoCalculationFlag": true,
             "checkPlanId": 2,
-            "checkType": "本格点検",
+            "checkTypeName": "本格点検",
             "deadline": "2026-09-30"
           }
         ]
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドでdeadlineのクエリパラメータを指定した時に、
-  // deadlineが指定した日付以前の設備と点検期限が取得できステータスコード200が返されること
   @Test
-  @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
+  @DataSet(value = "datasets/check_type/check_types.yml, datasets/equipment/equipments.yml,"
+      + " datasets/plan/plans.yml")
   @Transactional
   void deadlineが指定した日付以前の設備と点検期限が取得できること() throws Exception {
     String response =
@@ -145,15 +149,15 @@ public class EquipmentIntegrationTest {
             "name": "真空ポンプA",
             "number": "A1-C001A",
             "location": "Area1",
+            "autoCalculationFlag": true,
             "checkPlanId": 1,
-            "checkType": "簡易点検",
+            "checkTypeName": "簡易点検",
             "deadline": "2023-09-30"
           }
         ]
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドで設備が存在しない時に、空のListが返されステータスコード200が返されること
   @Test
   @DataSet(value = "datasets/equipment/empty.yml, datasets/plan/plans.yml")
   @Transactional
@@ -168,7 +172,6 @@ public class EquipmentIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドで存在する設備IDを指定した時に、指定したIDの設備が取得できステータスコード200が返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -183,12 +186,12 @@ public class EquipmentIntegrationTest {
           "equipmentId": 1,
           "name": "真空ポンプA",
           "number": "A1-C001A",
-          "location": "Area1"
+          "location": "Area1",
+          "autoCalculationFlag": true
         }
         """, response, JSONCompareMode.STRICT);
   }
 
-  // GETメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -210,8 +213,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドで正しくリクエスト（name,number,locationをすべて20文字以内で入力）した時に、
-  // 設備が登録できステータスコード201とメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @ExpectedDataSet(value = "datasets/equipment/insert_equipment.yml", ignoreCols = "equipment_id")
@@ -239,9 +240,6 @@ public class EquipmentIntegrationTest {
         new Customization("newId", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのname,number,locationのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
-  // （NotBlankのバリデーション確認、name,number,locationはすべて同じアノテーションを付与しており同じString型のため、
-  // 代表してnameで確認。以下同様）
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -271,8 +269,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのname,number,locationのいずれかが空文字の時に、
-  // ステータスコード400とエラーメッセージが返されること（NotBlankのバリデーション確認）
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -302,8 +298,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドでリクエストのname,number,locationのいずれかが20文字を超えている時に、
-  // ステータスコード400とエラーメッセージが返されること（@Size(max = 10)のバリデーション確認）
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -333,8 +327,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // POSTメソッドで既に同じname,number,locationの設備が存在する時に、
-  // ステータスコード409とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -364,7 +356,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // PATCHメソッドで存在する設備IDを指定し正しくリクエストした時に、設備が更新できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @ExpectedDataSet(value = "datasets/equipment/update_equipment.yml")
@@ -390,8 +381,6 @@ public class EquipmentIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // PATCHメソッドで他のequipmentIdと同じname,number,locationに更新しようとした時に、
-  // ステータスコード409とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -421,7 +410,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // PATCHメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -451,8 +439,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // PATCHメソッドでリクエストのname,number,locationのいずれかがnullの時に、ステータスコード400とエラーメッセージが返されること
-  // （NotBlankのバリデーション確認、POSTメソッドでも確認しているため空文字と20文字を超える場合は割愛）
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
@@ -482,7 +468,6 @@ public class EquipmentIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-  // DELETEメソッドで存在する設備IDを指定した時に、設備が削除できステータスコード200とメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @ExpectedDataSet(value = "datasets/equipment/delete_equipment.yml")
@@ -500,7 +485,6 @@ public class EquipmentIntegrationTest {
         """, response, JSONCompareMode.STRICT);
   }
 
-  // DELETEメソッドで存在しない設備IDを指定した時に、例外がスローされステータスコード404とエラーメッセージが返されること
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional

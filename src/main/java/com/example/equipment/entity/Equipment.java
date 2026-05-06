@@ -15,11 +15,13 @@ public class Equipment {
   private String name;
   private String number;
   private String location;
+  private boolean autoCalculationFlag;
 
-  public Equipment(String name, String number, String location) {
+  public Equipment(String name, String number, String location, boolean autoCalculationFlag) {
     this.name = name;
     this.number = number;
     this.location = location;
+    this.autoCalculationFlag = autoCalculationFlag;
   }
 
   @Override
@@ -34,11 +36,12 @@ public class Equipment {
     return equipmentId == equipment.equipmentId
         && Objects.equals(name, equipment.name)
         && Objects.equals(number, equipment.number)
-        && Objects.equals(location, equipment.location);
+        && Objects.equals(location, equipment.location)
+        && autoCalculationFlag == equipment.autoCalculationFlag;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(equipmentId, name, number, location);
+    return Objects.hash(equipmentId, name, number, location, autoCalculationFlag);
   }
 }

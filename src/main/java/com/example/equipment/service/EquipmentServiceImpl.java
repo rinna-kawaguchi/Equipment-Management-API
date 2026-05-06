@@ -19,7 +19,6 @@ public class EquipmentServiceImpl implements EquipmentService {
     this.equipmentMapper = equipmentMapper;
   }
 
-  // 設備の条件検索
   @Override
   public List<FindEquipmentResponse> findEquipment(
       String name, String number, String location, String deadline) {
@@ -30,37 +29,37 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
   }
 
-  // 設備のID検索
   @Override
   public Equipment findEquipmentById(int equipmentId) {
     return equipmentMapper.findEquipmentById(equipmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
   }
 
-  // 設備の登録処理
   @Override
   public Equipment createEquipment(EquipmentForm form) {
     if (equipmentMapper.existsDuplicateEquipment(
         form.getName(), form.getNumber(), form.getLocation())) {
-      throw new DuplicateEquipmentException("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+      throw new DuplicateEquipmentException(
+          "同じ設備名称・設備番号・設置場所の設備が既に登録されています");
     }
-    Equipment equipment = new Equipment(form.getName(), form.getNumber(), form.getLocation());
+    Equipment equipment = new Equipment(
+        form.getName(), form.getNumber(), form.getLocation(), form.isAutoCalculationFlag());
     equipmentMapper.insertEquipment(equipment);
     return equipment;
   }
 
-  // 設備の更新処理
   @Override
-  public void updateEquipment(int equipmentId, String name, String number, String location) {
+  public void updateEquipment(int equipmentId, String name, String number, String location,
+      boolean autoCalculationFlag) {
     equipmentMapper.findEquipmentById(equipmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
     if (equipmentMapper.existsDuplicateEquipmentWithOtherId(equipmentId, name, number, location)) {
-      throw new DuplicateEquipmentException("同じ設備名称・設備番号・設置場所の設備が既に登録されています");
+      throw new DuplicateEquipmentException(
+          "同じ設備名称・設備番号・設置場所の設備が既に登録されています");
     }
-    equipmentMapper.updateEquipment(equipmentId, name, number, location);
+    equipmentMapper.updateEquipment(equipmentId, name, number, location, autoCalculationFlag);
   }
 
-  // 設備の削除処理
   @Override
   public void deleteEquipment(int equipmentId) {
     equipmentMapper.findEquipmentById(equipmentId)

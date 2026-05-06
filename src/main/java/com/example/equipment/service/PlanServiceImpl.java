@@ -33,16 +33,18 @@ public class PlanServiceImpl implements PlanService {
     equipmentMapper.findEquipmentById(equipmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
 
-    Plan plan = new Plan(equipmentId, form.getCheckType(), form.getPeriod(), form.getDeadline());
+    Plan plan = new Plan(equipmentId, form.getCheckTypeId(), form.getPeriodValue(),
+        form.getPeriodUnit(), form.getDeadline(), true);
     planMapper.insertPlan(plan);
     return plan;
   }
 
   @Override
-  public void updatePlan(int checkPlanId, String checkType, String period, String deadline) {
+  public void updatePlan(int checkPlanId, int checkTypeId, int periodValue, String periodUnit,
+      String deadline) {
     planMapper.findPlanByCheckPlanId(checkPlanId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-    planMapper.updatePlan(checkPlanId, checkType, period, deadline);
+    planMapper.updatePlan(checkPlanId, checkTypeId, periodValue, periodUnit, deadline, true);
   }
 
   @Override

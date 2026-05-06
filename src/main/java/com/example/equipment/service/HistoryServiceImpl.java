@@ -22,7 +22,7 @@ public class HistoryServiceImpl implements HistoryService {
   // 指定した設備IDの点検履歴を取得するMapperを呼び出す。
   // 指定した設備IDの設備が存在しない場合であっても例外をスローせず取得できるようにする。
   @Override
-   public List<History> findHistoryByEquipmentId(int equipmentId) {
+  public List<History> findHistoryByEquipmentId(int equipmentId) {
     return historyMapper.findHistoryByEquipmentId(equipmentId);
   }
 
@@ -33,8 +33,8 @@ public class HistoryServiceImpl implements HistoryService {
     equipmentMapper.findEquipmentById(equipmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
 
-    History history = new History(equipmentId, form.getImplementationDate(), form.getCheckType(),
-        form.getResult());
+    History history = new History(
+        equipmentId, form.getCheckTypeId(), form.getImplementationDate(), form.getResult());
     historyMapper.insertHistory(history);
     return history;
   }
@@ -43,10 +43,10 @@ public class HistoryServiceImpl implements HistoryService {
   // 指定した点検履歴IDが存在しない場合は例外をスローする
   @Override
   public void updateHistory(
-      int checkHistoryId, String implementationDate, String checkType, String result) {
+      int checkHistoryId, String implementationDate, int checkTypeId, String result) {
     historyMapper.findHistoryByCheckHistoryId(checkHistoryId)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-    historyMapper.updateHistory(checkHistoryId, implementationDate, checkType, result);
+    historyMapper.updateHistory(checkHistoryId, implementationDate, checkTypeId, result);
   }
 
   // 指定したIDの点検履歴を削除するMapperを呼び出す。点検履歴IDが存在しない場合は例外をスローする

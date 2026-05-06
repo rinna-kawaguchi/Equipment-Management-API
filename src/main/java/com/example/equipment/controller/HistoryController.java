@@ -25,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 public class HistoryController {
+
   private final HistoryService historyService;
 
   public HistoryController(HistoryService historyService) {
@@ -55,7 +56,7 @@ public class HistoryController {
       @PathVariable("checkHistoryId") int checkHistoryId,
       @RequestBody @Validated HistoryForm form) {
     historyService.updateHistory(
-        checkHistoryId, form.getImplementationDate(), form.getCheckType(), form.getResult());
+        checkHistoryId, form.getImplementationDate(), form.getCheckTypeId(), form.getResult());
     return ResponseEntity.ok(Map.of("message", "点検履歴が正常に更新されました"));
   }
 
@@ -96,8 +97,8 @@ public class HistoryController {
         "timestamp", ZonedDateTime.now().toString(),
         "status", String.valueOf(HttpStatus.BAD_REQUEST.value()),
         "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
-        "message", "implementationDate,checkType,"
-            + "resultは必須項目です。checkTypeは10文字以内、resultは50文字以内で入力してください",
+        "message",
+        "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
         "path", request.getRequestURI());
     return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
