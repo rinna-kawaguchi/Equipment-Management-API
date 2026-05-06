@@ -1,0 +1,9 @@
+equipment_check_type_inclusions:
+  - inclusion_id: 1
+    equipment_id: 1
+    upper_check_type_id: 1
+    lower_check_type_id: 2
+  - inclusion_id: 2
+    equipment_id: 1
+    upper_check_type_id: 1
+    lower_check_type_id: 3
