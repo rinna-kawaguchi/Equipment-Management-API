@@ -255,6 +255,36 @@ public class HistoryIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
+  // POSTメソッドでresultが50文字を超える時に、ステータスコード400とエラーメッセージが返されること（@Sizeのバリデーション確認）
+  @Test
+  @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
+  @Transactional
+  void 登録時のリクエストでresultが50文字を超える時にエラーメッセージが返されること() throws Exception {
+    String response =
+        mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                    {
+                      "implementationDate": "2015-09-30",
+                      "checkTypeId": 3,
+                      "result": "あいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあ"
+                    }
+                    """))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
+          "status": "400",
+          "error": "Bad Request",
+          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "path": "/equipments/1/histories"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
   // PATCHメソッドで存在する点検履歴IDを指定し正しくリクエスト（implementationDate,checkTypeId,resultが
   // 全て入力されており、checkTypeIdは1以上の値を入力、resultは50文字以内で入力）した時に、
   // 点検履歴が更新できステータスコード200とメッセージが返されること
