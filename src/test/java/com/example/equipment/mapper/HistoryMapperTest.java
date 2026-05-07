@@ -40,6 +40,14 @@ class HistoryMapperTest {
   @Test
   @DataSet(value = "datasets/history/histories.yml")
   @Transactional
+  void 指定した点検履歴IDが存在する時に対応するHistoryが返されること() {
+    assertThat(historyMapper.findHistoryByCheckHistoryId(1))
+        .contains(new History(1, 1, 1, "2022-09-30", "良"));
+  }
+
+  @Test
+  @DataSet(value = "datasets/history/histories.yml")
+  @Transactional
   void 指定した点検履歴IDが存在しない時に空のOptionalが返されること() {
     assertThat(historyMapper.findHistoryByCheckHistoryId(5)).isEmpty();
   }

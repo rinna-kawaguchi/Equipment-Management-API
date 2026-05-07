@@ -40,6 +40,14 @@ class PlanMapperTest {
   @Test
   @DataSet(value = "datasets/plan/plans.yml")
   @Transactional
+  void 指定した点検計画IDが存在する時に対応するPlanが返されること() {
+    assertThat(planMapper.findPlanByCheckPlanId(1))
+        .contains(new Plan(1, 1, 1, 1, "year", "2023-09-30", false));
+  }
+
+  @Test
+  @DataSet(value = "datasets/plan/plans.yml")
+  @Transactional
   void 指定した点検計画IDが存在しない時に空のOptionalが返されること() {
     assertThat(planMapper.findPlanByCheckPlanId(5)).isEmpty();
   }
