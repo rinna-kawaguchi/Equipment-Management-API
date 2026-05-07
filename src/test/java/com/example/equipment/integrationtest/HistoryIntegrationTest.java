@@ -157,7 +157,7 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "message": "implementationDate: 必須項目です",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -188,7 +188,7 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "message": "implementationDate: 必須項目です",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -219,7 +219,7 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "message": "checkTypeId: 1以上の値を入力してください",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -229,7 +229,8 @@ public class HistoryIntegrationTest {
   @Test
   @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
   @Transactional
-  void 登録時のリクエストでcheckTypeIdがnullの時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストでcheckTypeIdがnullの時にエラーメッセージが返されること()
+      throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -248,7 +249,7 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "message": "checkTypeId: 1以上の値を入力してください",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -259,7 +260,8 @@ public class HistoryIntegrationTest {
   @Test
   @DataSet(value = "datasets/history/histories.yml, datasets/equipment/equipments.yml")
   @Transactional
-  void 登録時のリクエストでresultが50文字を超える時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストでresultが50文字を超える時にエラーメッセージが返されること()
+      throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -278,7 +280,7 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "message": "result: 50文字以内で入力してください",
           "path": "/equipments/1/histories"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -368,7 +370,7 @@ public class HistoryIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "implementationDate,checkTypeId,resultは必須項目です。resultは50文字以内で入力してください",
+          "message": "implementationDate: 必須項目です",
           "path": "/histories/2"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,

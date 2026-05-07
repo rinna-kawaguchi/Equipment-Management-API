@@ -99,7 +99,8 @@ public class EquipmentIntegrationTest {
   @DataSet(value = "datasets/check_type/check_types.yml, datasets/equipment/equipments.yml,"
       + " datasets/plan/plans.yml")
   @Transactional
-  void name_number_locationに指定した内容と部分一致する設備と点検期限が取得できること() throws Exception {
+  void name_number_locationに指定した内容と部分一致する設備と点検期限が取得できること()
+      throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.get("/equipments?name=ポンプ&number=C00&location=1"))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -220,14 +221,14 @@ public class EquipmentIntegrationTest {
   void 設備が登録できること() throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content("""
-                {
-                  "name": "真空ポンプB",
-                  "number": "A1-C001B",
-                  "location": "Area1"
-                }
-                """))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content("""
+                    {
+                      "name": "真空ポンプB",
+                      "number": "A1-C001B",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -248,12 +249,12 @@ public class EquipmentIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": null,
-                  "number": "A1-C001B",
-                  "location": "Area1"
-                }
-                """))
+                    {
+                      "name": null,
+                      "number": "A1-C001B",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -262,7 +263,7 @@ public class EquipmentIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "message": "name: 必須項目です",
           "path": "/equipments"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -277,12 +278,12 @@ public class EquipmentIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": "",
-                  "number": "A1-C001B",
-                  "location": "Area1"
-                }
-                """))
+                    {
+                      "name": "",
+                      "number": "A1-C001B",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -291,7 +292,7 @@ public class EquipmentIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "message": "name: 必須項目です",
           "path": "/equipments"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -301,17 +302,18 @@ public class EquipmentIntegrationTest {
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml")
   @Transactional
-  void 登録時のリクエストで20文字を超えている項目がある時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストで20文字を超えている項目がある時にエラーメッセージが返されること()
+      throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": "aaaaaaaaaaaaaaaaaaaaa",
-                  "number": "A1-C001B",
-                  "location": "Area1"
-                }
-                """))
+                    {
+                      "name": "aaaaaaaaaaaaaaaaaaaaa",
+                      "number": "A1-C001B",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -320,7 +322,7 @@ public class EquipmentIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "message": "name: 20文字以内で入力してください",
           "path": "/equipments"
           }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -335,12 +337,12 @@ public class EquipmentIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": "真空ポンプA",
-                  "number": "A1-C001A",
-                  "location": "Area1"
-                }
-                """))
+                    {
+                      "name": "真空ポンプA",
+                      "number": "A1-C001A",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isConflict())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -365,12 +367,12 @@ public class EquipmentIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/equipments/1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": "真空ポンプB",
-                  "number": "A1-C001B",
-                  "location": "Area1"
-                }
-                """))
+                    {
+                      "name": "真空ポンプB",
+                      "number": "A1-C001B",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -389,12 +391,12 @@ public class EquipmentIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/equipments/1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": "吸込ポンプB",
-                  "number": "A2-C002B",
-                  "location": "Area2"
-                }
-                """))
+                    {
+                      "name": "吸込ポンプB",
+                      "number": "A2-C002B",
+                      "location": "Area2"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isConflict())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -418,12 +420,12 @@ public class EquipmentIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/equipments/4")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": "真空ポンプB",
-                  "number": "A1-C001B",
-                  "location": "Area1"
-                }
-                """))
+                    {
+                      "name": "真空ポンプB",
+                      "number": "A1-C001B",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isNotFound())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -447,12 +449,12 @@ public class EquipmentIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/equipments/1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("""
-                {
-                  "name": null,
-                  "number": "A1-C001B",
-                  "location": "Area1"
-                }
-                """))
+                    {
+                      "name": null,
+                      "number": "A1-C001B",
+                      "location": "Area1"
+                    }
+                    """))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -461,7 +463,7 @@ public class EquipmentIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "name,number,locationは必須項目です。20文字以内で入力してください",
+          "message": "name: 必須項目です",
           "path": "/equipments/1"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,

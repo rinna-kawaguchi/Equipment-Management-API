@@ -111,7 +111,7 @@ public class EquipmentCheckTypeInclusionIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "upperCheckTypeId,lowerCheckTypeIdは1以上の値を入力してください",
+          "message": "upperCheckTypeId: 1以上の値を入力してください",
           "path": "/equipments/1/inclusions"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -137,7 +137,7 @@ public class EquipmentCheckTypeInclusionIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "upperCheckTypeId,lowerCheckTypeIdは1以上の値を入力してください",
+          "message": "lowerCheckTypeId: 1以上の値を入力してください",
           "path": "/equipments/1/inclusions"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -168,7 +168,8 @@ public class EquipmentCheckTypeInclusionIntegrationTest {
   @DataSet(value = "datasets/check_type/check_types.yml, datasets/equipment/equipments.yml,"
       + " datasets/inclusion/inclusions.yml")
   @Transactional
-  void 包含関係更新の際に存在しない包含関係IDを指定した時に404エラーが返されること() throws Exception {
+  void 包含関係更新の際に存在しない包含関係IDを指定した時に404エラーが返されること()
+      throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.patch("/equipments/1/inclusions/99")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
@@ -196,7 +197,7 @@ public class EquipmentCheckTypeInclusionIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "upperCheckTypeId,lowerCheckTypeIdは1以上の値を入力してください",
+          "message": "upperCheckTypeId: 1以上の値を入力してください",
           "path": "/equipments/1/inclusions/1"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -223,7 +224,8 @@ public class EquipmentCheckTypeInclusionIntegrationTest {
   @DataSet(value = "datasets/check_type/check_types.yml, datasets/equipment/equipments.yml,"
       + " datasets/inclusion/inclusions.yml")
   @Transactional
-  void 包含関係削除の際に存在しない包含関係IDを指定した時に404エラーが返されること() throws Exception {
+  void 包含関係削除の際に存在しない包含関係IDを指定した時に404エラーが返されること()
+      throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.delete("/equipments/1/inclusions/99"))
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }

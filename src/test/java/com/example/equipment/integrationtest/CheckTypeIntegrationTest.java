@@ -96,7 +96,7 @@ public class CheckTypeIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "nameは必須項目です。20文字以内で入力してください",
+          "message": "name: 必須項目です",
           "path": "/check-types"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -121,7 +121,7 @@ public class CheckTypeIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "nameは必須項目です。20文字以内で入力してください",
+          "message": "name: 必須項目です",
           "path": "/check-types"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -146,7 +146,7 @@ public class CheckTypeIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "nameは必須項目です。20文字以内で入力してください",
+          "message": "name: 20文字以内で入力してください",
           "path": "/check-types"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
