@@ -155,7 +155,7 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
+          "message": "checkTypeId: 1以上の値を入力してください",
           "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -186,7 +186,7 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
+          "message": "periodUnit: day,week,month,yearのいずれかを入力してください, periodUnit: 必須項目です",
           "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -217,7 +217,7 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
+          "message": "periodUnit: day,week,month,yearのいずれかを入力してください",
           "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -227,7 +227,8 @@ public class PlanIntegrationTest {
   @Test
   @DataSet(value = "datasets/equipment/equipments.yml, datasets/plan/plans.yml")
   @Transactional
-  void 登録時のリクエストでcheckTypeIdがnullの時にエラーメッセージが返されること() throws Exception {
+  void 登録時のリクエストでcheckTypeIdがnullの時にエラーメッセージが返されること()
+      throws Exception {
     String response =
         mockMvc.perform(MockMvcRequestBuilders.post("/equipments/1/plans")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -247,7 +248,7 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
+          "message": "checkTypeId: 1以上の値を入力してください",
           "path": "/equipments/1/plans"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
@@ -333,7 +334,7 @@ public class PlanIntegrationTest {
           "timestamp": "2023-07-14T12:00:00.511021+09:00[Asia/Tokyo]",
           "status": "400",
           "error": "Bad Request",
-          "message": "checkTypeId,periodValue,periodUnitは必須項目です",
+          "message": "periodUnit: 必須項目です",
           "path": "/plans/2"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
