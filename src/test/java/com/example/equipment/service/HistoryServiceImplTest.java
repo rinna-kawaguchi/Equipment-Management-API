@@ -1,19 +1,5 @@
 package com.example.equipment.service;
 
-import com.example.equipment.entity.Equipment;
-import com.example.equipment.entity.History;
-import com.example.equipment.exception.ResourceNotFoundException;
-import com.example.equipment.form.HistoryForm;
-import com.example.equipment.mapper.EquipmentMapper;
-import com.example.equipment.mapper.HistoryMapper;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doNothing;
@@ -21,6 +7,19 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import com.example.equipment.entity.Equipment;
+import com.example.equipment.entity.History;
+import com.example.equipment.exception.ResourceNotFoundException;
+import com.example.equipment.form.HistoryForm;
+import com.example.equipment.mapper.EquipmentMapper;
+import com.example.equipment.mapper.HistoryMapper;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 // Mapperを呼び出しているだけの部分については、単体テストを割愛しMapper単体テスト及び結合テストで確認する。
 @ExtendWith(MockitoExtension.class)
@@ -76,7 +75,7 @@ class HistoryServiceImplTest {
   }
 
   @Test
-  public void 点検履歴削除の際に存在しない点検計画IDを指定した時に例外がスローされること() {
+  public void 点検履歴削除の際に存在しない点検履歴IDを指定した時に例外がスローされること() {
     doReturn(Optional.empty()).when(historyMapper).findHistoryByCheckHistoryId(99);
 
     assertThatThrownBy(() -> historyServiceImpl.deleteHistoryByCheckHistoryId(99))
