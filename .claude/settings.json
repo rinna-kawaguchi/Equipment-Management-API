@@ -49,5 +49,30 @@
       "Edit(./src/main/resources/application-prod.properties)",
       "Write(./src/main/resources/application-prod.properties)"
     ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "excludedCommands": ["docker compose up -d", "docker compose ps *"],
+    "filesystem": {
+      "allowWrite": ["~/.gradle"]
+    },
+    "network": {
+      "allowLocalBinding": true,
+      "allowedDomains": [
+        "repo.maven.apache.org",
+        "plugins.gradle.org",
+        "services.gradle.org",
+        "registry.yarnpkg.com",
+        "registry.npmjs.org"
+      ]
+    },
+    "credentials": {
+      "envVars": [
+        { "name": "EQUIPMENT_DB_PASSWORD", "mode": "deny" },
+        { "name": "EQUIPMENT_MAIL_USER", "mode": "deny" },
+        { "name": "EQUIPMENT_MAIL_PASSWORD", "mode": "deny" },
+        { "name": "EQUIPMENT_ACTIVE_PROFILE", "mode": "deny" }
+      ]
+    }
   }
 }
