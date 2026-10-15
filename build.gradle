@@ -39,6 +39,7 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	systemProperty 'java.io.tmpdir', temporaryDir
 }
 
 checkstyle {
