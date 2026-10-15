@@ -52,7 +52,7 @@
   },
   "sandbox": {
     "enabled": true,
-    "excludedCommands": ["docker compose up -d", "docker compose ps *"],
+    "excludedCommands": ["docker compose up -d", "docker compose ps *", "gh pr create *", "gh pr view *"],
     "filesystem": {
       "allowWrite": ["~/.gradle"]
     },
