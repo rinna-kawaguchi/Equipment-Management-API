@@ -1,20 +1,53 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(./gradlew test *)",
+      "Bash(./gradlew checkstyleMain *)",
+      "Bash(./gradlew build *)",
+      "Bash(docker compose up -d)",
+      "Bash(docker compose ps *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(yarn test *)"
+    ],
     "deny": [
       "Bash(rm *)",
       "Bash(rm -r *)",
+      "Bash(sudo *)",
       "Bash(curl *)",
       "Bash(wget *)",
-      "Bash(git push *)",
       "Bash(chmod 777 *)",
       "Bash(mysql *)",
+      "Bash(env)",
+      "Bash(env *)",
+      "Bash(printenv *)",
+      "Bash(git push *)",
+      "Bash(git * push *)",
+      "Bash(git branch -D *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean *)",
+      "Bash(docker compose down -v *)",
+      "Bash(docker compose down --volumes *)",
+      "Bash(docker volume rm *)",
+      "Bash(docker volume prune *)",
+      "Bash(aws *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(gh pr merge *)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
       "Read(./config/credentials.json)",
       "Read(**/*.pem)",
       "Read(**/*.key)",
-      "Read(**/credentials)"
+      "Read(**/credentials)",
+      "Edit(./.claude/settings.json)",
+      "Write(./.claude/settings.json)",
+      "Edit(./.github/workflows/**)",
+      "Write(./.github/workflows/**)",
+      "Edit(./src/main/resources/application-prod.properties)",
+      "Write(./src/main/resources/application-prod.properties)"
     ]
   }
 }
