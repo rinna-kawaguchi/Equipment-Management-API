@@ -1,20 +1,142 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(./gradlew test *)",
+      "Bash(./gradlew checkstyleMain *)",
+      "Bash(./gradlew build *)",
+      "Bash(docker compose -f docker-compose.yml up -d)",
+      "Bash(docker compose ps *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(yarn test *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr diff *)"
+    ],
+    "ask": [
+      "Edit(./.claude/settings.json)",
+      "Write(./.claude/settings.json)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr edit *)",
+      "Edit(./docker-compose.yml)",
+      "Write(./docker-compose.yml)",
+      "Edit(./docker-compose.yaml)",
+      "Write(./docker-compose.yaml)",
+      "Edit(./docker-compose.override.yml)",
+      "Write(./docker-compose.override.yml)",
+      "Edit(./docker-compose.override.yaml)",
+      "Write(./docker-compose.override.yaml)",
+      "Edit(./compose.yml)",
+      "Write(./compose.yml)",
+      "Edit(./compose.yaml)",
+      "Write(./compose.yaml)",
+      "Edit(./compose.override.yml)",
+      "Write(./compose.override.yml)",
+      "Edit(./compose.override.yaml)",
+      "Write(./compose.override.yaml)",
+      "Edit(./Dockerfile)",
+      "Write(./Dockerfile)"
+    ],
     "deny": [
       "Bash(rm *)",
       "Bash(rm -r *)",
+      "Bash(sudo *)",
       "Bash(curl *)",
       "Bash(wget *)",
-      "Bash(git push *)",
       "Bash(chmod 777 *)",
       "Bash(mysql *)",
+      "Bash(env)",
+      "Bash(env *)",
+      "Bash(printenv *)",
+      "Bash(git push *)",
+      "Bash(git -C * push *)",
+      "Bash(git -c * push *)",
+      "Bash(git branch -D *)",
+      "Bash(git branch --delete --force *)",
+      "Bash(git checkout .)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean *)",
+      "Bash(docker compose down -v *)",
+      "Bash(docker compose down --volumes *)",
+      "Bash(docker volume rm *)",
+      "Bash(docker volume prune *)",
+      "Bash(aws *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(gh pr merge *)",
       "Read(./.env)",
       "Read(./.env.*)",
+      "Edit(./.env)",
+      "Write(./.env)",
       "Read(./secrets/**)",
       "Read(./config/credentials.json)",
       "Read(**/*.pem)",
       "Read(**/*.key)",
-      "Read(**/credentials)"
+      "Read(**/credentials)",
+      "Edit(./.claude/settings.local.json)",
+      "Write(./.claude/settings.local.json)",
+      "Edit(./.github/workflows/**)",
+      "Write(./.github/workflows/**)",
+      "Edit(./src/main/resources/application-prod.properties)",
+      "Write(./src/main/resources/application-prod.properties)"
     ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "excludedCommands": [
+      "docker compose -f docker-compose.yml up -d",
+      "docker compose ps *",
+      "gh pr create *",
+      "gh pr edit *",
+      "gh pr view *",
+      "gh pr diff *"
+    ],
+    "filesystem": {
+      "allowWrite": [
+        "~/.gradle"
+      ],
+      "denyWrite": [
+        "./.env",
+        "./docker-compose.yml",
+        "./docker-compose.yaml",
+        "./docker-compose.override.yml",
+        "./docker-compose.override.yaml",
+        "./compose.yml",
+        "./compose.yaml",
+        "./compose.override.yml",
+        "./compose.override.yaml",
+        "./Dockerfile"
+      ]
+    },
+    "network": {
+      "allowLocalBinding": true,
+      "allowedDomains": [
+        "repo.maven.apache.org",
+        "plugins.gradle.org",
+        "services.gradle.org",
+        "registry.yarnpkg.com",
+        "registry.npmjs.org"
+      ]
+    },
+    "credentials": {
+      "envVars": [
+        {
+          "name": "EQUIPMENT_DB_PASSWORD",
+          "mode": "deny"
+        },
+        {
+          "name": "EQUIPMENT_MAIL_USER",
+          "mode": "deny"
+        },
+        {
+          "name": "EQUIPMENT_MAIL_PASSWORD",
+          "mode": "deny"
+        },
+        {
+          "name": "EQUIPMENT_ACTIVE_PROFILE",
+          "mode": "deny"
+        }
+      ]
+    }
   }
 }

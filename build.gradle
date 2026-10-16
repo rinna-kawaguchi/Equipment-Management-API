@@ -9,7 +9,9 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
 }
 
 configurations {
@@ -37,6 +39,7 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	systemProperty 'java.io.tmpdir', temporaryDir
 }
 
 checkstyle {

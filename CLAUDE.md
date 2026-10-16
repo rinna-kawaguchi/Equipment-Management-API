@@ -8,6 +8,32 @@
 
 点検計画や期限については、check_plan_and_history.mdを参照。
 
+## Claude 作業時のルール
+
+オートモードでも以下を必ず守ること。禁止コマンドは `.claude/settings.json` の deny でも制限している。
+
+**禁止事項**
+- 本番プロファイル（`EQUIPMENT_ACTIVE_PROFILE=prod`）での起動や、本番環境（AWS RDS / EC2）への接続・操作
+- `application-prod.properties`、`.github/workflows/`、`.claude/settings.local.json` の変更
+- main ブランチへの直接コミット、`git push`、PR のマージ
+- `git reset --hard`、`git clean`、`git branch -D`、`git checkout .` など元に戻せない git 操作
+- `docker compose down -v` などの DB ボリューム削除
+- 環境変数（`EQUIPMENT_DB_PASSWORD`、`EQUIPMENT_MAIL_PASSWORD` など）や秘密情報の表示・出力
+- deny ルールを別のコマンドで回避すること（例: `rm` の代わりに `find -delete` を使う）
+
+**承認が必要な操作**（`.claude/settings.json` の ask で制御）
+- `.claude/settings.json`、`docker-compose.yml`、`Dockerfile` などの変更は Edit/Write ツールで行い、承認時にユーザーが差分を確認する（Bash からの書き換えはサンドボックスで禁止）
+- `gh pr create` の `--body-file` には scratchpad に作成したファイルのみを指定する
+
+**Docker の起動**
+- Claude が DB を起動する時は `docker compose -f docker-compose.yml up -d` を使う（`.env` や override ファイルによる compose ファイルの差し替えを防ぐため。`-f` なしはサンドボックス内で実行され失敗する）
+
+**作業手順**
+- 作業は main から切った作業ブランチで行う
+- 作業完了前に `./gradlew checkstyleMain` と関連テストを実行し、結果を報告する
+- Java 17 が必要（新しい JDK では起動不可）
+- Python で外部パッケージが必要な場合は venv で隔離し、システムの Python にインストールしない
+
 ## アーキテクチャ
 
 **レイヤー構成**: Controller → Service (インターフェース + Impl) → Mapper (MyBatis) → MySQL
