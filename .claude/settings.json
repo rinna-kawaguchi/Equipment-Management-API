@@ -17,6 +17,7 @@
       "Edit(./.claude/settings.json)",
       "Write(./.claude/settings.json)",
       "Bash(gh pr create *)",
+      "Bash(gh pr edit *)",
       "Edit(./docker-compose.yml)",
       "Write(./docker-compose.yml)",
       "Edit(./docker-compose.yaml)",
@@ -86,6 +87,7 @@
       "docker compose -f docker-compose.yml up -d",
       "docker compose ps *",
       "gh pr create *",
+      "gh pr edit *",
       "gh pr view *",
       "gh pr diff *"
     ],
